@@ -13,15 +13,6 @@
     },
     {
       "key": "shashidi",
-      "name": "音范丝|影音集",
-      "type": 1,
-      "api": "https://www.yinfans.me/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
-      "key": "shashidi",
       "name": "👩‍🦽自建丨沙师弟影视",
       "type": 1,
       "api": "https://xinliang.serv00.net/api.php/tvbox",
