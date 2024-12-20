@@ -12,12 +12,14 @@
     },
     {
       "key": "shashidi",
-      "name": "👩‍🦽自建┃沙师弟影视",
-      "type": 1,
+      "name": "👩‍🦽┃自建┃沙师弟影视",
+      "type": 3,
+      "playerType": "2",
       "api": "https://xinliang.serv00.net/api.php/tvbox",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1
+      "filterable": 1,
+      "ext": "https://xinliang.serv00.net"
     },
     {
       "key": "豆瓣",
