@@ -12,15 +12,10 @@
     },
     {
       "key": "zijian",
-      "name": "👩‍🦽┃自建┃影视",
+      "name": "👩‍🦽┃自建┃沙师弟影视",
       "type": 3,
-      "api": "https://xinliang.serv00.net/api.php/tvbox",
-      "filterable": 1,
-      "ext": {
-        "site_urls": [
-          "https://xinliang.serv00.net"
-        ],
-      }
+      "playerType": "2",
+      "api": "https://xinliang.serv00.net/api.php/tvbox"
     },
     {
       "key": "豆瓣",
