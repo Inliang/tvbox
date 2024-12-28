@@ -11,15 +11,17 @@
       "searchable": 0
     },
     {
-      "key": "shashidi",
+      "key": "zijian",
       "name": "👩‍🦽┃自建┃沙师弟影视",
       "type": 3,
-      "playerType": "2",
       "api": "https://xinliang.serv00.net/api.php/tvbox",
-      "searchable": 1,
-      "quickSearch": 1,
       "filterable": 1,
-      "ext": "https://xinliang.serv00.net"
+      "ext": {
+        "site_urls": [
+          "https://xinliang.serv00.net"
+        ],
+        "url_key": "zijian"
+      }
     },
     {
       "key": "豆瓣",
