@@ -93,13 +93,14 @@
       }
     },
     {
-  "key": "zijiane",
+  "key": "maccms_vod",
   "name": "🐲┃自建┃沙师弟影视",
   "type": 1,
   "api": "https://xinliang.serv00.net/api.php/tvbox",
   "searchable": 1,
   "quickSearch": 1,
-  "filterable": 1
+  "filterable": 1,
+  "changeable": 1 // 1为可切换，0为不可切换
    },
     {
       "key": "潮流",
