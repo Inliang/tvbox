@@ -96,7 +96,7 @@
   "key": "maccms_vod",
   "name": "🐲┃自建┃沙师弟影视",
   "type": 1,
-  "api": "https://xinliang.serv00.net/api.php/tvbox",
+  "api": "https://xinliang.serv00.net/api.php/provide/vod",
   "searchable": 1,
   "quickSearch": 1,
   "filterable": 1,
