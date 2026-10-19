@@ -234,16 +234,22 @@ def main():
             # probe() 内部已经做过"拿不到确定结论就再采一次"，
             # 这里不要再叠一层重试，否则最坏情况会打 4 次，把构建拖成龟速。
             r = probe(url)
-            # GitHub raw 在国内经常超时，回退到 jsdelivr 镜像验证内容本身是否正常
+            # raw 直连不通时，用 jsdelivr 侧证一下"这份配置本身是好的"。
+            # 但**只写 note，不改 state**：用户复制走的是 raw 地址，
+            # 卡片上那个绿点必须由 raw 自己挣来。让镜像替源站背书，
+            # 就是今天修了一整天的"假可用"（ghp.ci 那 6 条、dep 站的 5 条）。
             if r["state"] == "fail" and "raw.githubusercontent.com" in url:
                 alt = jsdelivr(url)
                 if alt:
                     r3 = probe(alt)
                     if r3["state"] == "ok":
-                        r3["checkedVia"] = alt
-                        r3["note"] = (c.get("note") or "") + " · 直连超时，经 jsdelivr 验证可用"
-                        r = r3
+                        r["checkedVia"] = alt
+                        r["note"] = (c.get("note") or "") + \
+                            " · 直连失败，经 jsdelivr 侧证内容正常（卡片状态仍以直连为准）"
             c.update(r)
+            c["checkedAt"] = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
+            return c
+
             c["checkedAt"] = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
             return c
 
@@ -351,12 +357,30 @@ def main():
     sites_doc["contentHash"] = content_hash
     cfgs_doc["contentHash"] = content_hash
 
+    # 上游血缘：记录本次构建读的是哪一版 exports。
+    # 没有这个，构建就会静默吃过期上游、并产出一个"看起来正常"的结果——
+    # 今天已经栽过一次（docs 比 exports 早两分钟，丢了 mirrorHosts 与 13 个站）。
+    # 校验只能比 hash，不能比时间戳：时间戳会因为时区、秒级截断、机器时钟而骗人。
+    sites_doc["sourceContentHash"] = exports_sites.get("contentHash", "")
+    cfgs_doc["sourceContentHash"] = (load(os.path.join(EXPORTS, "configs.json")) or {}).get("contentHash", "")
+
     sites_doc["generatedAt"] = stamp
     cfgs_doc["generatedAt"] = stamp
+
+    # 关键字段缺失就拒绝写盘。宁可构建失败，也不要产出"字段不见了但界面照常"的假正常。
+    REQUIRED_TOP = ("generatedAt", "total", "mirrorHosts", "items", "contentHash")
+    missing = [k for k in REQUIRED_TOP if k not in sites_doc]
+    if missing:
+        print(f"[FATAL] sites_doc 缺关键字段 {missing}，拒绝写盘。"
+              f"通常是上游 exports 版本不对或字段被改名。")
+        return 3
+
     dump(os.path.join(DATA_JSON, "sites.json"), sites_doc)
     dump(os.path.join(DATA_JSON, "configs.json"), cfgs_doc)
     print(f"[build] contentHash = {content_hash}"
           f"（同一份 exports 应恒定，与 generatedAt 无关）")
+    print(f"[build] 上游 exports.contentHash = {sites_doc['sourceContentHash']}"
+          f"（与 docs 的 contentHash 不同是正常的：前者是数据层，后者含构建期加工）")
 
     # ---------- 5) 内联兜底 ----------
     fb = {"configs": cfgs_doc, "sites": sites_doc, "builtAt": stamp}

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T17:08:54+08:00",
+  "generatedAt": "2026-10-19T17:26:46+08:00",
   "total": 39,
   "categories": [
     "综合",
@@ -42,12 +42,12 @@
       "innerUrls": 0,
       "mirrors": [],
       "source": "Inliang/tvbox",
-      "state": "reachable",
-      "confidence": "uncertain",
+      "state": "ok",
+      "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1176,
-      "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:44+08:00"
+      "probeMs": 1195,
+      "probeSiteCount": 142,
+      "checkedAt": "2026-10-19T17:26:35+08:00"
     },
     {
       "id": "qist-jsm",
@@ -76,9 +76,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1361,
+      "probeMs": 1363,
       "probeSiteCount": 152,
-      "checkedAt": "2026-10-19T17:08:44+08:00"
+      "checkedAt": "2026-10-19T17:26:36+08:00"
     },
     {
       "id": "liucn-m",
@@ -104,9 +104,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 794,
+      "probeMs": 983,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:44+08:00"
+      "checkedAt": "2026-10-19T17:26:35+08:00"
     },
     {
       "id": "tushen6-caiji",
@@ -132,9 +132,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1350,
+      "probeMs": 1272,
       "probeSiteCount": 47,
-      "checkedAt": "2026-10-19T17:08:44+08:00"
+      "checkedAt": "2026-10-19T17:26:35+08:00"
     },
     {
       "id": "maoystv-000",
@@ -160,9 +160,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1286,
+      "probeMs": 1151,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:45+08:00"
+      "checkedAt": "2026-10-19T17:26:36+08:00"
     },
     {
       "id": "guot55-ygmax",
@@ -188,9 +188,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1228,
+      "probeMs": 655,
       "probeSiteCount": 77,
-      "checkedAt": "2026-10-19T17:08:45+08:00"
+      "checkedAt": "2026-10-19T17:26:36+08:00"
     },
     {
       "id": "szyyds-x",
@@ -216,9 +216,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 283,
+      "probeMs": 300,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:45+08:00"
+      "checkedAt": "2026-10-19T17:26:36+08:00"
     },
     {
       "id": "qist-99188",
@@ -244,9 +244,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1227,
+      "probeMs": 1248,
       "probeSiteCount": 64,
-      "checkedAt": "2026-10-19T17:08:45+08:00"
+      "checkedAt": "2026-10-19T17:26:37+08:00"
     },
     {
       "id": "niubihu-1",
@@ -272,9 +272,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1317,
+      "probeMs": 1105,
       "probeSiteCount": 134,
-      "checkedAt": "2026-10-19T17:08:46+08:00"
+      "checkedAt": "2026-10-19T17:26:37+08:00"
     },
     {
       "id": "qist-9918",
@@ -300,9 +300,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1207,
+      "probeMs": 1206,
       "probeSiteCount": 61,
-      "checkedAt": "2026-10-19T17:08:46+08:00"
+      "checkedAt": "2026-10-19T17:26:37+08:00"
     },
     {
       "id": "qist-dianshi",
@@ -328,9 +328,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1301,
+      "probeMs": 1276,
       "probeSiteCount": 153,
-      "checkedAt": "2026-10-19T17:08:47+08:00"
+      "checkedAt": "2026-10-19T17:26:38+08:00"
     },
     {
       "id": "qist-0825",
@@ -356,9 +356,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1247,
+      "probeMs": 1222,
       "probeSiteCount": 135,
-      "checkedAt": "2026-10-19T17:08:47+08:00"
+      "checkedAt": "2026-10-19T17:26:38+08:00"
     },
     {
       "id": "chitue-dongli",
@@ -384,9 +384,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1277,
+      "probeMs": 1330,
       "probeSiteCount": 93,
-      "checkedAt": "2026-10-19T17:08:47+08:00"
+      "checkedAt": "2026-10-19T17:26:38+08:00"
     },
     {
       "id": "qist-0827",
@@ -414,9 +414,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1229,
+      "probeMs": 1210,
       "probeSiteCount": 33,
-      "checkedAt": "2026-10-19T17:08:47+08:00"
+      "checkedAt": "2026-10-19T17:26:38+08:00"
     },
     {
       "id": "gao-0821",
@@ -442,9 +442,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1271,
+      "probeMs": 1243,
       "probeSiteCount": 86,
-      "checkedAt": "2026-10-19T17:08:48+08:00"
+      "checkedAt": "2026-10-19T17:26:39+08:00"
     },
     {
       "id": "252035-fongmi",
@@ -470,9 +470,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1399,
+      "probeMs": 2722,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:48+08:00"
+      "checkedAt": "2026-10-19T17:26:41+08:00"
     },
     {
       "id": "qist-0821",
@@ -498,9 +498,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1209,
+      "probeMs": 1246,
       "probeSiteCount": 86,
-      "checkedAt": "2026-10-19T17:08:48+08:00"
+      "checkedAt": "2026-10-19T17:26:39+08:00"
     },
     {
       "id": "guot55-vip2",
@@ -526,9 +526,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1095,
+      "probeMs": 1109,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:48+08:00"
+      "checkedAt": "2026-10-19T17:26:40+08:00"
     },
     {
       "id": "dxawi",
@@ -554,9 +554,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 537,
+      "probeMs": 604,
       "probeSiteCount": 48,
-      "checkedAt": "2026-10-19T17:08:48+08:00"
+      "checkedAt": "2026-10-19T17:26:39+08:00"
     },
     {
       "id": "fish2018-ol-all",
@@ -583,9 +583,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1218,
+      "probeMs": 1228,
       "probeSiteCount": 24,
-      "checkedAt": "2026-10-19T17:08:49+08:00"
+      "checkedAt": "2026-10-19T17:26:41+08:00"
     },
     {
       "id": "fish2018-ol-tvbox",
@@ -612,10 +612,10 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1209,
+      "probeMs": 1135,
       "probeSiteCount": 0,
       "error": "no_sites",
-      "checkedAt": "2026-10-19T17:08:50+08:00"
+      "checkedAt": "2026-10-19T17:26:41+08:00"
     },
     {
       "id": "niubihu-tv8",
@@ -642,9 +642,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1250,
+      "probeMs": 1203,
       "probeSiteCount": 16,
-      "checkedAt": "2026-10-19T17:08:50+08:00"
+      "checkedAt": "2026-10-19T17:26:41+08:00"
     },
     {
       "id": "noimank-muti",
@@ -673,9 +673,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1025,
+      "probeMs": 814,
       "probeSiteCount": 14,
-      "checkedAt": "2026-10-19T17:08:50+08:00"
+      "checkedAt": "2026-10-19T17:26:41+08:00"
     },
     {
       "id": "qist-0707",
@@ -702,9 +702,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1178,
+      "probeMs": 967,
       "probeSiteCount": 1,
-      "checkedAt": "2026-10-19T17:08:51+08:00"
+      "checkedAt": "2026-10-19T17:26:42+08:00"
     },
     {
       "id": "tushen6-lmw",
@@ -731,9 +731,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1160,
+      "probeMs": 1213,
       "probeSiteCount": 16,
-      "checkedAt": "2026-10-19T17:08:51+08:00"
+      "checkedAt": "2026-10-19T17:26:42+08:00"
     },
     {
       "id": "hccx-tvbox",
@@ -759,9 +759,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1215,
+      "probeMs": 900,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:51+08:00"
+      "checkedAt": "2026-10-19T17:26:42+08:00"
     },
     {
       "id": "qist-367",
@@ -787,9 +787,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1265,
+      "probeMs": 1319,
       "probeSiteCount": 106,
-      "checkedAt": "2026-10-19T17:08:51+08:00"
+      "checkedAt": "2026-10-19T17:26:43+08:00"
     },
     {
       "id": "qist-xyq",
@@ -817,9 +817,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1230,
+      "probeMs": 1069,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:52+08:00"
+      "checkedAt": "2026-10-19T17:26:43+08:00"
     },
     {
       "id": "2hacc-oktv",
@@ -847,9 +847,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1183,
+      "probeMs": 1184,
       "probeSiteCount": 41,
-      "checkedAt": "2026-10-19T17:08:52+08:00"
+      "checkedAt": "2026-10-19T17:26:43+08:00"
     },
     {
       "id": "xyq-tvbox",
@@ -875,9 +875,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1063,
+      "probeMs": 1064,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:08:52+08:00"
+      "checkedAt": "2026-10-19T17:26:43+08:00"
     },
     {
       "id": "gao-0826",
@@ -903,9 +903,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1214,
+      "probeMs": 1186,
       "probeSiteCount": 51,
-      "checkedAt": "2026-10-19T17:08:52+08:00"
+      "checkedAt": "2026-10-19T17:26:44+08:00"
     },
     {
       "id": "tushen6-tvbox",
@@ -931,9 +931,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1047,
+      "probeMs": 1243,
       "probeSiteCount": 33,
-      "checkedAt": "2026-10-19T17:08:53+08:00"
+      "checkedAt": "2026-10-19T17:26:44+08:00"
     },
     {
       "id": "qist-js",
@@ -961,9 +961,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1268,
+      "probeMs": 1125,
       "probeSiteCount": 298,
-      "checkedAt": "2026-10-19T17:08:53+08:00"
+      "checkedAt": "2026-10-19T17:26:44+08:00"
     },
     {
       "id": "lushunming",
@@ -989,9 +989,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1644,
+      "probeMs": 1535,
       "probeSiteCount": 44,
-      "checkedAt": "2026-10-19T17:08:53+08:00"
+      "checkedAt": "2026-10-19T17:26:45+08:00"
     },
     {
       "id": "yingm-dm",
@@ -1017,9 +1017,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 158,
+      "probeMs": 160,
       "probeSiteCount": 27,
-      "checkedAt": "2026-10-19T17:08:52+08:00"
+      "checkedAt": "2026-10-19T17:26:44+08:00"
     },
     {
       "id": "9280-kstore",
@@ -1045,9 +1045,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 172,
+      "probeMs": 664,
       "probeSiteCount": 99,
-      "checkedAt": "2026-10-19T17:08:52+08:00"
+      "checkedAt": "2026-10-19T17:26:45+08:00"
     },
     {
       "id": "9763-aowu",
@@ -1073,9 +1073,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 167,
+      "probeMs": 95,
       "probeSiteCount": 76,
-      "checkedAt": "2026-10-19T17:08:53+08:00"
+      "checkedAt": "2026-10-19T17:26:44+08:00"
     },
     {
       "id": "qist-0826",
@@ -1101,9 +1101,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1222,
+      "probeMs": 1702,
       "probeSiteCount": 54,
-      "checkedAt": "2026-10-19T17:08:54+08:00"
+      "checkedAt": "2026-10-19T17:26:46+08:00"
     },
     {
       "id": "qist-fty",
@@ -1129,11 +1129,12 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1221,
+      "probeMs": 518,
       "probeSiteCount": 49,
-      "checkedAt": "2026-10-19T17:08:54+08:00"
+      "checkedAt": "2026-10-19T17:26:45+08:00"
     }
   ],
-  "contentHash": "70de3871bddd",
-  "schema": 3
+  "contentHash": "864037513535",
+  "schema": 3,
+  "sourceContentHash": "ea6e0405b2df312d"
 }

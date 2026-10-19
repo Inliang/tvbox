@@ -1,0 +1,731 @@
+{
+  "method": "同一 URL 连试两次，间隔 1s；任一成功记为 alive",
+  "count": 28,
+  "aliveCount": 0,
+  "items": [
+    {
+      "name": "⚡┃闪电┃优汐",
+      "tier": "D",
+      "included": true,
+      "url": "https://shandian.blog/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 8410,
+        "err": "TimeoutError:The read operation timed out"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 8386,
+        "err": "TimeoutError:The read operation timed out"
+      }
+    },
+    {
+      "name": "🐇┃兔子┃APP",
+      "tier": "D",
+      "included": true,
+      "url": "https://dyyztvappapigoodgx.68.gy:12689/ciwk28vu38io8/apiurl.txt",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 857,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 806,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "影视 • 小绵阳",
+      "tier": "D",
+      "included": false,
+      "url": "https://vs.okcdn100.top/api.php/provide/vod",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 597,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 525,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "海外看┃采集",
+      "tier": "D",
+      "included": false,
+      "url": "https://haiwaikan.com/api.php/provide/vod",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 907,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 864,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      }
+    },
+    {
+      "name": "明星┃MV",
+      "tier": "D",
+      "included": false,
+      "url": "https://notabug.org/fantaiying/ext/raw/main/MTV.json",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 1075,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 652,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🅱哔哔合集┃弹幕",
+      "tier": "D",
+      "included": false,
+      "url": "https://notabug.org/fantaiying/ext/raw/main/bilibili.json",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 706,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 663,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🅱哔哔演唱会┃弹幕",
+      "tier": "D",
+      "included": false,
+      "url": "https://notabug.org/fantaiying/ext/raw/main/biliych.json",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 704,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 678,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "📚少儿┃教育",
+      "tier": "D",
+      "included": false,
+      "url": "https://notabug.org/fantaiying/ext/raw/main/少儿教育.json",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 27,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 0,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      }
+    },
+    {
+      "name": "📚小学┃课堂",
+      "tier": "D",
+      "included": false,
+      "url": "https://notabug.org/fantaiying/ext/raw/main/小学课堂.json",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 0,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 0,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      }
+    },
+    {
+      "name": "📚初中┃课堂",
+      "tier": "D",
+      "included": false,
+      "url": "https://notabug.org/fantaiying/ext/raw/main/初中课堂.json",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 0,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 0,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      }
+    },
+    {
+      "name": "📚高中┃课堂",
+      "tier": "D",
+      "included": false,
+      "url": "https://notabug.org/fantaiying/ext/raw/main/高中课堂.json",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 0,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 0,
+        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
+      }
+    },
+    {
+      "name": "🌙555（APP）",
+      "tier": "D",
+      "included": false,
+      "url": "https://555dy3.com/api.php/app/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 787,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 553,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🌙空气屋（APP）",
+      "tier": "D",
+      "included": false,
+      "url": "https://www.airfun.fun/xgapp.php/v2/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 624,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 612,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🌙速看100（APP）",
+      "tier": "D",
+      "included": false,
+      "url": "https://sk100.tv/api.php/app/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 403,
+        "ms": 852,
+        "err": "http_403"
+      },
+      "try2": {
+        "ok": false,
+        "status": 403,
+        "ms": 1563,
+        "err": "http_403"
+      }
+    },
+    {
+      "name": "🌙木白（APP）",
+      "tier": "D",
+      "included": false,
+      "url": "https://www.chiguafilm.com/api.php/v1.vod",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 1299,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 1098,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🌙少泽影客（APP）",
+      "tier": "D",
+      "included": false,
+      "url": "https://yk.shaozeyy.com/api.php/app/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 379,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 910,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🌙映迷（APP）",
+      "tier": "D",
+      "included": false,
+      "url": "https://www.inmi.app/xgapp.php/v1/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 514,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 548,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "👁️‍🗨️快看",
+      "tier": "D",
+      "included": false,
+      "url": "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 374,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 394,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "💝分享起跑",
+      "tier": "D",
+      "included": false,
+      "url": "https://qpcj.69mini.com/api.php/app/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 224,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 186,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🌸｜曼波｜动漫",
+      "tier": "D",
+      "included": false,
+      "url": "https://app.omofun1.top",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 7942,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 693,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🐼布雷｜APP",
+      "tier": "D",
+      "included": false,
+      "url": "https://ceshi307386.oss-cn-beijing.aliyuncs.com/blurl.txt",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 138,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 128,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "🌝┃益达┃App",
+      "tier": "D",
+      "included": false,
+      "url": "https://myd666.tv/lvdou_api.php/v1.vod",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 884,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 877,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      }
+    },
+    {
+      "name": "🌪️暴风影音",
+      "tier": "D",
+      "included": false,
+      "url": "https://app.bfzyapi.com/api.php/provide/vod/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 1309,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 1680,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "👓视觉┃BPQ",
+      "tier": "D",
+      "included": false,
+      "url": "https://www.3ayy.com",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 880,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 855,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      }
+    },
+    {
+      "name": "雷蒙影视 | 🧲BT天堂(XBPQ)",
+      "tier": "D",
+      "included": false,
+      "url": "https://www.bttt11.com",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 912,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 878,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      }
+    },
+    {
+      "name": "💢骚火",
+      "tier": "D",
+      "included": false,
+      "url": "https://hhjx.hhplayer.com/api.php;post;url=+var",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": 404,
+        "ms": 412,
+        "err": "http_404"
+      },
+      "try2": {
+        "ok": false,
+        "status": 404,
+        "ms": 402,
+        "err": "http_404"
+      }
+    },
+    {
+      "name": "快车资源",
+      "tier": "D",
+      "included": false,
+      "url": "https://caiji.kczyapi.com/api.php/provide/vod/",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 874,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 891,
+        "err": "RemoteDisconnected:Remote end closed connection without response"
+      }
+    },
+    {
+      "name": "Ⓜ️米搜丨搜索",
+      "tier": "D",
+      "included": false,
+      "url": "https://misoso.shop",
+      "alive": false,
+      "try1": {
+        "ok": false,
+        "status": null,
+        "ms": 8521,
+        "err": "TimeoutError:The read operation timed out"
+      },
+      "try2": {
+        "ok": false,
+        "status": null,
+        "ms": 8509,
+        "err": "TimeoutError:The read operation timed out"
+      }
+    }
+  ],
+  "ua_retest": {
+    "method": "同一 URL 用 okhttp/3.12.13 与浏览器 UA 各请求一次，timeout=15，直连",
+    "items": [
+      {
+        "name": "⚡┃闪电┃优汐",
+        "url": "https://shandian.blog/",
+        "okhttp": "522/10876ms",
+        "moz": "522/10794ms",
+        "note": "CDN 到源站超时"
+      },
+      {
+        "name": "Ⓜ️米搜丨搜索",
+        "url": "https://misoso.shop",
+        "okhttp": "TimeoutError/15560ms",
+        "moz": "TimeoutError/16643ms",
+        "note": "两次都超时"
+      },
+      {
+        "name": "海外看┃采集",
+        "url": "https://haiwaikan.com/api.php/provide/vod",
+        "okhttp": "RemoteDisconnected/893ms",
+        "moz": "200/867ms/300B",
+        "alive": true
+      },
+      {
+        "name": "🌝┃益达┃App",
+        "url": "https://myd666.tv/lvdou_api.php/v1.vod",
+        "okhttp": "RemoteDisconnected/899ms",
+        "moz": "RemoteDisconnected/888ms"
+      },
+      {
+        "name": "👓视觉┃BPQ",
+        "url": "https://www.3ayy.com",
+        "okhttp": "RemoteDisconnected/842ms",
+        "moz": "200/881ms/300B",
+        "alive": true
+      },
+      {
+        "name": "雷蒙影视 | 🧲BT天堂(XBPQ)",
+        "url": "https://www.bttt11.com",
+        "okhttp": "RemoteDisconnected/862ms",
+        "moz": "200/894ms/300B",
+        "alive": true
+      },
+      {
+        "name": "快车资源",
+        "url": "https://caiji.kczyapi.com/api.php/provide/vod/",
+        "okhttp": "RemoteDisconnected/861ms",
+        "moz": "200/845ms/300B",
+        "alive": true
+      },
+      {
+        "name": "🌙速看100（APP）",
+        "url": "https://sk100.tv/api.php/app/",
+        "okhttp": "403/828ms",
+        "moz": "404/1583ms"
+      }
+    ],
+    "notabug_encoded": [
+      {
+        "name": "📚少儿┃教育",
+        "url": "https://notabug.org/fantaiying/ext/raw/main/%E5%B0%91%E5%84%BF%E6%95%99%E8%82%B2.json",
+        "result": "404/1906ms"
+      },
+      {
+        "name": "📚小学┃课堂",
+        "url": "https://notabug.org/fantaiying/ext/raw/main/%E5%B0%8F%E5%AD%A6%E8%AF%BE%E5%A0%82.json",
+        "result": "404/818ms"
+      },
+      {
+        "name": "📚初中┃课堂",
+        "url": "https://notabug.org/fantaiying/ext/raw/main/%E5%88%9D%E4%B8%AD%E8%AF%BE%E5%A0%82.json",
+        "result": "404/648ms"
+      },
+      {
+        "name": "📚高中┃课堂",
+        "url": "https://notabug.org/fantaiying/ext/raw/main/%E9%AB%98%E4%B8%AD%E8%AF%BE%E5%A0%82.json",
+        "result": "404/814ms"
+      }
+    ]
+  },
+  "classification": {
+    "summary": {
+      "total": 28,
+      "alive_ua_blocked": 4,
+      "confirmed_dead_404": 16,
+      "insufficient_evidence": 4,
+      "probe_bug_unicode": 4
+    },
+    "detail": {
+      "alive_ua_blocked": [
+        "海外看┃采集",
+        "👓视觉┃BPQ",
+        "雷蒙影视 | 🧲BT天堂(XBPQ)",
+        "快车资源"
+      ],
+      "confirmed_dead_404": [
+        "🐇┃兔子┃APP",
+        "影视 • 小绵阳",
+        "明星┃MV",
+        "🅱哔哔合集┃弹幕",
+        "🅱哔哔演唱会┃弹幕",
+        "🌙555（APP）",
+        "🌙空气屋（APP）",
+        "🌙木白（APP）",
+        "🌙少泽影客（APP）",
+        "🌙映迷（APP）",
+        "👁️‍🗨️快看",
+        "💝分享起跑",
+        "🌸｜曼波｜动漫",
+        "🐼布雷｜APP",
+        "🌪️暴风影音",
+        "💢骚火"
+      ],
+      "insufficient_evidence": [
+        "⚡┃闪电┃优汐(522)",
+        "Ⓜ️米搜丨搜索(timeout)",
+        "🌝┃益达┃App(conn)",
+        "🌙速看100（APP）(403/404)"
+      ],
+      "probe_bug_unicode": [
+        "📚少儿┃教育",
+        "📚小学┃课堂",
+        "📚初中┃课堂",
+        "📚高中┃课堂"
+      ],
+      "probe_bug_note": "UnicodeEncodeError 表示请求根本没发出；百分号编码后重测均 404，故结论碰巧成立，但方法错误，下次会误杀中文路径的活站点"
+    }
+  },
+  "config_truncation": {
+    "observedAt": "2026-10-19T17:20+08:00",
+    "source": "docs/data/configs.json generatedAt 2026-10-19T17:08:54+08:00",
+    "finding": "7 条 raw.githubusercontent.com 配置 state=reachable/error=not_json，probeMs 全部 794–1399ms，远低于 timeout=10s，说明是在 1.2 秒左右拿到不完整 body 后 json 解析失败，不是超时",
+    "rawConfigs": {
+      "total": 31,
+      "ok": 24,
+      "reachable": 7,
+      "fail": 0
+    },
+    "items": [
+      {
+        "id": "github-inliang",
+        "ms": 1176
+      },
+      {
+        "id": "maoystv-000",
+        "ms": 1286
+      },
+      {
+        "id": "guot55-vip2",
+        "ms": 1095
+      },
+      {
+        "id": "hccx-tvbox",
+        "ms": 1215
+      },
+      {
+        "id": "qist-xyq",
+        "ms": 1230
+      },
+      {
+        "id": "xyq-tvbox",
+        "ms": 1063
+      },
+      {
+        "id": "liucn-m",
+        "ms": 794
+      }
+    ],
+    "bodyCheck": {
+      "url": "https://raw.githubusercontent.com/Inliang/tvbox/main/zijian.json",
+      "raw": {
+        "status": 200,
+        "ms": 84783,
+        "bytes": 41157,
+        "contentLength": "41157",
+        "contentType": "text/plain; charset=utf-8",
+        "jsonOk": true,
+        "sites": 142
+      },
+      "jsdelivr": {
+        "status": 200,
+        "ms": 768,
+        "bytes": 41157,
+        "contentType": "application/json; charset=utf-8",
+        "jsonOk": true,
+        "sites": 142,
+        "byteIdentical": true
+      }
+    },
+    "verdict": "内容层无问题；not_json 是读取不完整的误判。建议把截断与真正的非 JSON 响应分开判定，且 jsdelivr 回退只写 checkedVia、不改 state"
+  }
+}
