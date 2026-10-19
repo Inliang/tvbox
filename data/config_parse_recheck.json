@@ -214,5 +214,13 @@
         "head": "{\n    \"wallpaper\": \"https://wp.upx8.com/api.php\",\n    \"spide"
       }
     }
-  ]
+  ],
+  "measurement_source": {
+    "raw": "data/config_parse_raw.json",
+    "generatedBy": "scripts/recheck_config_parse.py",
+    "note": "本文件是首次测量快照（含人工修正的 kind 命名）；权威重测量在 raw 文件。脚本每次重跑只覆盖 raw。",
+    "curatedKeys": [
+      "kinds"
+    ]
+  }
 }

@@ -87,14 +87,16 @@ a{color:var(--accent);text-decoration:none}
 
 /* ============ sticky: search + status chips ============ */
 .sticky{position:sticky;top:0;z-index:40;background:var(--bg);padding:10px 0 8px}
-.searchbox{position:relative;display:flex;align-items:center;margin:0 16px;height:44px;padding:0 4px 0 38px;
+.searchbox{position:relative;display:flex;align-items:center;margin:0 16px;height:44px;padding:0 4px 0 0;
   background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-2)}
 .searchbox:focus-within{border-color:var(--accent);background:var(--surface)}
-.searchbox>.ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-3);width:18px;height:18px}
-.searchbox input{flex:1;min-width:0;height:100%;border:0;background:none;color:var(--text);font-size:14px;outline:none}
+/* 图标只负责画，不接点击：否则放大镜压在 input 上，点它命中 svg，输入框不聚焦。
+   左侧留白改由 input 自己的 padding-left 承担，这样整块 343×44 都是输入热区。 */
+.searchbox>.ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-3);width:18px;height:18px;pointer-events:none}
+.searchbox input{flex:1;min-width:0;height:100%;border:0;background:none;color:var(--text);font-size:14px;outline:none;padding-left:38px}
 .searchbox input::placeholder{color:var(--text-3)}
 .searchbox input::-webkit-search-cancel-button{display:none}
-.btn-clear{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:6px;color:var(--text-3)}
+.btn-clear{display:none;align-items:center;justify-content:center;width:36px;height:42px;border-radius:6px;color:var(--text-3)}
 .searchbox.has-val .btn-clear{display:inline-flex}
 
 .chipbar{display:flex;gap:8px;margin-top:8px;padding:0 16px 2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -357,11 +359,23 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
   .btn-link{height:44px;padding:0 8px}
   .btn-sm{height:44px}
   .mirror-head,.mirror-row{min-height:44px}
+  /* URL 的「展开/收起」是冗余入口（整块 .url 本身可选中复制），抬到 24px 最小线即可，
+     不给它 44：517 张卡每张 +20px 划不来。 */
+  .btn-expand{padding:4px 6px}
 
   /* 上面 36→44 多出 16px，吸顶条仍须 ≤110：
      原来 10+8 留白 + 44 + 8 + 36 + 2 = 108；现在 6+0 + 44 + 6 + 44 + 2 = 102（= --sticky-h） */
   .sticky{padding:6px 0 0}
   .chipbar{margin-top:6px}
+
+  /* 卡片标题（点开详情）原本只有 20px 高：用 padding 把点击区抬到 44，再用负 margin 抵消，
+     卡片高度与页面总高一个像素都不变。z-index 必须加——否则下沿被后面 DOM 顺序的
+     .card-sub 盖住，elementFromPoint 命中的是 SPAN，看着改好了其实点不动。
+     代价：与副行顶部重叠的 9px 归标题（副行本身不可点，方向是"更容易点中"）。 */
+  .card--site .card-name{padding:12px 0;margin:-12px 0;position:relative;z-index:1}
+  /* 筛选抽屉里的选项按钮：34px，点起来最容易误触（站点 Tab 6 个 / 配置 Tab 34 个）。
+     抽屉是固定高度可滚动，涨 20px 不影响视口。 */
+  .opt{height:44px}
 }
 </style>
 <script>
@@ -1056,7 +1070,7 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
              (s.api||'').toLowerCase().indexOf(needle)>=0;
     }).length : cfgSites.length;
     if(hits){
-      var hb = h('button',{class:'btn-link', type:'button', style:'height:28px;font-size:12px'},
+      var hb = h('button',{class:'btn-link', type:'button', style:'font-size:12px'},
         needle ? ('内含 '+hits+' 个匹配站点') : ('查看该配置的 '+hits+' 个站点'), icon('i-chevron'));
       hb.addEventListener('click', function(){
         sourceFilter = c.id; groupFilter='all'; typeFilter='all'; stFilter='all';
@@ -1353,7 +1367,7 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
 
     var sc = rows;
     if(sc){
-      var link = h('button',{class:'btn-link', type:'button', style:'height:40px;font-size:13px'}, '查看此配置包含的 '+sc+' 个站点', icon('i-chevron'));
+      var link = h('button',{class:'btn-link', type:'button', style:'font-size:13px'}, '查看此配置包含的 '+sc+' 个站点', icon('i-chevron'));
       link.addEventListener('click', function(){
         closeSheet();
         sourceFilter = c.id; groupFilter='all'; typeFilter='all'; stFilter='all'; q='';

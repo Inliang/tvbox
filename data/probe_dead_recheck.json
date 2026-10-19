@@ -1,14 +1,14 @@
 {
-  "method": "同一 URL 连试两次，间隔 1s；任一成功记为 alive",
+  "method": "同一 URL 连试两次，间隔 1s；任一成功记为 http_responded",
   "count": 28,
-  "aliveCount": 0,
+  "httpRespondedCount": 0,
   "items": [
     {
       "name": "⚡┃闪电┃优汐",
       "tier": "D",
       "included": true,
       "url": "https://shandian.blog/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -27,7 +27,7 @@
       "tier": "D",
       "included": true,
       "url": "https://dyyztvappapigoodgx.68.gy:12689/ciwk28vu38io8/apiurl.txt",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -46,7 +46,7 @@
       "tier": "D",
       "included": false,
       "url": "https://vs.okcdn100.top/api.php/provide/vod",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -65,7 +65,7 @@
       "tier": "D",
       "included": false,
       "url": "https://haiwaikan.com/api.php/provide/vod",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -84,7 +84,7 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/MTV.json",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -103,7 +103,7 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/bilibili.json",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -122,7 +122,7 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/biliych.json",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -141,7 +141,7 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/少儿教育.json",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -160,7 +160,7 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/小学课堂.json",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -179,7 +179,7 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/初中课堂.json",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -198,7 +198,7 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/高中课堂.json",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -217,7 +217,7 @@
       "tier": "D",
       "included": false,
       "url": "https://555dy3.com/api.php/app/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -236,7 +236,7 @@
       "tier": "D",
       "included": false,
       "url": "https://www.airfun.fun/xgapp.php/v2/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -255,7 +255,7 @@
       "tier": "D",
       "included": false,
       "url": "https://sk100.tv/api.php/app/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 403,
@@ -274,7 +274,7 @@
       "tier": "D",
       "included": false,
       "url": "https://www.chiguafilm.com/api.php/v1.vod",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -293,7 +293,7 @@
       "tier": "D",
       "included": false,
       "url": "https://yk.shaozeyy.com/api.php/app/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -312,7 +312,7 @@
       "tier": "D",
       "included": false,
       "url": "https://www.inmi.app/xgapp.php/v1/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -331,7 +331,7 @@
       "tier": "D",
       "included": false,
       "url": "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -350,7 +350,7 @@
       "tier": "D",
       "included": false,
       "url": "https://qpcj.69mini.com/api.php/app/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -369,7 +369,7 @@
       "tier": "D",
       "included": false,
       "url": "https://app.omofun1.top",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -388,7 +388,7 @@
       "tier": "D",
       "included": false,
       "url": "https://ceshi307386.oss-cn-beijing.aliyuncs.com/blurl.txt",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -407,7 +407,7 @@
       "tier": "D",
       "included": false,
       "url": "https://myd666.tv/lvdou_api.php/v1.vod",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -426,7 +426,7 @@
       "tier": "D",
       "included": false,
       "url": "https://app.bfzyapi.com/api.php/provide/vod/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -445,7 +445,7 @@
       "tier": "D",
       "included": false,
       "url": "https://www.3ayy.com",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -464,7 +464,7 @@
       "tier": "D",
       "included": false,
       "url": "https://www.bttt11.com",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -483,7 +483,7 @@
       "tier": "D",
       "included": false,
       "url": "https://hhjx.hhplayer.com/api.php;post;url=+var",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": 404,
@@ -502,7 +502,7 @@
       "tier": "D",
       "included": false,
       "url": "https://caiji.kczyapi.com/api.php/provide/vod/",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -521,7 +521,7 @@
       "tier": "D",
       "included": false,
       "url": "https://misoso.shop",
-      "alive": false,
+      "http_responded": false,
       "try1": {
         "ok": false,
         "status": null,
@@ -558,7 +558,7 @@
         "url": "https://haiwaikan.com/api.php/provide/vod",
         "okhttp": "RemoteDisconnected/893ms",
         "moz": "200/867ms/300B",
-        "alive": true
+        "http_responded": true
       },
       {
         "name": "🌝┃益达┃App",
@@ -571,21 +571,21 @@
         "url": "https://www.3ayy.com",
         "okhttp": "RemoteDisconnected/842ms",
         "moz": "200/881ms/300B",
-        "alive": true
+        "http_responded": true
       },
       {
         "name": "雷蒙影视 | 🧲BT天堂(XBPQ)",
         "url": "https://www.bttt11.com",
         "okhttp": "RemoteDisconnected/862ms",
         "moz": "200/894ms/300B",
-        "alive": true
+        "http_responded": true
       },
       {
         "name": "快车资源",
         "url": "https://caiji.kczyapi.com/api.php/provide/vod/",
         "okhttp": "RemoteDisconnected/861ms",
         "moz": "200/845ms/300B",
-        "alive": true
+        "http_responded": true
       },
       {
         "name": "🌙速看100（APP）",
@@ -620,13 +620,13 @@
   "classification": {
     "summary": {
       "total": 28,
-      "alive_ua_blocked": 4,
+      "http_responded_ua_blocked": 4,
       "confirmed_dead_404": 16,
       "insufficient_evidence": 4,
       "probe_bug_unicode": 4
     },
     "detail": {
-      "alive_ua_blocked": [
+      "http_responded_ua_blocked": [
         "海外看┃采集",
         "👓视觉┃BPQ",
         "雷蒙影视 | 🧲BT天堂(XBPQ)",
@@ -663,7 +663,8 @@
         "📚高中┃课堂"
       ],
       "probe_bug_note": "UnicodeEncodeError 表示请求根本没发出；百分号编码后重测均 404，故结论碰巧成立，但方法错误，下次会误杀中文路径的活站点"
-    }
+    },
+    "summary_note": "http_responded 只表示 HTTP 有响应，不等于可用"
   },
   "config_parse": {
     "status": "superseded",
@@ -683,7 +684,7 @@
         "jsonc": 6,
         "bom": 1,
         "store_house": 1,
-        "invalid": 1
+        "strict_fail": 1
       },
       "items": [
         {
@@ -736,13 +737,199 @@
         },
         {
           "id": "guot55-vip2",
-          "kind": "invalid",
+          "kind": "strict_fail",
           "detail": "{\"key\":爱迪V2,...} 未加引号的 key",
           "sites": 144,
-          "exportsRows": 46
+          "exportsRows": 46,
+          "note": "未加引号的 key；仅表示我们这一侧严格解析失败，不推断客户端行为；该配置已抽出 46 条站进入 517"
         }
       ]
     },
-    "severity": "仅影响卡片状态文案；采集层 repair_json_text() 已宽容解析，站点均已进入 517，数据层无缺失"
+    "severity": "仅影响卡片状态文案；采集层 repair_json_text() 已宽容解析，站点均已进入 517，数据层无缺失",
+    "invisible_sites": {
+      "note": "非 ok 配置卡下方的站点行与 totalSites 的差有三种成因，不能统一说成去重",
+      "cases": [
+        {
+          "id": "liucn-m",
+          "declared": 234,
+          "dedupCandidates": null,
+          "pageRows": 98,
+          "cause": "跨配置去重"
+        },
+        {
+          "id": "hccx-tvbox",
+          "declared": 68,
+          "pageRows": 55,
+          "cause": "跨配置去重"
+        },
+        {
+          "id": "xyq-tvbox",
+          "declared": 48,
+          "dedupCandidates": 29,
+          "pageRows": 0,
+          "cause": "全部 E 档：class_missing 20 / api_not_class 8 / type_unsupported 1",
+          "detail": "类名不在已知清单或 api 指向本地 drpy2.min.js，未验证也未展示"
+        }
+      ],
+      "ui": {
+        "cardTip": "配置原文我们的严格解析读不全（注释 / BOM 等），这个标记只反映我们的解析口径，不代表配置不可用。",
+        "legend": "未列出的站点或因跨配置去重、或因类名 / 本地依赖无法映射。"
+      }
+    }
+  },
+  "rejections_breakdown": {
+    "closure": "2024 candidates - 517 exports = 1507",
+    "groups": [
+      {
+        "label": "类名不在已知 spider 清单",
+        "count": 869,
+        "codes": [
+          "class_missing"
+        ]
+      },
+      {
+        "label": "非站点类（推送/代理/市场）",
+        "count": 11,
+        "codes": [
+          "non_site_class"
+        ]
+      },
+      {
+        "label": "本地或相对路径依赖",
+        "count": 390,
+        "codes": [
+          "relpath_api",
+          "api_not_class",
+          "dep_local",
+          "dep_relpath"
+        ]
+      },
+      {
+        "label": "类型不支持（XML 采集）",
+        "count": 34,
+        "codes": [
+          "type_unsupported"
+        ]
+      },
+      {
+        "label": "需要远程 js",
+        "count": 175,
+        "codes": [
+          "remote_js"
+        ]
+      },
+      {
+        "label": "一次探测未取得响应",
+        "count": 28,
+        "codes": [
+          "probe_dead"
+        ]
+      }
+    ],
+    "sum": 1507,
+    "corrections": [
+      "reviewer 初版把本地依赖写成 414，实际 390（多算 24）",
+      "E 档 1456 里只有 869 是 class_missing，README 原句「1456 个站点引用了不存在的类」需改为 869"
+    ],
+    "probeDeadNote": "28 中 16 条双 UA 确认 404、4 条实为活站点（UA 层 RST）、4 条证据不足、4 条请求未发出（中文路径未编码）"
+  },
+  "reclassify_preview": {
+    "note": "4 条 HTTP 有响应的站点若修掉 probe_dead，按现行 classify_site() 的落点预演。不改变已冻结数据。",
+    "items": [
+      {
+        "name": "海外看┃采集",
+        "type": 1,
+        "api": "https://haiwaikan.com/api.php/provide/vod",
+        "now": "D/probe_dead",
+        "if_fixed": "Y",
+        "evidence": "浏览器 UA 200 932ms 4000B ctype=text/html，body 为 <title>Redirecting...</title>，非 JSON，达不到 A 档 confirmed_ok"
+      },
+      {
+        "name": "快车资源",
+        "type": 1,
+        "api": "https://caiji.kczyapi.com/api.php/provide/vod/",
+        "now": "D/probe_dead",
+        "if_fixed": "Y",
+        "evidence": "浏览器 UA 200 855ms 4000B text/html，JS 跳转页"
+      },
+      {
+        "name": "👓视觉┃BPQ",
+        "type": 3,
+        "api": "csp_XBPQ",
+        "ext_has_public_url": true,
+        "now": "D/probe_dead",
+        "if_fixed": "B"
+      },
+      {
+        "name": "雷蒙影视 | 🧲BT天堂(XBPQ)",
+        "type": 3,
+        "api": "csp_XBPQ",
+        "ext_has_public_url": true,
+        "now": "D/probe_dead",
+        "if_fixed": "B"
+      }
+    ],
+    "tier_delta": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "Y": 2,
+      "D": -4,
+      "exports": 521
+    },
+    "root_cause": "classify_site() 对 type3 在 B 判定之前执行 probe dead→D；但 B 档 370 条中 216 条为 none（从未探测）仍是 B，164 条 csp_XBPQ 中 162 条未受探测约束。同一类站点因是否被探测而分档，规则内部不一致。",
+    "v2_priority": [
+      "type3 去掉 probe dead→D（或降为 uncertain 保持 B）",
+      "probe_dead 收紧为双 UA 都 404",
+      "type1 的 HTML 跳转页单独记 html_page，不混入 not_json"
+    ],
+    "cluster_evidence": {
+      "finding": "4 条用浏览器 UA 复探全部返回同一个跳转模板",
+      "samples": [
+        {
+          "target": "https://haiwaikan.com/api.php/provide/vod",
+          "status": 200,
+          "ctype": "text/html",
+          "title": "Redirecting..."
+        },
+        {
+          "target": "https://caiji.kczyapi.com/api.php/provide/vod/",
+          "status": 200,
+          "ctype": "text/html",
+          "title": "Redirecting..."
+        },
+        {
+          "target": "https://www.3ayy.com",
+          "status": 200,
+          "ctype": "text/html",
+          "title": "Redirecting..."
+        },
+        {
+          "target": "https://www.bttt11.com",
+          "status": 200,
+          "ctype": "text/html",
+          "title": "Redirecting..."
+        }
+      ],
+      "implication": "这不是「站点正常、只是 UA 被拒」，而是域名被跳转接管。修 dead 定义后它们应从 D 出来，但没有一条可判为可用：2 条 type1 落 Y，2 条 type3 落 B（B 档语义即『无法验证』）。"
+    },
+    "http_responded_note": "http_responded:true 只表示 HTTP 有响应（拿到了状态码/body），不表示站点可用。本次 4 条全部返回 <title>Redirecting...</title> 的 JS 跳转页，域名活着但内容不可达。"
+  },
+  "field_notes": {
+    "http_responded": "只表示拿到了 HTTP 状态码与响应体，不表示站点可用。今天这 4 条全部返回 <title>Redirecting...</title> 跳转页。",
+    "cluster_evidence": "汇总字段旁边的聚类证据。读取时应先看这一簇的共同事实，不要把簇名或单个布尔值当逐条结论。"
+  },
+  "measurement_source": {
+    "raw": "data/probe_dead_raw.json",
+    "generatedBy": "scripts/recheck_dead.py",
+    "note": "raw 文件是 scripts/recheck_dead.py 的单 UA 原始测量，已知会低估：其中 4 条站点在浏览器 UA 下返回 200（首次测量记为无响应）。权威口径是本文件的 classification 字段，不是 raw。脚本每次重跑只覆盖 raw，并通过 curated_keys 守卫拒绝写入本文件。",
+    "curatedKeys": [
+      "classification",
+      "ua_retest",
+      "config_parse",
+      "rejections_breakdown",
+      "reclassify_preview",
+      "field_notes"
+    ]
   }
 }

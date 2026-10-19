@@ -19,7 +19,11 @@ from urllib.parse import urlsplit
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(BASE, "docs", "data", "configs.json")
-OUT = os.path.join(BASE, "data", "config_parse_recheck.json")
+# 测量与解释分开：本脚本只写原始测量结果，每次重跑覆盖。
+# 人工整理的解释层在 data/probe_dead_recheck.json 的 config_parse 段，
+# 首次测量快照在 data/config_parse_recheck.json，二者都不由本脚本写入。
+OUT = os.path.join(BASE, "data", "config_parse_raw.json")
+CURATED = os.path.join(BASE, "data", "config_parse_recheck.json")
 
 CTX = ssl.create_default_context()
 CTX.check_hostname = False
@@ -75,7 +79,7 @@ def try_parse(body):
         n = len(j.get("sites") or []) if isinstance(j, dict) else 0
         return ("jsonc_ok", {"bom": bom, "err": msg, "pos": pos}, n)
     except Exception as e2:
-        return ("still_fail", {"bom": bom, "err": msg, "pos": pos,
+        return ("strict_fail", {"bom": bom, "err": msg, "pos": pos,
                               "err2": str(e2)[:120]}, 0)
 
 
@@ -122,8 +126,17 @@ def main():
         print(f"  {r['id']:22s} {k:12s} "
               f"{d.get('declared')}/{d.get('received')} "
               f"sites={d.get('sites')} pos={(d.get('detail') or {}).get('pos')}", flush=True)
+    ts = __import__("datetime").datetime.now().astimezone().isoformat(timespec="seconds")
     out = {"method": "优先 jsdelivr 取同一内容做语法分析；raw 只在 jsdelivr 失败时使用",
-           "count": len(rows), "kinds": dict(kinds), "items": rows}
+           "generatedAt": ts,
+           "count": len(rows), "kinds": dict(kinds), "items": rows,
+           "field_note": "strict_fail 只表示我们这一侧严格解析失败，不推断客户端行为"}
+    # 守卫：解释层/首测快照含人工字段时拒绝覆盖，不依赖"记得这件事"
+    for path in (CURATED,):
+        if os.path.exists(path):
+            old = json.load(open(path, encoding="utf-8"))
+            if os.path.abspath(OUT) == os.path.abspath(path) and old.get("items"):
+                raise SystemExit(f"[拒绝覆盖] {path} 是人工整理/首测快照")
     json.dump(out, open(OUT, "w", encoding="utf-8", newline="\n"),
               ensure_ascii=False, indent=2)
     print("wrote", OUT, dict(kinds), flush=True)

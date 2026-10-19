@@ -1,0 +1,220 @@
+{
+  "method": "优先 jsdelivr 取同一内容做语法分析；raw 只在 jsdelivr 失败时使用",
+  "generatedAt": "2026-10-19T18:07:10+08:00",
+  "count": 9,
+  "kinds": {
+    "jsonc_ok": 6,
+    "strict_ok": 2,
+    "strict_fail": 1
+  },
+  "items": [
+    {
+      "id": "liucn-m",
+      "name": "老刘备接口",
+      "url": "https://raw.liucn.cc/box/m.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 983,
+      "raw": {
+        "status": 200,
+        "declared": "57874",
+        "received": 57874,
+        "ms": 897,
+        "ctype": "application/json; charset=utf-8",
+        "kind": "jsonc_ok",
+        "sites": 234,
+        "detail": {
+          "bom": false,
+          "err": "Expecting value: line 1 column 1 (char 0)",
+          "pos": 0
+        },
+        "head": "//以下内容为互联网收集，只为自用。\n{\n  \"spid"
+      }
+    },
+    {
+      "id": "maoystv-000",
+      "name": "分享源 000",
+      "url": "https://raw.githubusercontent.com/maoystv/6/main/000.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 1151,
+      "jsdelivr": {
+        "status": 200,
+        "declared": null,
+        "received": 82794,
+        "ms": 747,
+        "ctype": "application/json; charset=utf-8",
+        "kind": "jsonc_ok",
+        "sites": 187,
+        "detail": {
+          "bom": false,
+          "err": "Expecting property name enclosed in double quotes: line 2 column 1 (char 2)",
+          "pos": 2
+        },
+        "head": "{\n//数据接口\n\"adblock\":{\"gjc\":[\".lz\",\".ff\",\".mstop\",\".bf"
+      }
+    },
+    {
+      "id": "szyyds-x",
+      "name": "小马接口",
+      "url": "https://szyyds.cn/tv/x.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 300,
+      "raw": {
+        "status": 200,
+        "declared": "30571",
+        "received": 30571,
+        "ms": 21383,
+        "ctype": "application/json",
+        "kind": "strict_ok",
+        "sites": 62,
+        "detail": {
+          "bom": true
+        },
+        "head": "﻿{\n\"spider\":\"https://szyyds.cn/tv/x.jpg;md5;4ce29ce27eeff6"
+      }
+    },
+    {
+      "id": "252035-fongmi",
+      "name": "真心 FongMi",
+      "url": "https://www.252035.xyz/z/FongMi.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 2722,
+      "raw": {
+        "status": 200,
+        "declared": "18346",
+        "received": 18346,
+        "ms": 334,
+        "ctype": "application/json",
+        "kind": "jsonc_ok",
+        "sites": 43,
+        "detail": {
+          "bom": false,
+          "err": "Expecting property name enclosed in double quotes: line 11 column 8 (char 267)",
+          "pos": 267
+        },
+        "head": "{\r\n  \"spider\": \"./custom_spider.jar;md5;43989964965deab2a4b6"
+      }
+    },
+    {
+      "id": "guot55-vip2",
+      "name": "宝盒 VIP 接口",
+      "url": "https://raw.githubusercontent.com/guot55/YGBH/main/vip2.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 1109,
+      "jsdelivr": {
+        "status": 200,
+        "declared": null,
+        "received": 45331,
+        "ms": 990,
+        "ctype": "application/json; charset=utf-8",
+        "kind": "strict_fail",
+        "sites": 0,
+        "detail": {
+          "bom": false,
+          "err": "Expecting value: line 134 column 14 (char 3070)",
+          "pos": 3070,
+          "err2": "Expecting value: line 134 column 14 (char 3070)"
+        },
+        "head": "{\r\n\r\n\r\n\r\n\r\n\"spider\":\"./jar/vip.jar\",\r\n\r\n\"lives\":[\r\n\r\n\r\n    \r"
+      },
+      "raw": {
+        "fail": "ConnectionResetError:[WinError 10054] 远程主机强迫关闭了一个现有的连接。"
+      }
+    },
+    {
+      "id": "fish2018-ol-tvbox",
+      "name": "fish2018 抓取结果",
+      "url": "https://raw.githubusercontent.com/fish2018/ol/main/tvbox.json",
+      "state": "reachable",
+      "error": "no_sites",
+      "probeMs": 1135,
+      "jsdelivr": {
+        "status": 200,
+        "declared": null,
+        "received": 210,
+        "ms": 1036,
+        "ctype": "application/json; charset=utf-8",
+        "kind": "strict_ok",
+        "sites": 0,
+        "detail": {
+          "bom": false
+        },
+        "head": "{\n    \"storeHouse\": [\n        {\n            \"sourceName\": \""
+      }
+    },
+    {
+      "id": "hccx-tvbox",
+      "name": "荷城茶秀",
+      "url": "https://raw.githubusercontent.com/HeChengChaXiu/tvbox/main/hccx.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 900,
+      "jsdelivr": {
+        "status": 200,
+        "declared": null,
+        "received": 18204,
+        "ms": 766,
+        "ctype": "application/json; charset=utf-8",
+        "kind": "jsonc_ok",
+        "sites": 68,
+        "detail": {
+          "bom": false,
+          "err": "Expecting value: line 17 column 1 (char 713)",
+          "pos": 713
+        },
+        "head": "{\"spider\":\"./hccx/HeChengChaXiu.jar\",\n\n\"wallpaper\":\"http://"
+      }
+    },
+    {
+      "id": "qist-xyq",
+      "name": "qist 香雅情源",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/XYQ.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 1069,
+      "jsdelivr": {
+        "status": 200,
+        "declared": null,
+        "received": 19198,
+        "ms": 548,
+        "ctype": "application/json; charset=utf-8",
+        "kind": "jsonc_ok",
+        "sites": 49,
+        "detail": {
+          "bom": false,
+          "err": "Expecting value: line 29 column 9 (char 1408)",
+          "pos": 1408
+        },
+        "head": "{\n    \"wallpaper\": \"https://picsum.photos/1280/720/?blur=2\","
+      }
+    },
+    {
+      "id": "xyq-tvbox",
+      "name": "香雅情主接口",
+      "url": "https://raw.githubusercontent.com/xyq254245/xyqonlinerule/main/XYQTVBox.json",
+      "state": "reachable",
+      "error": "not_json",
+      "probeMs": 1064,
+      "jsdelivr": {
+        "status": 200,
+        "declared": null,
+        "received": 24820,
+        "ms": 851,
+        "ctype": "application/json; charset=utf-8",
+        "kind": "jsonc_ok",
+        "sites": 48,
+        "detail": {
+          "bom": false,
+          "err": "Expecting value: line 39 column 9 (char 1984)",
+          "pos": 1984
+        },
+        "head": "{\n    \"wallpaper\": \"https://wp.upx8.com/api.php\",\n    \"spide"
+      }
+    }
+  ],
+  "field_note": "strict_fail 只表示我们这一侧严格解析失败，不推断客户端行为"
+}
