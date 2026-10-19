@@ -1,0 +1,685 @@
+{
+ "generatedAt": "2026-10-19T16:31:40+08:00",
+ "note": "护栏排除的模板目标留证：这些 URL 含未展开占位符，不是一个可请求的地址。保留清单是为了说明 apply_probe_guards() 与 is_template_url() 不是多余防御——同类错误（把\"解析不出目标\"当成\"目标已死\"）在下一批采集里会重复出现。",
+ "method": "从 data/site_candidates.json 的 site.ext 按旧正则 https?://[^\\s\"'|,})]+ 取首个 URL，筛出含 { 或 } 的地址，按唯一目标聚合；探测结论取 data/probe_cache.json 的历史记录。",
+ "count": 26,
+ "confirmedCount": 0,
+ "verdict": "26 个模板目标里没有任何一个曾被判 confirmed，6 个 dead、20 个 uncertain；它们现在全部不参与探测，状态为 none。",
+ "targets": [
+  {
+   "target": "http://ntfeiyu.com/nt/{cateId",
+   "sites": [
+    {
+     "name": "飞宇影院",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "qist-jsm",
+     "ext": {
+      "分类url": "http://ntfeiyu.com/nt/{cateId}/area/{area}/by/{by}/class/{class}/lang/{lang}/page/{catePg}/year/{year}.html",
+      "分类": "电影$1#电视剧$2#综艺$3#动漫$4"
+     }
+    }
+   ],
+   "probe": {
+    "status": "blocked",
+    "confidence": "uncertain",
+    "httpStatus": 403,
+    "reason": "HTTP 403（UA/IP 拦截）",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "proxy"
+   }
+  },
+  {
+   "target": "http://www.btpxgl.com/show/{cateId",
+   "sites": [
+    {
+     "name": "💖分享|BTT",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": {
+      "数组": "class=\"hl-item-thumb hl-lazy\"&&</div></li>",
+      "简介": "class=\"hl-text-muted\">简介：</em>&&</li>",
+      "线路数组": "alt=\"&&</a>",
+      "线路标题": "分享者在线+</i>&nbsp;&&</a>",
+      "分类数组": "<a&&</a>",
+      "分类标题": "subs\"href=\"/vodlist/*.html\">&&</a>",
+      "分类ID": "href=\"/vodlist/&&.html\"",
+      "分类url": "http://www.btpxgl.com/show/{cateId}-{area}-{by}-{class}-{lang}----{catePg}---{year}.html;;s"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_temporary",
+    "confidence": "uncertain",
+    "httpStatus": 503,
+    "reason": "HTTP 503",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "http://www.lxsgsy.com/search.php?page={catePg",
+   "sites": [
+    {
+     "name": "👨‍👨‍👧一起看┃app",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": {
+      "首页": "短剧",
+      "副标题": "🥝老胡推荐🥝",
+      "线路数组": "#playlist*\">&&</a>",
+      "线路标题": "🌽专享🌽+<span>&&</span>+线路",
+      "播放数组": "class=\"playlistlink&&</ul>",
+      "播放列表": "<li&&</li>",
+      "播放标题": "title=\"&&\"",
+      "播放链接": "href=\"&&\"",
+      "跳转播放链接": "varurlDecode(var player*url\":\"&&\")",
+      "分类url": "http://www.lxsgsy.com/search.php?page={catePg}&searchtype=5&order={by}&tid={cateId}&area={area}&year={year}&letter=&yuyan=&state=&money=&ver=&jq=[]",
+      "分类": "电影$1&电视剧$2&短剧$30&综艺$3&动漫$4&都是$5&刚好$6&东方$7"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "http://www.ting38.com/search.php?searchword={wd",
+   "sites": [
+    {
+     "name": "💖吾吧动漫",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": {
+      "简介": "分享者特别提醒您：请勿相信影片中的广告，以免上当受骗。+简介：&&</p>",
+      "线路数组": "data-toggle=\"tab&&</a>",
+      "线路标题": ">&&<",
+      "搜索url": "http://www.ting38.com/search.php?searchword={wd}",
+      "分类url": "http://www.ting38.com/ting/{cateId}-{catePg}.html",
+      "分类": "新番日漫$1#国产动漫$2#欧美动漫$3#动漫电影$4"
+     }
+    }
+   ],
+   "probe": {
+    "status": "blocked",
+    "confidence": "uncertain",
+    "httpStatus": 403,
+    "reason": "HTTP 403（UA/IP 拦截）",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://aoao.tv/vodshow/{cateId",
+   "sites": [
+    {
+     "name": "🎦┃短剧┃嗷嗷",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "liucn-m",
+     "ext": {
+      "分类url": "https://aoao.tv/vodshow/{cateId}--------{catePg}---.html",
+      "分类": "短剧$20#电视剧$21#电影$22#动漫$23#综艺$24"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://dbwyt.com/search.php?searchword={wd",
+   "sites": [
+    {
+     "name": "💖之家动漫",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": {
+      "简介": "分享者提醒您:请勿相信影片中的广告，以免上当受骗。+简介：&&</p>",
+      "搜索url": "https://dbwyt.com/search.php?searchword={wd}",
+      "分类url": "https://dbwyt.com/wuba/{cateId}-{catePg}.html",
+      "分类": "国产动漫$1#日本动漫$2#欧美动漫$47#海外动漫$3#动漫电影$4"
+     }
+    }
+   ],
+   "probe": {
+    "status": "tls_issue",
+    "confidence": "uncertain",
+    "reason": "TLS 握手失败",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "proxy"
+   }
+  },
+  {
+   "target": "https://dianyi.ng/v/{cateId",
+   "sites": [
+    {
+     "name": "影视 | 电影先生",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": "%E5%88%86%E7%B1%BBurl:https://dianyi.ng/v/{cateId}/area/{area}/by/{by}/class/{class}/page/{catePg}/year/{year}.html,%E5%88%86%E7%B1%BB:%E7%94%B5%E5%BD%B1$dianying#%E7%94%B5%E8%A7%86%E5%89%A7$%E7%94%B5%E8%A7%86%E5%89%A7#%E7%BB%BC%E8%89%BA$zongyi#%E5%8A%A8%E6%BC%AB$dongman"
+    }
+   ],
+   "probe": {
+    "status": "uncertain_network",
+    "confidence": "uncertain",
+    "reason": "网络错误 conn:Tunnel connection failed: 502 Bad Gateway",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "proxy"
+   }
+  },
+  {
+   "target": "https://dingdingdm.com/list/{cateId",
+   "sites": [
+    {
+     "name": "💖大全动漫",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": {
+      "简介": "分享者特别提醒您：请勿相信影片中的广告，以免上当受骗。+简介：&&</p>",
+      "线路数组": "<aclass=\"hl-tabs-btnhl-slide-swiper\"&&</a>",
+      "线路标题": "</i>&nbsp;&&</a>+集",
+      "分类url": "https://dingdingdm.com/list/{cateId}-{catePg}.html",
+      "分类": "动漫电影$1#国产动漫$3#日本动漫$2#欧美动漫$4#短剧$20"
+     }
+    }
+   ],
+   "probe": {
+    "status": "tls_issue",
+    "confidence": "uncertain",
+    "reason": "TLS 握手失败",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "proxy"
+   }
+  },
+  {
+   "target": "https://dmbus.cc/show-{cateId",
+   "sites": [
+    {
+     "name": "巴士 • 动漫",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "qist-jsm",
+     "ext": {
+      "请求头": "User-Agent$MOBILE_UA#Accept$text/html#accept-language$zh-CN,zh;q=0.8",
+      "分类url": "https://dmbus.cc/show-{cateId}--{by}-{class}--{year}-{catePg}.html",
+      "分类": "国漫$1#日漫$2#欧美动漫$3#电影$4",
+      "数组": "class=\"item\">&&</li>",
+      "简介": "剧情：&&</p>",
+      "标题": "title=\"&&在线观看\"",
+      "副标题": "desc\">&&</span>",
+      "图片": "data-bg=\"&&\"",
+      "搜索url": "https://dmbus.cc/s----------.html?wd={wd}",
+      "倒序": "1"
+     }
+    }
+   ],
+   "probe": {
+    "status": "dead",
+    "confidence": "dead",
+    "httpStatus": 404,
+    "reason": "HTTP 404",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://m.xiangdao.me/vod-list-id-{cateId",
+   "sites": [
+    {
+     "name": "👑稳定农民👑",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": "{    \"%E8%AF%B7%E6%B1%82%E5%A4%B4\":\"%E6%89%8B%E6%9C%BA\",    \"%E5%80%92%E5%BA%8F\":\"1\",    \"%E4%B8%BB%E6%BC%94\":\"%E4%B8%BB%E6%BC%94:&&</div>\",    \"%E5%89%AF%E6%A0%87%E9%A2%98\":\"<span>&&<em>\",    \"%E6%92%AD%E6%94%BE%E6%95%B0%E7%BB%84\":\"class=\\\"numList&&</div>\",    \"%E7%AE%80%E4%BB%8B\":\"%E7%AE%80&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;%E4%BB%8B%EF%BC%9A&&</p>\",    \"%E7%BA%BF%E8%B7%AF%E6%95%B0%E7%BB%84\":\"javascript:;&&/a>\",    \"%E7%BA%BF%E8%B7%AF%E6%A0%87%E9%A2%98\":\">&&<\",    \"%E5%88%86%E7%B1%BB\":\"%E7%9F%AD%E5%89%A7$26#%E7%94%B5%E5%BD%B1$1#%E7%94%B5%E8%A7%86%E5%89%A7$2#%E5%9B%BD%E4%BA%A7%E5%89%A7$12#%E6%B8%AF%E5%89%A7$13#%E7%BE%8E%E5%89%A7$15#%E5%8A%A8%E6%BC%AB$4#%E7%BB%BC%E8%89%BA$3\",    \"%E5%88%86%E7%B1%BBurl\":\"https://m.xiangdao.me/vod-list-id-{cateId}-pg-{catePg}-order--by-{by}-class--year-{year}-letter--area-{area}-lang-.html\"}"
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://shdy2.com/list/{cateId",
+   "sites": [
+    {
+     "name": "💢骚火",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "D",
+     "config_ref": "niubihu-1",
+     "ext": {
+      "嗅探词": ".m3u8#.mp4#.m3u8?#freeok.mp4",
+      "分类url": "https://shdy2.com/list/{cateId}-{catePg}.html;;vr1au0",
+      "分类": "电影$1#电视剧$2#韩剧$22#美剧$23#动漫$4",
+      "数组二次截取": "class=\"v_list\">&&</ul>",
+      "数组": "\"v_img\"&&/div>",
+      "标题": "title=\"&&\"",
+      "副标题": "v_note\"&&</div",
+      "跳转播放链接": "<iframe*src=\"&&\"",
+      "二次跳转播放链接": "https://hhjx.hhplayer.com/api.php;post;url=+var url*\"&&\"+&t=+var t*\"&&\"+&key=+var key*\"&&\"+&act=0+&play=1",
+      "三次跳转播放链接": "\"url\"*\"&&\""
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_temporary",
+    "confidence": "uncertain",
+    "httpStatus": 522,
+    "reason": "HTTP 522",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://sszzyy.com/index.php/vod/type/id/{cateId",
+   "sites": [
+    {
+     "name": "💝分享西瓜",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": {
+      "分类": "电影$20#连续剧$37#动漫$43#综艺$45",
+      "分类url": "https://sszzyy.com/index.php/vod/type/id/{cateId}/page/{catePg}.html",
+      "线路标题": "data-toggle=\"tab\">&&</a>"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://v.aiwule.com/vodshow/{cateId",
+   "sites": [
+    {
+     "name": "面包 • 影视",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "qist-jsm",
+     "ext": {
+      "请求头": "User-Agent$MOBILE_UA",
+      "编码": "UTF-8",
+      "分类url": "https://v.aiwule.com/vodshow/{cateId}-{area}-{by}-{class}-{lang}-{letter}---{catePg}---{year}.html",
+      "分类": "电影$20#电视剧$21#动漫$23#综艺$22#短剧$47",
+      "简介": "简介：&&"
+     }
+    }
+   ],
+   "probe": {
+    "status": "dead",
+    "confidence": "dead",
+    "httpStatus": 404,
+    "reason": "HTTP 404",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.555dy1.com/vodshow/{cateId",
+   "sites": [
+    {
+     "name": "555 • 在线",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": "https://www.555dy1.com/vodshow/{cateId}--------{catePg}---.html"
+    }
+   ],
+   "probe": {
+    "status": "dead",
+    "confidence": "dead",
+    "httpStatus": 404,
+    "reason": "HTTP 404",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.857yhdm.com/show/{cateId",
+   "sites": [
+    {
+     "name": "樱花动漫",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": "分类url:https://www.857yhdm.com/show/{cateId}--{by}------{catePg}---{year}.html,分类:日本动漫$ribendongman#国产动漫$guochandongman#动漫电影$dongmandianying#欧美动漫$omeidongman"
+    }
+   ],
+   "probe": {
+    "status": "uncertain_network",
+    "confidence": "uncertain",
+    "reason": "网络错误 conn:Tunnel connection failed: 502 Bad Gateway",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "proxy"
+   }
+  },
+  {
+   "target": "https://www.aidm3.com/type/{cateId",
+   "sites": [
+    {
+     "name": "樱花┃动漫",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": {
+      "简介": "请勿相信影片中的广告，以免上当受骗。+<span class=\"sketch content&&</div>",
+      "分类url": "https://www.aidm3.com/type/{cateId}-{catePg}.html",
+      "分类": "国产动漫$guochandongman#日本动漫$ribendongman#欧美动漫$oumeidongman#动漫电影$dongmandianying"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.catwcy.com/show/{cateId",
+   "sites": [
+    {
+     "name": "💖喵喵动漫",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": {
+      "简介": "分享者提醒您请勿相信影片中的广告，以免上当受骗❗️+剧情介绍：&&</p>",
+      "分类url": "https://www.catwcy.com/show/{cateId}/by/{by}/class/{class}/lang/{lang}/letter/{letter}/page/{catePg}/year/{year}.html",
+      "分类": "日本动漫$1#动漫电影$2#欧美动漫$25#4K专区$26",
+      "搜索url": "/search.html?wd={wd}"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.dsxysproo.com/dqvodshow/{cateId",
+   "sites": [
+    {
+     "name": "💂大师兄┃影视",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": {
+      "简介": "⚠️特别提醒您⚠️请勿相信影片中的广告，以免上当受骗❗️+剧情介绍：&&</p >",
+      "分类url": "https://www.dsxysproo.com/dqvodshow/{cateId}-{area}--{class}-----{catePg}---{year}.html",
+      "分类": "电视剧$2#电影$1#动漫$4#综艺$3"
+     }
+    }
+   ],
+   "probe": {
+    "status": "dead",
+    "confidence": "dead",
+    "httpStatus": 404,
+    "reason": "HTTP 404",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.heitujc.com/search/-------------.html?wd={wd",
+   "sites": [
+    {
+     "name": "💖分享魅影",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "maoystv-000",
+     "ext": {
+      "副标题": "公子专属",
+      "搜索url": "https://www.heitujc.com/search/-------------.html?wd={wd}",
+      "搜索数组": "<a class=\"video-pic&&</a",
+      "搜索图片": "data-original=\"&&\"",
+      "搜索标题": "title=\"&&\"",
+      "搜索链接": "href=\"&&\"",
+      "分类url": "https://www.heitujc.com/screen/{cateId}-{area}-{by}-{class}-{lang}----{catePg}---{year}.html",
+      "分类": "电影&电视剧&综艺&动漫",
+      "分类值": "1&2&3&4"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_temporary",
+    "confidence": "uncertain",
+    "httpStatus": 523,
+    "reason": "HTTP 523",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.jkdy.cc/vodshow/{cateId",
+   "sites": [
+    {
+     "name": "👋1080P┃即刻",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "liucn-m",
+     "ext": {
+      "嗅探词": ".m3u8",
+      "分类url": "https://www.jkdy.cc/vodshow/{cateId}-{area}-------{catePg}---{year}.html",
+      "分类": "电影$1#剧集$2#动漫$4#综艺$4",
+      "搜索模式": "0"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.kuaikanys.net/s/{cateId",
+   "sites": [
+    {
+     "name": "快看影视",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": {
+      "线路二次截取": "<div class=\"play\">&&</div>",
+      "线路数组": "<span&&/span>",
+      "线路标题": ">&&<",
+      "播放二次截取": "class=\"playlist\"&&</div>",
+      "播放数组": "<ul>&&</ul>",
+      "分类url": "https://www.kuaikanys.net/s/{cateId}/page/{catePg}.html",
+      "简介": "西夏为您+text\">&&</div>",
+      "分类数组": "<li>&&</li>",
+      "分类标题": ">&&</a>",
+      "分类ID": "/t/&&.html"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.mochadj.com/i/{cateId",
+   "sites": [
+    {
+     "name": "果果 • 短剧",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "qist-jsm",
+     "ext": {
+      "请求头": "User-Agent$MOBILE_UA",
+      "编码": "UTF-8",
+      "分类": "重生$1#穿越$2#爽剧$3#言情$4#都市$5#古装$6#悬疑$7#剧情$8",
+      "分类url": "https://www.mochadj.com/i/{cateId}-{catePg}.html"
+     }
+    }
+   ],
+   "probe": {
+    "status": "dead",
+    "confidence": "dead",
+    "httpStatus": 404,
+    "reason": "HTTP 404",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.nkvod.us/show/{cateId",
+   "sites": [
+    {
+     "name": "👑耐看点播👑",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "niubihu-1",
+     "ext": {
+      "分类": "电视剧$2#电影$1#动漫$4#综艺$3",
+      "分类url": "https://www.nkvod.us/show/{cateId}--------{catePg}---{year}.html"
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.putaojuchang.com/show/{cateId",
+   "sites": [
+    {
+     "name": "🎦┃短剧┃葡萄",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "liucn-m",
+     "ext": {
+      "数组": "class=\"stui-vodlist__box&&</li",
+      "分类url": "https://www.putaojuchang.com/show/{cateId}/area/{area}/class/{class}/by/{by}/page/{catePg}/year/{year}.html",
+      "分类": "微剧场$1#言情$6#逆袭$7#战神$8#异能$9#生活$10#重生$12#复仇$20#爱情$11"
+     }
+    }
+   ],
+   "probe": {
+    "status": "dead",
+    "confidence": "dead",
+    "reason": "连接拒绝/超时",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://www.qiuxia360.com/vodshow/{cateId",
+   "sites": [
+    {
+     "name": "️🍂秋霞影视",
+     "type": 3,
+     "api": "csp_XBPQ",
+     "tier": "B",
+     "config_ref": "guot55-vip2",
+     "ext": {
+      "分类": "电影$1#连续剧$2#动漫$4#综艺$3",
+      "分类url": "https://www.qiuxia360.com/vodshow/{cateId}-{area}-{by}-{class}-----{catePg}---{year}.html;;val",
+      "跳转播放链接": "https://www.jfxz689.com/?url=+vod_class*url\":\"&&\"+&tm=+\"tm\":&&,+&key=+\"key\"*\"&&\"",
+      "二次跳转播放链接": "https://www.jfxz689.com/API.php;post;url=+\"url\"*\"&&\"+&time=+\"time\"*\"&&\"+&key=+\"key\"*\"&&\"",
+      "三次跳转播放链接": "\"url\"*\"&&\""
+     }
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  },
+  {
+   "target": "https://zhaoziyuan1.cc/so?filename={wd",
+   "sites": [
+    {
+     "name": "📀找资源(搜索)",
+     "type": 3,
+     "api": "csp_Zhaozy",
+     "tier": "E",
+     "config_ref": "qist-xyq",
+     "ext": "{\"username\":\"fanty\",\"password\":\"qqq111\",\"searchurl\":\"https://zhaoziyuan1.cc/so?filename={wd}\"}"
+    }
+   ],
+   "probe": {
+    "status": "uncertain_non_json",
+    "confidence": "uncertain",
+    "httpStatus": 200,
+    "reason": "2xx 但非 JSON",
+    "probedAt": "2026-10-19T15:48:51+08:00",
+    "via": "direct"
+   }
+  }
+ ]
+}

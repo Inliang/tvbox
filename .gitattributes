@@ -1,0 +1,9 @@
+# 生成产物：标记为 generated，避免 GitHub 把 320KB 内联数据当成手写源码参与 diff/搜索
+docs/index.html            linguist-generated=true -diff
+docs/data/*.json           linguist-generated=true
+data/exports/*.json        linguist-generated=true
+zijian-full.json           linguist-generated=true
+
+# 站点数据是单行压缩 JSON，换行符统一，避免 Windows 提交后整文件 diff
+docs/data/*.json           text eol=lf
+data/exports/*.json        text eol=lf

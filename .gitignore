@@ -1,0 +1,20 @@
+# 调试产物
+.tmp-verify*/
+.qa_snapshot/
+.chk/
+_dbg*.html
+_shot_*.png
+_mob.html
+_setlight.html
+
+# 采集中间物：可重跑生成，不进版本库
+data/raw/
+data/backup/
+data/probe_cache.json
+data/candidates.json
+
+# 系统
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc

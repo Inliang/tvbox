@@ -1,0 +1,491 @@
+{
+  "_comment": "TVBox/CatVod 公开配置接口候选清单。仅收录公开可访问、无需登录鉴权的地址。",
+  "candidates": [
+    {
+      "name": "qist-jsm",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/jsm.json",
+      "category": "综合",
+      "note": "qist 自用主接口，更新较勤"
+    },
+    {
+      "name": "qist-0821",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/0821.json",
+      "category": "综合",
+      "note": "在饭太硬配置基础上扩充"
+    },
+    {
+      "name": "qist-0822",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/0822.json",
+      "category": "综合",
+      "note": "极简配置"
+    },
+    {
+      "name": "qist-0825",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/0825.json",
+      "category": "综合",
+      "note": "Panda Groove go 包"
+    },
+    {
+      "name": "qist-0826",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/0826.json",
+      "category": "综合",
+      "note": "饭太硬 jar/配置"
+    },
+    {
+      "name": "qist-0827",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/0827.json",
+      "category": "综合",
+      "note": "fongmi jar/配置"
+    },
+    {
+      "name": "qist-0828",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/0828.json",
+      "category": "综合",
+      "note": "唐三 jar/配置"
+    },
+    {
+      "name": "qist-js",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/js.json",
+      "category": "JS源",
+      "note": "道长 drpy(js) 资源"
+    },
+    {
+      "name": "qist-xyq",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/XYQ.json",
+      "category": "综合",
+      "note": "香雅情源"
+    },
+    {
+      "name": "qist-cat",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/cat.json",
+      "category": "CatVod",
+      "note": "猫影视源"
+    },
+    {
+      "name": "qist-fty",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
+      "category": "综合",
+      "note": "饭太硬接口镜像"
+    },
+    {
+      "name": "qist-xiaosa",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/xiaosa/api.json",
+      "category": "综合",
+      "note": "潇洒接口"
+    },
+    {
+      "name": "qist-pages-jsm",
+      "url": "https://qist.wyfc.qzz.io/jsm.json",
+      "category": "综合",
+      "note": "qist Cloudflare Pages 镜像"
+    },
+    {
+      "name": "gao-js",
+      "url": "https://raw.githubusercontent.com/gaotianliuyun/gao/master/js.json",
+      "category": "JS源",
+      "note": "高天流云 js 源"
+    },
+    {
+      "name": "gao-0821",
+      "url": "https://raw.githubusercontent.com/gaotianliuyun/gao/master/0821.json",
+      "category": "综合",
+      "note": "高天流云 0821"
+    },
+    {
+      "name": "gao-0826",
+      "url": "https://raw.githubusercontent.com/gaotianliuyun/gao/master/0826.json",
+      "category": "综合",
+      "note": "高天流云 0826"
+    },
+    {
+      "name": "gao-0827",
+      "url": "https://raw.githubusercontent.com/gaotianliuyun/gao/master/0827.json",
+      "category": "综合",
+      "note": "高天流云 0827"
+    },
+    {
+      "name": "gao-xyq",
+      "url": "https://raw.githubusercontent.com/gaotianliuyun/gao/master/XYQ.json",
+      "category": "综合",
+      "note": "高天流云香雅情"
+    },
+    {
+      "name": "2hacc-oktv",
+      "url": "https://raw.githubusercontent.com/2hacc/TVBox/main/oktv.json",
+      "category": "综合",
+      "note": "2hacc OK影视配置"
+    },
+    {
+      "name": "2hacc-jsdelivr",
+      "url": "https://cdn.jsdelivr.net/gh/2hacc/TVBox@main/oktv.json",
+      "category": "综合",
+      "note": "jsdelivr 镜像，国内可用"
+    },
+    {
+      "name": "fish2018-all",
+      "url": "https://raw.githubusercontent.com/fish2018/tvbox/master/all.json",
+      "category": "综合",
+      "note": "fish2018 去重合集"
+    },
+    {
+      "name": "fish2018-tvbox",
+      "url": "https://raw.githubusercontent.com/fish2018/tvbox/master/tvbox.json",
+      "category": "综合",
+      "note": "fish2018 上次抓取结果"
+    },
+    {
+      "name": "pyramid-py",
+      "url": "https://raw.githubusercontent.com/lm317379829/PyramidStore/pyramid/py.json",
+      "category": "综合",
+      "note": "霜辉月明 PyramidStore"
+    },
+    {
+      "name": "hackyjso-jzy",
+      "url": "https://raw.githubusercontent.com/hackyjso/box/main/jzy.txt",
+      "category": "综合",
+      "note": "橘子柚；实际返回 JPEG 图片而非配置"
+    },
+    {
+      "name": "yoursmile-xc",
+      "url": "https://raw.githubusercontent.com/yoursmile66/TVBox/main/XC.json",
+      "category": "综合",
+      "note": "南风 XC"
+    },
+    {
+      "name": "xyq-tvbox",
+      "url": "https://raw.githubusercontent.com/xyq254245/xyqonlinerule/main/XYQTVBox.json",
+      "category": "综合",
+      "note": "香雅情主接口"
+    },
+    {
+      "name": "guot55-vip2",
+      "url": "https://raw.githubusercontent.com/guot55/YGBH/main/vip2.json",
+      "category": "综合",
+      "note": "宝盒 VIP"
+    },
+    {
+      "name": "maoystv-000",
+      "url": "https://raw.githubusercontent.com/maoystv/6/main/000.json",
+      "category": "综合",
+      "note": "分享源"
+    },
+    {
+      "name": "chitue-dongli",
+      "url": "https://raw.githubusercontent.com/chitue/dongliTV/main/api.json",
+      "category": "综合",
+      "note": "东篱线路"
+    },
+    {
+      "name": "hccx-tvbox",
+      "url": "https://raw.githubusercontent.com/HeChengChaXiu/tvbox/main/hccx.json",
+      "category": "综合",
+      "note": "荷城茶秀"
+    },
+    {
+      "name": "ouhaibo-pg",
+      "url": "https://raw.githubusercontent.com/ouhaibo1980/tvbox/master/pg/jsm.json",
+      "category": "综合",
+      "note": "PG 网盘源"
+    },
+    {
+      "name": "guot55-ygmax",
+      "url": "https://raw.githubusercontent.com/guot55/yg/main/max.json",
+      "category": "综合",
+      "note": "月光 max"
+    },
+    {
+      "name": "fty-tv",
+      "url": "http://www.饭太硬.net/tv",
+      "category": "综合",
+      "note": "饭太硬主接口，中文域名"
+    },
+    {
+      "name": "feimao",
+      "url": "http://肥猫.net",
+      "category": "综合",
+      "note": "肥猫接口，中文域名"
+    },
+    {
+      "name": "moyuer",
+      "url": "http://我不是.摸鱼儿.top",
+      "category": "综合",
+      "note": "摸鱼儿接口，中文域名"
+    },
+    {
+      "name": "wang-er-xiao",
+      "url": "http://tvbox.王二小放牛娃.top",
+      "category": "综合",
+      "note": "王二小放牛娃，中文域名"
+    },
+    {
+      "name": "9280-kstore",
+      "url": "https://9280.kstore.vip/newwex.json",
+      "category": "综合",
+      "note": "王二小新接口"
+    },
+    {
+      "name": "yingm-dm",
+      "url": "https://www.yingm.cc/dm/dm.json",
+      "category": "动漫",
+      "note": "动漫城"
+    },
+    {
+      "name": "jundie-top98",
+      "url": "http://home.jundie.top:81/top98.json",
+      "category": "综合",
+      "note": "俊于接口，非标准端口"
+    },
+    {
+      "name": "xduo-libs",
+      "url": "https://cdn.gitmirror.com/bb/xduo/libs/master/index.json",
+      "category": "综合",
+      "note": "道长接口"
+    },
+    {
+      "name": "cainisi",
+      "url": "https://tv.菜妮丝.top",
+      "category": "综合",
+      "note": "菜妮丝，中文域名"
+    },
+    {
+      "name": "hgyx",
+      "url": "https://api.hgyx.vip/hgyx.json",
+      "category": "综合",
+      "note": "HG 接口；文件内含 ## 分段拼接，非单一 JSON"
+    },
+    {
+      "name": "dxawi",
+      "url": "https://dxawi.github.io/0/0.json",
+      "category": "综合",
+      "note": "dxawi GitHub Pages"
+    },
+    {
+      "name": "xhztv-xhz",
+      "url": "http://xhztv.top/xhz",
+      "category": "综合",
+      "note": "小盒子单仓"
+    },
+    {
+      "name": "xhztv-4k",
+      "url": "http://xhztv.top/4k.json",
+      "category": "4K",
+      "note": "小盒子 4K"
+    },
+    {
+      "name": "252035-fongmi",
+      "url": "https://www.252035.xyz/z/FongMi.json",
+      "category": "综合",
+      "note": "真心接口"
+    },
+    {
+      "name": "ufuzi-duanju",
+      "url": "http://box.ufuzi.com/tv/qq/短剧频道/api.json",
+      "category": "短剧",
+      "note": "短剧频道，路径含中文"
+    },
+    {
+      "name": "9763-aowu",
+      "url": "https://9763.kstore.vip/aowu.json",
+      "category": "综合",
+      "note": "嗷呜线路"
+    },
+    {
+      "name": "lushunming",
+      "url": "https://android.lushunming.qzz.io/json/index.json",
+      "category": "综合",
+      "note": "L 佬线路"
+    },
+    {
+      "name": "iyouhun-dc",
+      "url": "https://www.iyouhun.com/tv/dc",
+      "category": "多仓",
+      "note": "游魂多仓"
+    },
+    {
+      "name": "iyouhun-yh",
+      "url": "https://www.iyouhun.com/tv/yh",
+      "category": "多仓",
+      "note": "游魂多仓备用"
+    },
+    {
+      "name": "9877-xiaosa",
+      "url": "https://9877.kstore.space/AnotherDS/api.json",
+      "category": "综合",
+      "note": "潇洒单仓"
+    },
+    {
+      "name": "xhztv-dc",
+      "url": "http://xhztv.top/dc/",
+      "category": "多仓",
+      "note": "小盒子多仓"
+    },
+    {
+      "name": "xhztv-dc-txt",
+      "url": "http://xhztv.top/DC.txt",
+      "category": "多仓",
+      "note": "小盒子多仓备用"
+    },
+    {
+      "name": "xmbjm-dc",
+      "url": "http://xmbjm.fh4u.org/dc.txt",
+      "category": "多仓",
+      "note": "拾光多仓"
+    },
+    {
+      "name": "szyyds-x",
+      "url": "https://szyyds.cn/tv/x.json",
+      "category": "综合",
+      "note": "小马接口"
+    },
+    {
+      "name": "liucn-m",
+      "url": "https://raw.liucn.cc/box/m.json",
+      "category": "综合",
+      "note": "老刘备"
+    },
+    {
+      "name": "ttkx",
+      "url": "http://ttkx.live:55/天天开心",
+      "category": "综合",
+      "note": "天天开心，非标准端口+中文路径"
+    },
+    {
+      "name": "itvbox-yunxing",
+      "url": "http://itvbox.cc/云星日记",
+      "category": "综合",
+      "note": "云星日记，中文路径"
+    },
+    {
+      "name": "qiaoji",
+      "url": "http://cdn.qiaoji8.com/tvbox.json",
+      "category": "综合",
+      "note": "巧技接口"
+    },
+    {
+      "name": "100km",
+      "url": "https://100km.top/0",
+      "category": "综合",
+      "note": "Ray 接口"
+    },
+    {
+      "name": "agit-nanfeng",
+      "url": "https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json",
+      "category": "综合",
+      "note": "agit.ai 南风，部分网络不可达"
+    },
+    {
+      "name": "jihulab-ok",
+      "url": "https://jihulab.com/okcaptain/kko/raw/main/ok.txt",
+      "category": "综合",
+      "note": "okjack，GitLab 中文站"
+    },
+    {
+      "name": "pandown-qiaoji",
+      "url": "http://pandown.pro/tvbox/tvbox.json",
+      "category": "综合",
+      "note": "巧技备用域名"
+    },
+    {
+      "name": "kstore-nzk",
+      "url": "https://download.kstore.space/download/2883/nzk/nzk0722.json",
+      "category": "综合",
+      "note": "D 佬 nzk"
+    },
+    {
+      "name": "cnb-fish-duanju",
+      "url": "https://cnb.cool/fish2018/duanju/-/git/raw/main/tvbox.json",
+      "category": "短剧",
+      "note": "cnb.cool 托管，fish2018 短剧"
+    },
+    {
+      "name": "qist-0707",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/0707.json",
+      "category": "综合",
+      "note": "OK影视多线配置，仅适用 Fengmi"
+    },
+    {
+      "name": "qist-367",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/367.json",
+      "category": "综合",
+      "note": "qist 仓库现存配置"
+    },
+    {
+      "name": "qist-9918",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/9918.json",
+      "category": "综合",
+      "note": "qist 仓库现存配置"
+    },
+    {
+      "name": "qist-99188",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/99188.json",
+      "category": "综合",
+      "note": "qist 仓库现存配置"
+    },
+    {
+      "name": "qist-dianshi",
+      "url": "https://raw.githubusercontent.com/qist/tvbox/master/dianshi.json",
+      "category": "综合",
+      "note": "qist 电视自用"
+    },
+    {
+      "name": "fish2018-ol-all",
+      "url": "https://raw.githubusercontent.com/fish2018/ol/main/all.json",
+      "category": "综合",
+      "note": "fish2018 私有化去重合集"
+    },
+    {
+      "name": "fish2018-ol-tvbox",
+      "url": "https://raw.githubusercontent.com/fish2018/ol/main/tvbox.json",
+      "category": "综合",
+      "note": "fish2018 最近一次抓取结果"
+    },
+    {
+      "name": "github-inliang",
+      "url": "https://raw.githubusercontent.com/Inliang/tvbox/main/zijian.json",
+      "category": "自建",
+      "note": "本项目自身接口，作为基线校验"
+    },
+    {
+      "name": "noimank-muti",
+      "url": "https://raw.githubusercontent.com/noimank/tvbox/main/tvboxmuti.json",
+      "category": "多仓",
+      "note": "noimank 多仓接口"
+    },
+    {
+      "name": "niubihu-1",
+      "url": "https://raw.githubusercontent.com/niubihu1/tvbox/main/1.json",
+      "category": "综合",
+      "note": "niubihu 主配置"
+    },
+    {
+      "name": "niubihu-tv8",
+      "url": "https://raw.githubusercontent.com/niubihu1/tvbox/main/tv8.json",
+      "category": "综合",
+      "note": "niubihu tv8"
+    },
+    {
+      "name": "tushen6-tvbox",
+      "url": "https://raw.githubusercontent.com/tushen6/Tomorrow/master/tvbox.json",
+      "category": "综合",
+      "note": "tushen6 Tomorrow"
+    },
+    {
+      "name": "tushen6-lmw",
+      "url": "https://raw.githubusercontent.com/tushen6/Tomorrow/master/lmw.json",
+      "category": "综合",
+      "note": "tushen6 lmw"
+    },
+    {
+      "name": "tushen6-caiji",
+      "url": "https://raw.githubusercontent.com/tushen6/Tomorrow/master/caiji.json",
+      "category": "采集",
+      "note": "tushen6 采集配置"
+    },
+    {
+      "name": "noimank-jsdelivr",
+      "url": "https://cdn.jsdelivr.net/gh/noimank/tvbox@main/tvboxmuti.json",
+      "category": "多仓",
+      "note": "noimank jsdelivr 镜像"
+    }
+  ]
+}
