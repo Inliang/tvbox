@@ -139,8 +139,16 @@ a{color:var(--accent);text-decoration:none}
 .legend{display:flex;gap:6px;align-items:flex-start;margin:0 0 12px;font-size:11.5px;line-height:1.5;color:var(--text-3)}
 .legend .ico{width:14px;height:14px;margin-top:1px;flex:none}
 
-#list{display:flex;flex-direction:column;gap:12px}
+/* 双列网格。三个必须的点：
+   1) align-items:start —— 卡片高度不统一（副行 .card-sub 会因来源名长短换成一行/两行，
+      实测高度取值 [121,139]）。缺省 stretch 会把同一行的短卡拉到跟高卡齐平，
+      底部留一大片空白。
+   2) minmax(0,1fr) 而不是 1fr —— 卡片里有超长 URL，1fr 的最小尺寸是 auto，
+      会被内容顶开把轨道撑破；0 才允许它收缩到轨道宽度再换行。
+   3) .state（空状态 / 加载失败）是整块居中的，必须跨满两列，否则会缩在左半边。 */
+#list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
 #list[aria-busy="true"]{opacity:.92}
+#list>.state{grid-column:1/-1}
 
 /* ============ card ============ */
 .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-3);
@@ -243,6 +251,16 @@ a{color:var(--accent);text-decoration:none}
 .btn-copy-mini .ico{width:15px;height:15px}
 .hostbadge{font-family:var(--mono);font-size:11px;color:var(--text-2);background:var(--surface-2);border-radius:4px;padding:0 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
+/* ============ 第三方加速地址 ============ */
+/* 只是「多给一个可复制的备用地址」：不替换主地址，不碰主 CTA，不参与任何状态判定。
+   视觉上比镜像组更轻：虚线分隔 + 更小的字，避免跟「本仓库收录的镜像」抢权重。 */
+.ghacc{margin-top:2px;padding-top:8px;border-top:1px dashed var(--line)}
+.ghacc-head{display:flex;align-items:center;gap:6px;font-size:11.5px;line-height:1.45;color:var(--text-3)}
+.ghacc-head .tag{flex:none;display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:4px;
+  font-size:10.5px;font-weight:700;letter-spacing:.02em;background:var(--surface-2);color:var(--text-3)}
+.ghacc-row{display:flex;align-items:center;gap:8px;min-height:30px;font:400 11.5px/1.5 var(--mono);color:var(--text-3)}
+.ghacc-row .mu{flex:1;min-width:0;word-break:break-all;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all;cursor:copy}
+
 /* ============ empty / error ============ */
 .state{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:56px 20px}
 .state .ico{width:40px;height:40px;color:var(--text-3);stroke-width:1.4}
@@ -344,6 +362,9 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
 /* 放在样式表末尾：.btn-link / .btn-sm / .btn-copy-mini / .mirror-* 都定义在上面，
    media query 不加特异性，同选 specificity 下后写者赢，所以这段必须在它们之后。 */
 @media (max-width:899px){
+  /* 手机回退单列：375px 宽塞两列，每张卡只有 ~170px，URL 会碎成一堆字符，没法读。 */
+  #list{grid-template-columns:1fr}
+
   /* 吸顶修正：sticky 只在「包含块」内生效，而 .sticky 的父是 .topwrap（只有 header 那么高），
      滚过 231px 后搜索框就跟着父盒子走出屏幕。让 .topwrap 不生成盒子（display:contents），
      .sticky 的包含块就上溯到 body，才能一直粘在 top:0。
@@ -358,7 +379,7 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
   .btn-copy-mini{height:44px}
   .btn-link{height:44px;padding:0 8px}
   .btn-sm{height:44px}
-  .mirror-head,.mirror-row{min-height:44px}
+  .mirror-head,.mirror-row,.ghacc-row{min-height:44px}
   /* URL 的「展开/收起」是冗余入口（整块 .url 本身可选中复制），抬到 24px 最小线即可，
      不给它 44：517 张卡每张 +20px 划不来。 */
   .btn-expand{padding:4px 6px}
@@ -748,6 +769,38 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
   function isMirrorUrl(url){
     try{ return mirrorHosts().indexOf(new URL(url, location.href).hostname) >= 0; }catch(e){ return false; }
   }
+
+  /* ---------- GitHub 上的文件 → 第三方加速地址 ---------- */
+  /* 纯展示层：给「GitHub 托管的文件」多备一个可复制的地址 https://www.gh-proxy.cn/github/<原URL>。
+     四条纪律：
+     1) 只加不改 —— 主地址和「复制订阅地址」主 CTA 一个字都不动。
+     2) 不进 MIRROR_HOSTS —— 那份清单是探针守卫（isMirrorUrl 用它把「经由镜像探测失败」降级成
+        「不可验证」）。我们并没有用 gh-proxy.cn 探测过任何东西，加进去会凭空造出一批假灰。
+     3) 必须是「文件」：raw.githubusercontent.com / github.com/<owner>/<repo>/blob|raw/<path> /
+        gist.githubusercontent.com。github.com/<owner>/<repo> 是仓库主页，不是文件，不给。
+     4) 只认 GitHub 自己的域名。ghp.ci / raw.kkgithub.com / gh-proxy.com 已经是别人的代理，
+        再套一层是双重代理 —— 站点源里正好有 16 条这种，全部跳过（对它们 isGitHubFileUrl 返回 false）。 */
+  var GH_PROXY = 'https://www.gh-proxy.cn/github/';
+  function isGitHubFileUrl(url){
+    if(!url) return false;
+    try{
+      var u = new URL(url, location.href);
+      if(u.protocol!=='http:' && u.protocol!=='https:') return false;
+      var host = u.hostname.toLowerCase();
+      var path = u.pathname || '/';
+      /* 文件型 CDN 域名：光有域名不算，必须带路径 */
+      if(host==='raw.githubusercontent.com' || host==='gist.githubusercontent.com' || host==='raw.github.com'){
+        return path.replace(/^\/+/,'').length > 0;
+      }
+      /* github.com 网页：只有 /owner/repo/blob|raw/<...> 才是文件视图，其余（仓库主页、
+         /tree/ 目录、/issues、/releases…）都不是文件 */
+      if(host==='github.com' || host==='www.github.com'){
+        return /^\/[^/]+\/[^/]+\/(blob|raw)\/.+/.test(path);
+      }
+      return false;
+    }catch(e){ return false; }
+  }
+  function ghAccelUrl(url){ return isGitHubFileUrl(url) ? GH_PROXY + url : ''; }
   function cfgState(c){
     var p = probeOf(c && c.url);
     if(p) return normState(p.state);
@@ -1013,6 +1066,23 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
     return wrap;
   }
 
+  /* 加速地址行：与主地址同构（可点文字复制 + 独立复制按钮），但明确标注第三方。
+     文案不写「官方」/「推荐」，也不承诺更快 —— 那是别人的服务，挂了我们管不了。 */
+  function buildGhAccel(accelUrl){
+    var wrap = h('div',{class:'ghacc'});
+    var head = h('div',{class:'ghacc-head'},
+      h('span',{class:'tag'},'加速地址'),
+      h('span',null,'第三方 gh-proxy.cn · 不保证更快'));
+    var row = h('div',{class:'ghacc-row'});
+    var t = h('span',{class:'mu', text:accelUrl, title:'点击复制加速地址（第三方服务）'});
+    t.addEventListener('click', function(){ doCopy(accelUrl, '加速地址 · 第三方 gh-proxy.cn', t); });
+    var b = h('button',{class:'btn-copy-mini', type:'button','aria-label':'复制加速地址 '+accelUrl}, icon('i-copy'));
+    b.addEventListener('click', function(){ doCopy(accelUrl, '加速地址 · 第三方 gh-proxy.cn', b); });
+    row.appendChild(t); row.appendChild(b);
+    wrap.appendChild(head); wrap.appendChild(row);
+    return wrap;
+  }
+
   function buildConfigCard(c){
     var state = cfgState(c);
     var card = h('article', { class:'card', id:'cfg-'+c.id, 'data-id':c.id });
@@ -1051,6 +1121,10 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
     card.appendChild(top);
 
     card.appendChild(buildUrlBlock(c.url||''));
+
+    /* GitHub 托管的文件才给加速地址；其余（自建域名 / GitHub Pages / 已是别人代理的）一律不加 */
+    var accel = ghAccelUrl(c.url);
+    if(accel) card.appendChild(buildGhAccel(accel));
 
     var lat = cfgLatency(c), at = cfgCheckedAt(c);
     var meta = h('div',{class:'card-meta'});
@@ -1340,6 +1414,20 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
 
     var code = h('div',{class:'sheet-url', text:c.url||''});
     body.push(code);
+
+    var accel = ghAccelUrl(c.url);
+    if(accel){
+      var wrapA = h('div',{style:'margin:10px 0 0'});
+      wrapA.appendChild(h('h3',{style:'font-size:11.5px;font-weight:700;letter-spacing:.06em;color:var(--text-3);margin-bottom:6px'},'加速地址（第三方）'));
+      var lineA = h('div',{class:'sheet-url',style:'margin:6px 0;display:flex;align-items:center;gap:8px'});
+      var ta = h('span',{style:'flex:1;min-width:0;word-break:break-all'}, accel);
+      var ba = h('button',{class:'btn btn-icon',type:'button',style:'width:34px;height:34px;flex:none','aria-label':'复制加速地址'}, icon('i-copy'));
+      ba.addEventListener('click', function(){ doCopy(accel, '加速地址 · 第三方 gh-proxy.cn', ba); });
+      lineA.appendChild(ta); lineA.appendChild(ba);
+      wrapA.appendChild(lineA);
+      wrapA.appendChild(h('p',{class:'sheet-note',style:'margin:6px 0 0'},'gh-proxy.cn 是第三方公共加速服务，可用性与速度都不由本站保证；失效时请用上面的原始地址。'));
+      body.push(wrapA);
+    }
 
     var mirrors = Array.isArray(c.mirrors) ? c.mirrors.filter(Boolean) : [];
     if(mirrors.length){
