@@ -1,0 +1,148 @@
+{
+  "method": "拿 zijian.json（raw.githubusercontent.com/Inliang/tvbox/main/zijian.json）逐个镜像实拉，比对字节数与 md5；失败的镜像额外换浏览器 UA 复测，并检查响应体而非只看状态码",
+  "generatedAt": "2026-10-19T20:05:00+08:00",
+  "baseline": {
+    "url": "https://raw.githubusercontent.com/Inliang/tvbox/main/zijian.json",
+    "status": 200,
+    "bytes": 41157,
+    "md5": "f6e930200c29d2106401d835658c02b2",
+    "ms": 1114
+  },
+  "field_note": "status=200 不等于内容正确。本文件里 3 个『坏』镜像全部返回 200，靠 md5 与响应体才识别出它们没给到文件。",
+  "hosts": [
+    {
+      "host": "gh-proxy.com",
+      "verdict": "ok",
+      "status": 200,
+      "bytes": 41157,
+      "md5": "f6e930200c29d2106401d835658c02b2",
+      "ms": 687,
+      "note": "内容与基线一致"
+    },
+    {
+      "host": "gh-proxy.org",
+      "verdict": "ok",
+      "status": 200,
+      "bytes": 41157,
+      "md5": "f6e930200c29d2106401d835658c02b2",
+      "ms": 457,
+      "note": "内容与基线一致"
+    },
+    {
+      "host": "ghfast.top",
+      "verdict": "ok",
+      "status": 200,
+      "bytes": 41157,
+      "md5": "f6e930200c29d2106401d835658c02b2",
+      "ms": 1285,
+      "note": "内容与基线一致"
+    },
+    {
+      "host": "ghproxy.cc",
+      "verdict": "ok",
+      "status": 200,
+      "bytes": 41157,
+      "md5": "f6e930200c29d2106401d835658c02b2",
+      "ms": 3509,
+      "note": "内容与基线一致，偏慢"
+    },
+    {
+      "host": "ghproxy.net",
+      "verdict": "ok_slow",
+      "status": 200,
+      "bytes": 41157,
+      "md5": "f6e930200c29d2106401d835658c02b2",
+      "ms": 21558,
+      "note": "内容与基线一致，但耗时 21.5s，接近不可用；同为 ghproxy 家族的 ghproxy.cc 只要 3.5s"
+    },
+    {
+      "host": "ghp.ci",
+      "verdict": "unreachable",
+      "status": null,
+      "bytes": null,
+      "md5": null,
+      "ms": 656,
+      "note": "RemoteDisconnected 656ms；换浏览器 UA 复测仍 RemoteDisconnected 623ms。快速 RST 且换 UA 无效，属于对端主动拒绝，不是超时抖动"
+    },
+    {
+      "host": "gh-proxy.net",
+      "verdict": "hijacked",
+      "status": 200,
+      "bytes": 538,
+      "md5": "2848b6d1cb38627167ace6cc897e9145",
+      "ms": 806,
+      "note": "200 但返回 538B 的 window.location.replace 跳转壳；跟随其中的 ?ch=1&js=<JWT> 目标后落到 3084B 页面，其 meta refresh 指向 http://hagne-puo.com/zokredirect?visitid=... ——第三方随机域名，页面内检测 iframeDetected / window.innerWidth 等浏览器指纹。这不是 anti-bot 挑战，是流量劫持。给不出文件内容。",
+      "evidence": {
+        "layer1_bytes": 538,
+        "layer1_title": "Loading...",
+        "layer2_bytes": 3084,
+        "layer2_refresh_target": "http://hagne-puo.com/zokredirect?visitid=88813674-cbb3-11f1-ad69-0affcae513af&type=meta",
+        "layer2_fingerprint_checks": [
+          "iframeDetected",
+          "window.innerWidth",
+          "window.innerHeight"
+        ]
+      }
+    },
+    {
+      "host": "raw.kkgithub.com",
+      "verdict": "parked",
+      "status": 200,
+      "bytes": 1142,
+      "md5": "3f3712900228a7c65ad8b0fdb317620e",
+      "ms": 394,
+      "note": "200 但返回 1142B SPA 空壳，title 为 'Boulies OPS'，引用一堆本地 async.js。域名已停放，不再是 GitHub 镜像。"
+    }
+  ],
+  "verdict_counts": {
+    "ok": 4,
+    "ok_slow": 1,
+    "unreachable": 1,
+    "hijacked": 1,
+    "parked": 1
+  },
+  "impact_on_517": {
+    "mirror_down_count": 0,
+    "note": "scripts/build_candidates.py 的 apply_probe_guards 只在 probe 判 dead 时把镜像 host 降级为 mirror_down；本次全量 2024 条里 probe_status=='mirror_down' 为 0 条，该分支今天一次都没触发。",
+    "sites_on_mirror_hosts": 80,
+    "sites_on_mirror_hosts_tier": "全部 E 档 / reason_code=remote_js / included=false",
+    "sites_in_517_on_mirror_hosts": 0,
+    "sites_on_the_three_bad_hosts": 7,
+    "sites_on_raw_kkgithub": 0,
+    "conclusion": "摘除或标记这 3 个坏镜像对 517 条站点零影响：raw.kkgithub.com 上一站点都没有，gh-proxy.net(6) 与 ghp.ci(1) 上共 7 条全是 E 档 remote_js，本就不进 517。改动的风险在数据契约一致性，不在站点集合。"
+  },
+  "recommendation": [
+    "raw.kkgithub.com：域名已停放，从 MIRROR_HOSTS 摘除（前端也不该再把它当加速源推荐）",
+    "gh-proxy.net：不是不稳定，是已被劫持到第三方域名 hagne-puo.com，建议立即摘除而非仅标注",
+    "ghp.ci：对端主动拒绝且换 UA 无效，建议标 unreachable 而非『不稳定』——不稳定暗示重试可能成功，本次 4 次尝试全部 RST",
+    "ghproxy.net：内容正确但 21.5s，建议标注而不摘除",
+    "拆 MIRROR_HOSTS 为『可用清单』与『实测状态』两个字段：前者给前端判青用，后者给后来者看新鲜度。当前 8 个里 3 个已不能给出文件内容，清单却仍在对外宣称它们是加速源"
+  ],
+  "caveat": "本文件只测量不改判定。MIRROR_HOSTS 定义在 scripts/build_candidates.py:420，注释要求与 docs/index.html 同步；数据层已冻结，是否改动由 team-lead 决定。",
+  "lead_decision": {
+    "verdict": "不摘除，gh-proxy.net / raw.kkgithub.com / ghp.ci 三个 host 保留在 MIRROR_HOSTS 中（v1 不动）",
+    "why_not_remove": [
+      "MIRROR_HOSTS 是探针守卫清单，不是推荐清单。它在 scripts/build_candidates.py:424 的 apply_probe_guards 里唯一的作用是：当 probe 判 confidence=dead 且 host 命中清单时，降级为 uncertain/status=mirror_down（标灰），从而不把站点踢进 D 档。",
+      "因此把某个 host 从清单里摘掉，效果是让探测到它失败的站点从『标灰』变成『判死』——方向恰好相反：域名越坏，越应该留在清单里。",
+      "这三个域名现在都拿不到文件内容（劫持 / 停放 / 主动 RST）。摘掉之后，任何 ext 指向它们的站点都会因为『探测失败』而被判死，正是我们今天一直在清的假阴性。"
+    ],
+    "exposure_check": {
+      "config_hosts": [
+        "raw.githubusercontent.com(31)",
+        "raw.liucn.cc",
+        "szyyds.cn",
+        "www.252035.xyz",
+        "dxawi.github.io",
+        "android.lushunming.qzz.io",
+        "www.yingm.cc",
+        "9280.kstore.vip",
+        "9763.kstore.vip"
+      ],
+      "gh-proxy.net_refs": 0,
+      "raw.kkgithub.com_refs": 0,
+      "ghp.ci_refs_in_517": 0,
+      "note": "交付页面不会渲染这三个域名的链接：配置卡上的 mirrors 来自各配置自己声明的 c.mirrors（共 7 条），不含任一坏域名。"
+    },
+    "v2_item": "若要把『已知坏』变成可查询状态而不是靠『删掉』表达，再拆 mirrorHosts(守卫用) / mirrorHostStatus(给人看)。拆之前先确认有读取方——今天 mirror_down 命中 0 条，没有任何逻辑依赖这个状态，提前拆是设计过度。"
+  }
+}

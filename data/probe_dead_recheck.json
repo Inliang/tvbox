@@ -2,6 +2,7 @@
   "method": "双 UA 策略：快速失败(＜3s RST)换浏览器 UA 立即重试；慢失败(＞3s)同 UA 隔 1s 重试",
   "count": 28,
   "httpRespondedCount": 4,
+  "httpRespondedCount_note": "本文件口径=UA 换指纹后被救活的 2xx 条数（等于 classification.http_responded_ua_blocked）。raw 文件的 httpRespondedCount=25 是「拿到 HTTP 状态码」（404 也算）。同名不同义，勿混用。",
   "items": [
     {
       "name": "⚡┃闪电┃优汐",
@@ -1088,7 +1089,6 @@
   "measurement_source": {
     "raw": "data/probe_dead_raw.json",
     "generatedBy": "scripts/recheck_dead.py",
-    "note": "顶层 method/count/httpRespondedCount/items 与本文件 classification 段均取自 raw 的双 UA 测量；权威口径是 classification。raw 由脚本重写，本文件为人工整理，脚本已加 curated_keys 守卫拒绝覆盖。",
     "curatedKeys": [
       "classification",
       "ua_retest",
@@ -1096,7 +1096,24 @@
       "rejections_breakdown",
       "reclassify_preview",
       "field_notes"
-    ]
+    ],
+    "raw_method": "双 UA 策略：快速失败(＜3s RST/403/429)换浏览器 UA 立即重试；慢失败(＞3s)同 UA 隔 1s 重试；URL 先做 IDNA + 百分号编码",
+    "raw_result": {
+      "count": 28,
+      "httpRespondedCount": 25,
+      "ok2xxCount": 4,
+      "noResponseCount": 3,
+      "pathCounts": {
+        "ua_blocked_retry": 6,
+        "stall_retry": 22
+      },
+      "noResponseDetail": [
+        "⚡┃闪电┃优汐 — 两次 timeout（9007ms / 8374ms），stall 不是抖动",
+        "Ⓜ️米搜丨搜索 — 两次 timeout（8681ms / 8492ms）",
+        "🌝┃益达┃App — 双 UA 均 RST（865ms / 864ms），换指纹无效，不是 UA 层拒绝"
+      ]
+    },
+    "note": "raw 文件是 scripts/recheck_dead.py 的原始测量，可重复生成；本文件的 classification / ua_retest 是人工解释层。两者口径已对齐：raw 的 httpRespondedCount=25 表示「拿到 HTTP 状态码」（404 也算），其中只有 ok2xxCount=4 是 2xx；classification 把这 4 条归为 http_responded_ua_blocked，与 ua_retest 逐条同名。raw 的历史缺陷：早期版本用单 UA 且未对中文路径做百分号编码，会同时低估 2xx 并误杀中文路径站点（后者已修，见 classification.detail.probe_bug_note）。脚本每次重跑只覆盖 raw，并通过 curated_keys 守卫拒绝写入本文件。"
   },
   "generatedAt": "2026-10-19T19:44:23+08:00"
 }

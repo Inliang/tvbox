@@ -1,13 +1,19 @@
 {
-  "method": "双 UA 策略：快速失败(＜3s RST)换浏览器 UA 立即重试；慢失败(＞3s)同 UA 隔 1s 重试",
-  "generatedAt": "2026-10-19T19:44:23+08:00",
+  "method": "双 UA 策略：快速失败(＜3s RST/403/429)换浏览器 UA 立即重试；慢失败(＞3s)同 UA 隔 1s 重试；URL 先做 IDNA + 百分号编码",
+  "generatedAt": "2026-10-19T19:46:41+08:00",
   "count": 28,
-  "httpRespondedCount": 4,
+  "httpRespondedCount": 25,
+  "ok2xxCount": 4,
   "pathCounts": {
     "stall_retry": 22,
     "ua_blocked_retry": 6
   },
-  "field_note": "http_responded 只表示拿到 HTTP 响应，不表示站点可用",
+  "statusCounts": {
+    "200": 4,
+    "403": 1,
+    "404": 40
+  },
+  "field_note": "http_responded=拿到 HTTP 状态码，404 也算，不表示站点可用；ok2xx=拿到 2xx；agreement=两次结果一致（确定性响应）",
   "items": [
     {
       "name": "⚡┃闪电┃优汐",
@@ -15,13 +21,15 @@
       "included": true,
       "url": "https://shandian.blog/",
       "http_responded": false,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 8922,
+          "ms": 9007,
           "err": "timeout",
           "err_detail": "TimeoutError"
         },
@@ -29,7 +37,7 @@
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 8430,
+          "ms": 8374,
           "err": "timeout",
           "err_detail": "TimeoutError"
         }
@@ -40,21 +48,23 @@
       "tier": "D",
       "included": true,
       "url": "https://dyyztvappapigoodgx.68.gy:12689/ciwk28vu38io8/apiurl.txt",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 912,
+          "ms": 840,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 809,
+          "ms": 797,
           "err": "http_404"
         }
       ]
@@ -64,21 +74,23 @@
       "tier": "D",
       "included": false,
       "url": "https://vs.okcdn100.top/api.php/provide/vod",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 829,
+          "ms": 749,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 700,
+          "ms": 529,
           "err": "http_404"
         }
       ]
@@ -89,13 +101,15 @@
       "included": false,
       "url": "https://haiwaikan.com/api.php/provide/vod",
       "http_responded": true,
+      "ok2xx": true,
+      "agreement": false,
       "path": "ua_blocked_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 950,
+          "ms": 879,
           "err": "rst",
           "err_detail": "RemoteDisconnected"
         },
@@ -103,7 +117,7 @@
           "ua": "browser",
           "ok": true,
           "status": 200,
-          "ms": 869,
+          "ms": 848,
           "bytes": 4000,
           "ctype": "text/html",
           "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
@@ -115,21 +129,23 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/MTV.json",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 1837,
+          "ms": 1632,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 1471,
+          "ms": 821,
           "err": "http_404"
         }
       ]
@@ -139,21 +155,23 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/bilibili.json",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 1935,
+          "ms": 850,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 656,
+          "ms": 803,
           "err": "http_404"
         }
       ]
@@ -163,21 +181,23 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/biliych.json",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 966,
+          "ms": 1026,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 1582,
+          "ms": 652,
           "err": "http_404"
         }
       ]
@@ -187,24 +207,24 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/少儿教育.json",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 60,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 1686,
+          "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 0,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 870,
+          "err": "http_404"
         }
       ]
     },
@@ -213,24 +233,24 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/小学课堂.json",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 0,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 1009,
+          "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 0,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 1483,
+          "err": "http_404"
         }
       ]
     },
@@ -239,24 +259,24 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/初中课堂.json",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 0,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 1598,
+          "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 0,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 658,
+          "err": "http_404"
         }
       ]
     },
@@ -265,24 +285,24 @@
       "tier": "D",
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/高中课堂.json",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 0,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 1506,
+          "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
-          "status": null,
-          "ms": 0,
-          "err": "UnicodeEncodeError",
-          "err_detail": "UnicodeEncodeError"
+          "status": 404,
+          "ms": 812,
+          "err": "http_404"
         }
       ]
     },
@@ -291,21 +311,23 @@
       "tier": "D",
       "included": false,
       "url": "https://555dy3.com/api.php/app/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 989,
+          "ms": 557,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 727,
+          "ms": 521,
           "err": "http_404"
         }
       ]
@@ -315,14 +337,16 @@
       "tier": "D",
       "included": false,
       "url": "https://www.airfun.fun/xgapp.php/v2/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 518,
+          "ms": 521,
           "err": "http_404"
         },
         {
@@ -339,21 +363,23 @@
       "tier": "D",
       "included": false,
       "url": "https://sk100.tv/api.php/app/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": false,
       "path": "ua_blocked_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 403,
-          "ms": 1763,
+          "ms": 678,
           "err": "http_403"
         },
         {
           "ua": "browser",
           "ok": false,
           "status": 404,
-          "ms": 1655,
+          "ms": 2608,
           "err": "http_404"
         }
       ]
@@ -363,21 +389,23 @@
       "tier": "D",
       "included": false,
       "url": "https://www.chiguafilm.com/api.php/v1.vod",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 1262,
+          "ms": 1171,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 1269,
+          "ms": 1599,
           "err": "http_404"
         }
       ]
@@ -387,21 +415,23 @@
       "tier": "D",
       "included": false,
       "url": "https://yk.shaozeyy.com/api.php/app/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 449,
+          "ms": 365,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 1146,
+          "ms": 393,
           "err": "http_404"
         }
       ]
@@ -411,21 +441,23 @@
       "tier": "D",
       "included": false,
       "url": "https://www.inmi.app/xgapp.php/v1/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 523,
+          "ms": 505,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 528,
+          "ms": 526,
           "err": "http_404"
         }
       ]
@@ -435,21 +467,23 @@
       "tier": "D",
       "included": false,
       "url": "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 367,
+          "ms": 394,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 372,
+          "ms": 340,
           "err": "http_404"
         }
       ]
@@ -459,21 +493,23 @@
       "tier": "D",
       "included": false,
       "url": "https://qpcj.69mini.com/api.php/app/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 167,
+          "ms": 160,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 178,
+          "ms": 163,
           "err": "http_404"
         }
       ]
@@ -483,22 +519,25 @@
       "tier": "D",
       "included": false,
       "url": "https://app.omofun1.top",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": false,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 715,
+          "ms": 717,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
-          "status": 404,
-          "ms": 1735,
-          "err": "http_404"
+          "status": null,
+          "ms": 526,
+          "err": "tls",
+          "err_detail": "URLError"
         }
       ]
     },
@@ -507,21 +546,23 @@
       "tier": "D",
       "included": false,
       "url": "https://ceshi307386.oss-cn-beijing.aliyuncs.com/blurl.txt",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 122,
+          "ms": 141,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 125,
+          "ms": 128,
           "err": "http_404"
         }
       ]
@@ -532,13 +573,15 @@
       "included": false,
       "url": "https://myd666.tv/lvdou_api.php/v1.vod",
       "http_responded": false,
+      "ok2xx": false,
+      "agreement": true,
       "path": "ua_blocked_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 859,
+          "ms": 865,
           "err": "rst",
           "err_detail": "RemoteDisconnected"
         },
@@ -546,7 +589,7 @@
           "ua": "browser",
           "ok": false,
           "status": null,
-          "ms": 877,
+          "ms": 864,
           "err": "rst",
           "err_detail": "RemoteDisconnected"
         }
@@ -557,21 +600,23 @@
       "tier": "D",
       "included": false,
       "url": "https://app.bfzyapi.com/api.php/provide/vod/",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 883,
+          "ms": 1003,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 894,
+          "ms": 785,
           "err": "http_404"
         }
       ]
@@ -582,13 +627,15 @@
       "included": false,
       "url": "https://www.3ayy.com",
       "http_responded": true,
+      "ok2xx": true,
+      "agreement": false,
       "path": "ua_blocked_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 872,
+          "ms": 870,
           "err": "rst",
           "err_detail": "RemoteDisconnected"
         },
@@ -596,7 +643,7 @@
           "ua": "browser",
           "ok": true,
           "status": 200,
-          "ms": 857,
+          "ms": 888,
           "bytes": 4000,
           "ctype": "text/html",
           "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
@@ -609,13 +656,15 @@
       "included": false,
       "url": "https://www.bttt11.com",
       "http_responded": true,
+      "ok2xx": true,
+      "agreement": false,
       "path": "ua_blocked_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 841,
+          "ms": 857,
           "err": "rst",
           "err_detail": "RemoteDisconnected"
         },
@@ -623,7 +672,7 @@
           "ua": "browser",
           "ok": true,
           "status": 200,
-          "ms": 860,
+          "ms": 891,
           "bytes": 4000,
           "ctype": "text/html",
           "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
@@ -635,21 +684,23 @@
       "tier": "D",
       "included": false,
       "url": "https://hhjx.hhplayer.com/api.php;post;url=+var",
-      "http_responded": false,
+      "http_responded": true,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 384,
+          "ms": 399,
           "err": "http_404"
         },
         {
           "ua": "client",
           "ok": false,
           "status": 404,
-          "ms": 388,
+          "ms": 384,
           "err": "http_404"
         }
       ]
@@ -660,13 +711,15 @@
       "included": false,
       "url": "https://caiji.kczyapi.com/api.php/provide/vod/",
       "http_responded": true,
+      "ok2xx": true,
+      "agreement": false,
       "path": "ua_blocked_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 854,
+          "ms": 878,
           "err": "rst",
           "err_detail": "RemoteDisconnected"
         },
@@ -674,7 +727,7 @@
           "ua": "browser",
           "ok": true,
           "status": 200,
-          "ms": 847,
+          "ms": 854,
           "bytes": 4000,
           "ctype": "text/html",
           "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
@@ -687,13 +740,15 @@
       "included": false,
       "url": "https://misoso.shop",
       "http_responded": false,
+      "ok2xx": false,
+      "agreement": true,
       "path": "stall_retry",
       "attempts": [
         {
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 8927,
+          "ms": 8681,
           "err": "timeout",
           "err_detail": "TimeoutError"
         },
@@ -701,7 +756,7 @@
           "ua": "client",
           "ok": false,
           "status": null,
-          "ms": 8571,
+          "ms": 8492,
           "err": "timeout",
           "err_detail": "TimeoutError"
         }
