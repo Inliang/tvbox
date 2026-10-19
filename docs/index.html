@@ -1237,6 +1237,9 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
   /* ---------- tabs ---------- */
   function switchTab(next){
     if(tab===next) return;
+    /* 数据没加载起来时（store 为 null）整套渲染建立在 store.sites/configs 上，
+       这里放行就会抛 TypeError。错误态已经有 renderError() 的整块提示，切 Tab 无意义。 */
+    if(!store) return;
     tab = next;
     ['configs','sites'].forEach(function(t){
       var btn = document.getElementById('tab-'+t);

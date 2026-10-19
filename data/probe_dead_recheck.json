@@ -665,67 +665,84 @@
       "probe_bug_note": "UnicodeEncodeError 表示请求根本没发出；百分号编码后重测均 404，故结论碰巧成立，但方法错误，下次会误杀中文路径的活站点"
     }
   },
-  "config_truncation": {
-    "observedAt": "2026-10-19T17:20+08:00",
-    "source": "docs/data/configs.json generatedAt 2026-10-19T17:08:54+08:00",
-    "finding": "7 条 raw.githubusercontent.com 配置 state=reachable/error=not_json，probeMs 全部 794–1399ms，远低于 timeout=10s，说明是在 1.2 秒左右拿到不完整 body 后 json 解析失败，不是超时",
-    "rawConfigs": {
-      "total": 31,
-      "ok": 24,
-      "reachable": 7,
-      "fail": 0
+  "config_parse": {
+    "status": "superseded",
+    "retracted": "最初假设「7 条非 ok 配置是读取截断」，已被证伪并撤回。原始错误记录保留在 retracted_hypothesis 字段，供后续避免重复推断。",
+    "retracted_hypothesis": {
+      "claim": "7 条 raw 配置 probeMs 794–1399ms 且 error=not_json，推断为 read() 静默返回短 body",
+      "why_wrong": [
+        "Content-Length 与实收字节逐条完全相等（57874/57874、18204/18204、19198/19198）",
+        "json 解析失败位置在 char 0 / 2 / 267 / 713 / 1408 / 1984，全在开头，不在尾部",
+        "build.py 自身的 truncated 分支今天命中 0 次"
+      ],
+      "method_error": "把一条样本（github-inliang 1176ms）的属性推广到同组的另外 6 条"
     },
-    "items": [
-      {
-        "id": "github-inliang",
-        "ms": 1176
+    "corrected": {
+      "source": "data/config_parse_recheck.json",
+      "kinds": {
+        "jsonc": 6,
+        "bom": 1,
+        "store_house": 1,
+        "invalid": 1
       },
-      {
-        "id": "maoystv-000",
-        "ms": 1286
-      },
-      {
-        "id": "guot55-vip2",
-        "ms": 1095
-      },
-      {
-        "id": "hccx-tvbox",
-        "ms": 1215
-      },
-      {
-        "id": "qist-xyq",
-        "ms": 1230
-      },
-      {
-        "id": "xyq-tvbox",
-        "ms": 1063
-      },
-      {
-        "id": "liucn-m",
-        "ms": 794
-      }
-    ],
-    "bodyCheck": {
-      "url": "https://raw.githubusercontent.com/Inliang/tvbox/main/zijian.json",
-      "raw": {
-        "status": 200,
-        "ms": 84783,
-        "bytes": 41157,
-        "contentLength": "41157",
-        "contentType": "text/plain; charset=utf-8",
-        "jsonOk": true,
-        "sites": 142
-      },
-      "jsdelivr": {
-        "status": 200,
-        "ms": 768,
-        "bytes": 41157,
-        "contentType": "application/json; charset=utf-8",
-        "jsonOk": true,
-        "sites": 142,
-        "byteIdentical": true
-      }
+      "items": [
+        {
+          "id": "liucn-m",
+          "kind": "jsonc",
+          "sites": 234,
+          "exportsRows": 98
+        },
+        {
+          "id": "maoystv-000",
+          "kind": "jsonc",
+          "sites": 184,
+          "exportsRows": 18
+        },
+        {
+          "id": "252035-fongmi",
+          "kind": "jsonc",
+          "sites": 43,
+          "exportsRows": 5
+        },
+        {
+          "id": "hccx-tvbox",
+          "kind": "jsonc",
+          "sites": 68,
+          "exportsRows": 55
+        },
+        {
+          "id": "qist-xyq",
+          "kind": "jsonc",
+          "sites": 49,
+          "exportsRows": 8
+        },
+        {
+          "id": "xyq-tvbox",
+          "kind": "jsonc",
+          "sites": 48,
+          "exportsRows": 0
+        },
+        {
+          "id": "szyyds-x",
+          "kind": "bom",
+          "sites": 62,
+          "exportsRows": 1
+        },
+        {
+          "id": "fish2018-ol-tvbox",
+          "kind": "store_house",
+          "sites": 0,
+          "exportsRows": 0
+        },
+        {
+          "id": "guot55-vip2",
+          "kind": "invalid",
+          "detail": "{\"key\":爱迪V2,...} 未加引号的 key",
+          "sites": 144,
+          "exportsRows": 46
+        }
+      ]
     },
-    "verdict": "内容层无问题；not_json 是读取不完整的误判。建议把截断与真正的非 JSON 响应分开判定，且 jsdelivr 回退只写 checkedVia、不改 state"
+    "severity": "仅影响卡片状态文案；采集层 repair_json_text() 已宽容解析，站点均已进入 517，数据层无缺失"
   }
 }
