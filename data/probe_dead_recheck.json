@@ -1,7 +1,7 @@
 {
-  "method": "同一 URL 连试两次，间隔 1s；任一成功记为 http_responded",
+  "method": "双 UA 策略：快速失败(＜3s RST)换浏览器 UA 立即重试；慢失败(＞3s)同 UA 隔 1s 重试",
   "count": 28,
-  "httpRespondedCount": 0,
+  "httpRespondedCount": 4,
   "items": [
     {
       "name": "⚡┃闪电┃优汐",
@@ -9,18 +9,25 @@
       "included": true,
       "url": "https://shandian.blog/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 8410,
-        "err": "TimeoutError:The read operation timed out"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 8386,
-        "err": "TimeoutError:The read operation timed out"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 8922,
+          "err": "timeout",
+          "err_detail": "TimeoutError"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 8430,
+          "err": "timeout",
+          "err_detail": "TimeoutError"
+        }
+      ]
     },
     {
       "name": "🐇┃兔子┃APP",
@@ -28,18 +35,23 @@
       "included": true,
       "url": "https://dyyztvappapigoodgx.68.gy:12689/ciwk28vu38io8/apiurl.txt",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 857,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 806,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 912,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 809,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "影视 • 小绵阳",
@@ -47,37 +59,50 @@
       "included": false,
       "url": "https://vs.okcdn100.top/api.php/provide/vod",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 597,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 525,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 829,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 700,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "海外看┃采集",
       "tier": "D",
       "included": false,
       "url": "https://haiwaikan.com/api.php/provide/vod",
-      "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 907,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 864,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      }
+      "http_responded": true,
+      "path": "ua_blocked_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 950,
+          "err": "rst",
+          "err_detail": "RemoteDisconnected"
+        },
+        {
+          "ua": "browser",
+          "ok": true,
+          "status": 200,
+          "ms": 869,
+          "bytes": 4000,
+          "ctype": "text/html",
+          "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
+        }
+      ]
     },
     {
       "name": "明星┃MV",
@@ -85,18 +110,23 @@
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/MTV.json",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 1075,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 652,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1837,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1471,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🅱哔哔合集┃弹幕",
@@ -104,18 +134,23 @@
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/bilibili.json",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 706,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 663,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1935,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 656,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🅱哔哔演唱会┃弹幕",
@@ -123,18 +158,23 @@
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/biliych.json",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 704,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 678,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 966,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1582,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "📚少儿┃教育",
@@ -142,18 +182,25 @@
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/少儿教育.json",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 27,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 0,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 60,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 0,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        }
+      ]
     },
     {
       "name": "📚小学┃课堂",
@@ -161,18 +208,25 @@
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/小学课堂.json",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 0,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 0,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 0,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 0,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        }
+      ]
     },
     {
       "name": "📚初中┃课堂",
@@ -180,18 +234,25 @@
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/初中课堂.json",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 0,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 0,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 0,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 0,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        }
+      ]
     },
     {
       "name": "📚高中┃课堂",
@@ -199,18 +260,25 @@
       "included": false,
       "url": "https://notabug.org/fantaiying/ext/raw/main/高中课堂.json",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 0,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 0,
-        "err": "UnicodeEncodeError:'ascii' codec can't encode characters in position 29-32: ord"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 0,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 0,
+          "err": "UnicodeEncodeError",
+          "err_detail": "UnicodeEncodeError"
+        }
+      ]
     },
     {
       "name": "🌙555（APP）",
@@ -218,18 +286,23 @@
       "included": false,
       "url": "https://555dy3.com/api.php/app/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 787,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 553,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 989,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 727,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🌙空气屋（APP）",
@@ -237,18 +310,23 @@
       "included": false,
       "url": "https://www.airfun.fun/xgapp.php/v2/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 624,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 612,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 518,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 490,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🌙速看100（APP）",
@@ -256,18 +334,23 @@
       "included": false,
       "url": "https://sk100.tv/api.php/app/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 403,
-        "ms": 852,
-        "err": "http_403"
-      },
-      "try2": {
-        "ok": false,
-        "status": 403,
-        "ms": 1563,
-        "err": "http_403"
-      }
+      "path": "ua_blocked_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 403,
+          "ms": 1763,
+          "err": "http_403"
+        },
+        {
+          "ua": "browser",
+          "ok": false,
+          "status": 404,
+          "ms": 1655,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🌙木白（APP）",
@@ -275,18 +358,23 @@
       "included": false,
       "url": "https://www.chiguafilm.com/api.php/v1.vod",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 1299,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 1098,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1262,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1269,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🌙少泽影客（APP）",
@@ -294,18 +382,23 @@
       "included": false,
       "url": "https://yk.shaozeyy.com/api.php/app/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 379,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 910,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 449,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1146,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🌙映迷（APP）",
@@ -313,18 +406,23 @@
       "included": false,
       "url": "https://www.inmi.app/xgapp.php/v1/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 514,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 548,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 523,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 528,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "👁️‍🗨️快看",
@@ -332,18 +430,23 @@
       "included": false,
       "url": "https://kuaikan-api.com/api.php/provide/vod/from/kuaikan/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 374,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 394,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 367,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 372,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "💝分享起跑",
@@ -351,18 +454,23 @@
       "included": false,
       "url": "https://qpcj.69mini.com/api.php/app/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 224,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 186,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 167,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 178,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🌸｜曼波｜动漫",
@@ -370,18 +478,23 @@
       "included": false,
       "url": "https://app.omofun1.top",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 7942,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 693,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 715,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 1735,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🐼布雷｜APP",
@@ -389,18 +502,23 @@
       "included": false,
       "url": "https://ceshi307386.oss-cn-beijing.aliyuncs.com/blurl.txt",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 138,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 128,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 122,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 125,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "🌝┃益达┃App",
@@ -408,18 +526,25 @@
       "included": false,
       "url": "https://myd666.tv/lvdou_api.php/v1.vod",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 884,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 877,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      }
+      "path": "ua_blocked_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 859,
+          "err": "rst",
+          "err_detail": "RemoteDisconnected"
+        },
+        {
+          "ua": "browser",
+          "ok": false,
+          "status": null,
+          "ms": 877,
+          "err": "rst",
+          "err_detail": "RemoteDisconnected"
+        }
+      ]
     },
     {
       "name": "🌪️暴风影音",
@@ -427,56 +552,77 @@
       "included": false,
       "url": "https://app.bfzyapi.com/api.php/provide/vod/",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 1309,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 1680,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 883,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 894,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "👓视觉┃BPQ",
       "tier": "D",
       "included": false,
       "url": "https://www.3ayy.com",
-      "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 880,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 855,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      }
+      "http_responded": true,
+      "path": "ua_blocked_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 872,
+          "err": "rst",
+          "err_detail": "RemoteDisconnected"
+        },
+        {
+          "ua": "browser",
+          "ok": true,
+          "status": 200,
+          "ms": 857,
+          "bytes": 4000,
+          "ctype": "text/html",
+          "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
+        }
+      ]
     },
     {
       "name": "雷蒙影视 | 🧲BT天堂(XBPQ)",
       "tier": "D",
       "included": false,
       "url": "https://www.bttt11.com",
-      "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 912,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 878,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      }
+      "http_responded": true,
+      "path": "ua_blocked_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 841,
+          "err": "rst",
+          "err_detail": "RemoteDisconnected"
+        },
+        {
+          "ua": "browser",
+          "ok": true,
+          "status": 200,
+          "ms": 860,
+          "bytes": 4000,
+          "ctype": "text/html",
+          "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
+        }
+      ]
     },
     {
       "name": "💢骚火",
@@ -484,37 +630,50 @@
       "included": false,
       "url": "https://hhjx.hhplayer.com/api.php;post;url=+var",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": 404,
-        "ms": 412,
-        "err": "http_404"
-      },
-      "try2": {
-        "ok": false,
-        "status": 404,
-        "ms": 402,
-        "err": "http_404"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 384,
+          "err": "http_404"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": 404,
+          "ms": 388,
+          "err": "http_404"
+        }
+      ]
     },
     {
       "name": "快车资源",
       "tier": "D",
       "included": false,
       "url": "https://caiji.kczyapi.com/api.php/provide/vod/",
-      "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 874,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 891,
-        "err": "RemoteDisconnected:Remote end closed connection without response"
-      }
+      "http_responded": true,
+      "path": "ua_blocked_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 854,
+          "err": "rst",
+          "err_detail": "RemoteDisconnected"
+        },
+        {
+          "ua": "browser",
+          "ok": true,
+          "status": 200,
+          "ms": 847,
+          "bytes": 4000,
+          "ctype": "text/html",
+          "head": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><"
+        }
+      ]
     },
     {
       "name": "Ⓜ️米搜丨搜索",
@@ -522,18 +681,25 @@
       "included": false,
       "url": "https://misoso.shop",
       "http_responded": false,
-      "try1": {
-        "ok": false,
-        "status": null,
-        "ms": 8521,
-        "err": "TimeoutError:The read operation timed out"
-      },
-      "try2": {
-        "ok": false,
-        "status": null,
-        "ms": 8509,
-        "err": "TimeoutError:The read operation timed out"
-      }
+      "path": "stall_retry",
+      "attempts": [
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 8927,
+          "err": "timeout",
+          "err_detail": "TimeoutError"
+        },
+        {
+          "ua": "client",
+          "ok": false,
+          "status": null,
+          "ms": 8571,
+          "err": "timeout",
+          "err_detail": "TimeoutError"
+        }
+      ]
     }
   ],
   "ua_retest": {
@@ -922,7 +1088,7 @@
   "measurement_source": {
     "raw": "data/probe_dead_raw.json",
     "generatedBy": "scripts/recheck_dead.py",
-    "note": "raw 文件是 scripts/recheck_dead.py 的单 UA 原始测量，已知会低估：其中 4 条站点在浏览器 UA 下返回 200（首次测量记为无响应）。权威口径是本文件的 classification 字段，不是 raw。脚本每次重跑只覆盖 raw，并通过 curated_keys 守卫拒绝写入本文件。",
+    "note": "顶层 method/count/httpRespondedCount/items 与本文件 classification 段均取自 raw 的双 UA 测量；权威口径是 classification。raw 由脚本重写，本文件为人工整理，脚本已加 curated_keys 守卫拒绝覆盖。",
     "curatedKeys": [
       "classification",
       "ua_retest",
@@ -931,5 +1097,6 @@
       "reclassify_preview",
       "field_notes"
     ]
-  }
+  },
+  "generatedAt": "2026-10-19T19:44:23+08:00"
 }
