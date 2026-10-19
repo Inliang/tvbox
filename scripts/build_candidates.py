@@ -414,9 +414,32 @@ def probe_json(url, kind="api", timeout=8):
     return r
 
 
-# GitHub 加速/转发站：它们挂了不代表源站挂了，dead 只能说明这一跳不可用。
-# 不含 cdn.jsdelivr.net：它是 CDN，直接返回仓库文件本身，404 说明文件真没了，属于真 dead。
-# 这份清单必须与 docs/index.html 的 MIRROR_HOSTS 完全一致（前端用它决定不判青/不进探测队列）。
+# 不可信的地址跳板：GitHub 加速/转发站、代理、镜像都算。
+#
+# 注意这份清单的性质——它是「诚实性守卫」，不是「推荐源列表」。成员身份的含义是：
+# 探测到这个 host 失败时，只能说明这一跳不可用，不能据此判源站死，所以降级为
+# uncertain / mirror_down（标灰）。前端 docs/index.html:748 的 isMirrorUrl() 用
+# 同一份数据做同样的事（:785 判 untestable、:1670 不进探测队列）。
+#
+# 推论（反直觉但重要）：**域名越坏，越应该留在清单里。** 摘掉一个已知坏掉的
+# host，唯一的净效果是让探测到它失败的站点从「标灰」变成「判死」，即制造假阴性——
+# 而且今天它引用数为 0 只说明摘掉没有收益，不说明摘掉安全。
+# （2026-10-19 实测：摘掉 3 个坏 host 会让 517 里 11 条 probe_status=uncertain
+#  的站从 ⊘ 翻成青「可达」，用来自已劫持/已停放代理的记录替源站背书。）
+#
+# 已知失效（2026-10-19 实测，见 data/mirror_recheck.json）：
+#   gh-proxy.net      hijacked   538B 跳转壳 → hagne-puo.com 等随机第三方域名
+#   raw.kkgithub.com  parked     1142B SPA 空壳，title 'Boulies OPS'
+#   ghp.ci            unreachable 双 UA 均快速 RST
+#   ghproxy.net       ok_slow    内容正确但耗时方差大
+# 这几条**保留不动**：它们现在压着 11 条站不被误标为可达。
+# 想让「镜像已死」可见，应加展示层标注，或重探这 11 条换新的 probe_status，
+# 而不是从名单里删。
+#
+# 不含 cdn.jsdelivr.net：它是 CDN，直接返回仓库文件本身，404 说明文件真没了，
+# 属于真 dead。
+#
+# 这份清单必须与 docs/index.html 的 MIRROR_HOSTS 完全一致。
 MIRROR_HOSTS = {"ghp.ci", "gh-proxy.com", "gh-proxy.org", "gh-proxy.net",
                 "ghproxy.net", "ghproxy.cc", "ghfast.top", "raw.kkgithub.com"}
 
