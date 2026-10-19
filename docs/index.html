@@ -358,6 +358,25 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
   .hdr{padding-top:14px}
 }
 
+/* ============ 桌面内容列放宽：920 → 1160 ============ */
+/* 双列出来之后 920px 成了瓶颈。实测（39 条配置地址，1280 宽）：
+   438px 卡片时 29/39 条 URL 折成两行、只有 10 条一行读完；放宽到 558px 后 39/39 全部一行。
+   没有被 .url 的 -webkit-line-clamp:2 真的截掉过（两行是允许的），但地址从中间断开
+   成两截、第二行只剩 "on" 这种尾巴时，肉眼很难确认自己复制的是不是同一个地址 ——
+   而「看清并复制地址」就是本页唯一的核心功能。920 是单列时代的尺寸，双列之后不够用了。
+   头部 / 搜索 / 筛选 / 页脚（以及底部检测条）必须一起改：只放开 .wrap 会让卡片比
+   头部和页脚宽一截，整块内容在视觉上散架。
+   放在 min-width:768 那条之后：同样的选择器、同样的特异性，后写者赢，
+   靠源码顺序覆盖上面 .wrap 的 920 和 .hdr/.searchbox/.chipbar 的 920。
+   顺带修掉一处旧错位：原先 ≥1440 只把 .wrap 提到 980，头部/页脚仍是 920（差 30px）。
+   max-width 只在视口够宽时才生效，375px 下这五处什么都不变 —— 移动端不受影响。 */
+@media (min-width:900px){
+  .wrap,.hdr,.searchbox,.chipbar,.probe-inner,.foot-inner{max-width:1160px}
+}
+@media (min-width:1440px){
+  .wrap,.hdr,.searchbox,.chipbar,.probe-inner,.foot-inner{max-width:1220px}
+}
+
 /* ============ 手机端：吸顶修正 + 触控目标 ============ */
 /* 放在样式表末尾：.btn-link / .btn-sm / .btn-copy-mini / .mirror-* 都定义在上面，
    media query 不加特异性，同选 specificity 下后写者赢，所以这段必须在它们之后。 */
