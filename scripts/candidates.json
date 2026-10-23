@@ -486,6 +486,18 @@
       "url": "https://cdn.jsdelivr.net/gh/noimank/tvbox@main/tvboxmuti.json",
       "category": "多仓",
       "note": "noimank jsdelivr 镜像"
+    },
+    {
+      "name": "feimao-gif",
+      "url": "https://w.junce.dpdns.org/fm.gif",
+      "category": "综合",
+      "note": "肥猫备用2，GIF 图片尾部内嵌配置（feimaomm** + base64）"
+    },
+    {
+      "name": "feimao-tv",
+      "url": "http://肥猫.net/tv",
+      "category": "综合",
+      "note": "肥猫备用1；与主地址同内容（md5 一致），digest 折叠后归入 feimao 的 mirrors"
     }
   ]
 }

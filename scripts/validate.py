@@ -245,8 +245,22 @@ def main():
             continue
 
         # ext 本地依赖
+        # 只在引用的文件确实不存在时判 ERROR。本仓库的场景是 zijian.json 与 lib/ 同在根目录，
+        # TVBox 把 ./lib/ 解析为相对配置文件所在目录，路径有效、站点可用——此时不该阻塞。
+        # （csp_Bili 曾被这条规则误判为失效，实际 lib/0075389dca9afadd4614e9713765ff17.txt
+        #   在仓库内、47,957 B，站点可正常加载。）
         if "./lib/" in blob or "../" in blob:
-            flag("EXT_REL", f"[{label}] ext 依赖本仓库 lib 文件，跨配置迁移后失效")
+            rels = re.findall(r"(?:\./lib/|\.\./)[^\s\"']+", blob)
+            missing = [r for r in rels
+                       if not os.path.exists(os.path.join(
+                           ROOT, r[2:].replace("/", os.sep)))]
+            if missing:
+                err("EXT_REL",
+                    f"[{label}] ext 依赖的本地文件不存在：{missing[0]}")
+            else:
+                known("EXT_REL",
+                      f"[{label}] ext 依赖本仓库 lib 文件（{len(rels)} 个均在仓库内，"
+                      f"相对路径有效）")
         if LOCAL_RE.search(blob):
             flag("EXT_LOCAL", f"[{label}] ext 指向本机服务（127.0.0.1/localhost），"
                               f"仅本机可用，换设备失效")

@@ -9,6 +9,20 @@ build.py —— 构建站点数据并注入页面。
   3. 统一写入时间戳（数据里的 generatedAt 由本脚本覆盖，避免上游时钟漂移）
   4. 把数据内联进 docs/index.html 的 DATA_FALLBACK 区块，保证 file:// 双击也能看
 
+## 运行环境要求（重要，与 scripts/fetch_sources.py 同因）
+本脚本**必须在非沙箱环境运行**。第 1 步的服务端预探测会真实请求每个配置地址，
+沙箱的网络拦截列表会把部分主机（含中文域名的 punycode 形式）拦成 403 或断开连接，
+与"站点真的不可用"无法从单次结果上区分。
+2026-10-19 实测：沙箱内跑会把肥猫卡（http://肥猫.net → xn--z7x900a.net）判成
+`state=untestable / httpStatus=403`，而同一张卡在非沙箱环境是 `state=ok`、40 站。
+用户会直接看到一张"无法测试"的卡片，而它的地址是好的。
+若某张卡的 state 与 exports 侧数据明显矛盾，先确认是否处于沙箱环境。
+
+## 上游数据要求
+data/exports/*.json 必须由 scripts/inject_origin_probe.py 处理过
+（它在 build_candidates.py 之后、本脚本之前运行，负责写入 items[].originProbe）。
+顺序不可交换，详见该脚本文件头与下方 mirrorHosts 透传处的注释。
+
 ## 注入契约（与前端约定的硬约束，不要改）
 本脚本写 docs/index.html 时**只替换**下面两个标记之间的内容，禁止整文件重写、
 禁止模板整页重渲染，否则会覆盖手写代码：
@@ -40,7 +54,7 @@ import datetime
 import urllib.request
 import urllib.error
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse, urlunsplit
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
@@ -76,6 +90,13 @@ BROWSER_UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 
 # 这套此站只认 python-urllib 也会吃 UA 黑名单；只用一个 UA 等于单点故障。
 UA_CHAIN = [TVBOX_UA, BROWSER_UA]
+
+# 必须绕过环境代理。本机 127.0.0.1:9188 代理会拦掉一批主机（含中文域名 punycode 形式）
+# 并在 2ms 内返回 403，与"站点真的拒绝"无法从单次结果上区分。
+# 2026-10-19 实测：走代理时肥猫、xhztv 系列、jundie 等 7 张卡全被判成
+# state=untestable / error=blocked / probeMs=2，绕过之后恢复正常。
+# （scripts/build_candidates.py 早已为同一原因绕过代理，两边必须保持一致。）
+PROBE_OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
 
 def probe(url, timeout=15):
@@ -121,13 +142,20 @@ def _probe_once(url, timeout, ua):
         fail       → 失效：明确的 404 / 连接拒绝 / 超时
     返回 confidence：confirmed / uncertain / dead
     """
-    # 中文域名必须先 IDNA 编码，否则 urllib 抛 UnicodeEncodeError（请求根本没发出去）
+    # 中文域名必须先 IDNA 编码、中文路径必须 percent-encode，
+    # 否则 urllib 抛 UnicodeEncodeError——请求根本没发出去，
+    # 会被误记成"未测"（ufuzi-duanju 的 url 含中文路径"短剧频道"，曾中招）。
     try:
         p = urlparse(url)
         if p.hostname:
             host = p.hostname.encode("idna").decode("ascii")
             netloc = host + (f":{p.port}" if p.port else "")
             url = url.replace(p.netloc, netloc, 1)
+        p2 = urlparse(url)
+        url = urlunsplit((p2.scheme, p2.netloc,
+                          quote(p2.path, safe="/%:=&?+~#"),
+                          quote(p2.query, safe="/%:=&?+~#"),
+                          p2.fragment))
     except Exception:
         return {"state": "untestable", "confidence": "uncertain",
                 "error": "idna_failed", "httpStatus": None, "probeMs": 0}
@@ -140,7 +168,7 @@ def _probe_once(url, timeout, ua):
     })
     t0 = time.time()
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with PROBE_OPENER.open(req, timeout=timeout) as r:
             body = r.read(800000)
             code = r.status
             declared = r.headers.get("Content-Length")
@@ -333,6 +361,16 @@ def main():
     if "mirrorHosts" in exports_sites:
         sites_doc["mirrorHosts"] = exports_sites["mirrorHosts"]
     cfgs_doc["schema"] = SCHEMA_VERSION
+
+    # items[].originProbe 是**预计算字段**，由 scripts/inject_origin_probe.py 写入，
+    # 不由本脚本产生，也不要在这里重算或清除。
+    #   它记录的是：落在已失效镜像 host 上的站点，其 raw.githubusercontent.com
+    #   源站的实测结果（status/bytes/md5/checkedAt）。
+    #   为什么必须预计算：源站耗时在 0.6s ~ 40.8s 之间剧烈波动（间歇 stall），
+    #   前端实时探测会卡死，所以这个值只能是构建期算好写死的。
+    # 运行顺序不可交换：build_candidates.py → inject_origin_probe.py → 本脚本。
+    #   inject 跑在 build_candidates 之前会被重写冲掉；
+    #   跑在本脚本之后会让 docs 与 exports 脱节（sourceContentHash 指不到它）。
 
     # contentHash：只对"内容"取指纹，**不含每次构建都会变的量**。
     # 实测两次构建漂移的元凶是 checkedAt（探测时刻）和 probeMs（耗时），

@@ -36,6 +36,15 @@ OPENER = urllib.request.build_opener(
     urllib.request.ProxyHandler({}), urllib.request.HTTPSHandler(context=CTX))
 UA = "okhttp/3.12.13"
 
+# 源站是间歇性 stall，不是恒定慢：好的时候 0.6 秒出头，坏的时候 40 秒级。
+# 2026-10-23 实测两轮并集，11 条全部 598–836 ms 拿到 200；而 10-19 那次同批地址
+# 单次耗时 7.9s ~ 40.8s。同一个地址两次测量差 60 倍，所以：
+#   - 不能按"慢"下结论说它不可用（那一次恰好赶上好窗口）
+#   - 更不能指望前端探测时正好撞上好的那次（撞上 40s 就直接超时）
+# 两条都指向同一个动作：结果必须由采集端预计算后写死。
+# 跑多轮取并集，避免"某一轮超时"被误读成"站点不存在"。
+ROUNDS = int(os.environ.get("ORIGIN_ROUNDS", "2"))
+
 
 def host_of(u):
     try:
@@ -106,6 +115,7 @@ def main():
     bad = [x for x in items if host_of(x.get("probe_url")) in BAD_HOSTS]
     print(f"517 中 probe_url 落在 8 个镜像 host 上: {len(on_mirror)}", flush=True)
     print(f"其中落在 3 个已失效 host 上: {len(bad)}", flush=True)
+    print(f"轮次: {ROUNDS}（源站极慢且不稳定，取并集）", flush=True)
 
     res, unmapped = [], []
     for x in bad:
@@ -114,37 +124,58 @@ def main():
             unmapped.append(x)
             print(f"  [无法映射] {host_of(x['probe_url'])} {x['name']}", flush=True)
             continue
-        r = once(o)
-        r.update({"name": x["name"], "id": x["id"], "tier": x["tier"],
-                  "probe_status_now": x.get("probe_status"),
-                  "mirror_host": host_of(x["probe_url"]),
-                  "probe_url": x["probe_url"], "origin_url": o,
-                  "suggested_landing": landing(r.get("status"))})
-        res.append(r)
-        print(f"  [{str(r.get('status') or r.get('err')):>10}] "
-              f"{r['mirror_host']:<18} {x['name'][:22]:<24} "
-              f"{r.get('bytes', '-')}B {r.get('ms')}ms", flush=True)
-        if r.get("head"):
-            print(f"               head: {r['head']}", flush=True)
+        rounds = []
+        for r in range(ROUNDS):
+            rounds.append(once(o))
+            if rounds[-1].get("status") == 200:
+                break        # 已拿到 200，后面的轮次没有意义
+        any200 = any(r.get("status") == 200 for r in rounds)
+        last_ok = next((r for r in rounds if r.get("status") == 200), rounds[-1])
+        rec = {
+            "name": x["name"], "id": x["id"], "tier": x["tier"],
+            "probe_status_now": x.get("probe_status"),
+            "mirror_host": host_of(x["probe_url"]),
+            "probe_url": x["probe_url"], "origin_url": o,
+            # 并集口径：任一轮 200 即算源站存活；只有 404 才是"文件真的没了"
+            "origin_status": last_ok.get("status"),
+            "origin_bytes": last_ok.get("bytes"),
+            "origin_md5": last_ok.get("md5"),
+            "origin_responded": any(r.get("status") is not None for r in rounds),
+            "origin_ok200": any200,
+            "suggested_landing": landing(last_ok.get("status")) if any200
+                                 else landing(None),
+            "rounds": rounds,
+        }
+        res.append(rec)
+        tag = "200" if any200 else str(last_ok.get("status") or last_ok.get("err"))
+        print(f"  [{tag:>10}] {rec['mirror_host']:<18} {x['name'][:22]:<24} "
+              f"{last_ok.get('bytes', '-')}B {last_ok.get('ms')}ms "
+              f"({len(rounds)} 轮)", flush=True)
 
     out = {
         "method": ("把落在已失效镜像 host 上的 probe_url 按 host 形态映射回 "
                    "raw.githubusercontent.com 源站并实拉，用于确定删除该 host 后的落点"),
         "generatedAt": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
-        "field_note": ("suggested_landing 是建议落点，不是已生效的判定；"
-                       "数据层冻结期间本文件只作 v2 决策依据"),
+        "field_note": ("origin_status 取第一轮拿到 200 的结果；若多轮均无 200 则取最后一轮。"
+                       "origin_ok200=任一轮 200；404 才算 dead，超时不算。"
+                       "本文件是预计算结果，禁止前端实时探测：源站是间歇性 stall，"
+                       "2026-10-23 两轮并集实测 598–836 ms 全 200，而 10-19 同批地址单次曾达 7.9–40.8 s，"
+                       "撞上慢窗口前端探测必超时。"),
+        "rounds": ROUNDS,
         "mirrorHostCount": len(on_mirror),
         "badHostCount": len(bad),
         "mappedCount": len(res),
         "unmappedCount": len(unmapped),
-        "confirmedCount": sum(1 for r in res if r.get("status") == 200),
-        "deadCount": sum(1 for r in res if r.get("status") == 404),
+        "confirmedCount": sum(1 for r in res if r["origin_ok200"]),
+        "deadCount": sum(1 for r in res if r["origin_status"] == 404),
+        "unresolvedCount": sum(1 for r in res if not r["origin_ok200"]
+                               and r["origin_status"] != 404),
         "items": res,
     }
     json.dump(out, open(OUT, "w", encoding="utf-8", newline="\n"),
               ensure_ascii=False, indent=2)
-    print(f"\n源站 200: {out['confirmedCount']} / 404: {out['deadCount']} / "
-          f"其他: {len(res) - out['confirmedCount'] - out['deadCount']}", flush=True)
+    print(f"\n源站 200（任一轮）: {out['confirmedCount']} / 404: {out['deadCount']} / "
+          f"仍未取到: {out['unresolvedCount']}，共 {len(res)}", flush=True)
     print("wrote", OUT, flush=True)
 
 

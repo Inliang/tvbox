@@ -1,0 +1,290 @@
+{
+  "method": "把落在已失效镜像 host 上的 probe_url 按 host 形态映射回 raw.githubusercontent.com 源站并实拉，用于确定删除该 host 后的落点",
+  "generatedAt": "2026-10-23T10:47:31+08:00",
+  "field_note": "origin_status 取第一轮拿到 200 的结果；若多轮均无 200 则取最后一轮。origin_ok200=任一轮 200；404 才算 dead，超时不算。本文件是预计算结果，禁止前端实时探测：源站是间歇性 stall，2026-10-23 两轮并集实测 598–836 ms 全 200，而 10-19 同批地址单次曾达 7.9–40.8 s，撞上慢窗口前端探测必超时。",
+  "rounds": 2,
+  "mirrorHostCount": 16,
+  "badHostCount": 11,
+  "mappedCount": 11,
+  "unmappedCount": 0,
+  "confirmedCount": 11,
+  "deadCount": 0,
+  "unresolvedCount": 0,
+  "items": [
+    {
+      "name": "初中",
+      "id": "s_f479c9fafb",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "raw.kkgithub.com",
+      "probe_url": "https://raw.kkgithub.com/2hacc/TVBox/main/json/初中课堂.json",
+      "origin_url": "https://raw.githubusercontent.com/2hacc/TVBox/main/json/初中课堂.json",
+      "origin_status": 200,
+      "origin_bytes": 31796,
+      "origin_md5": "1de2d3b28cd00c0137fb63964e42dcf1",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 836,
+          "bytes": 31796,
+          "md5": "1de2d3b28cd00c0137fb63964e42dcf1",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "小学",
+      "id": "s_60ca5e140e",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "raw.kkgithub.com",
+      "probe_url": "https://raw.kkgithub.com/2hacc/TVBox/main/json/小学课堂.json",
+      "origin_url": "https://raw.githubusercontent.com/2hacc/TVBox/main/json/小学课堂.json",
+      "origin_status": 200,
+      "origin_bytes": 9659,
+      "origin_md5": "3c31407904d0cdc57deffeaaaf196f82",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 620,
+          "bytes": 9659,
+          "md5": "3c31407904d0cdc57deffeaaaf196f82",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "初中┃课堂",
+      "id": "s_5065b16694",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "ghp.ci",
+      "probe_url": "https://ghp.ci/raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/初中课堂.json",
+      "origin_url": "https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/初中课堂.json",
+      "origin_status": 200,
+      "origin_bytes": 31796,
+      "origin_md5": "1de2d3b28cd00c0137fb63964e42dcf1",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 682,
+          "bytes": 31796,
+          "md5": "1de2d3b28cd00c0137fb63964e42dcf1",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "哔哔合集┃弹幕",
+      "id": "s_cc080a64d9",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "ghp.ci",
+      "probe_url": "https://ghp.ci/raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/bilibili.json",
+      "origin_url": "https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/bilibili.json",
+      "origin_status": 200,
+      "origin_bytes": 47957,
+      "origin_md5": "0cfef3d50340a7e109dff5e78478a242",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 684,
+          "bytes": 47957,
+          "md5": "0cfef3d50340a7e109dff5e78478a242",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "哔哔演唱会┃弹幕",
+      "id": "s_b9c5cb7d6c",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "ghp.ci",
+      "probe_url": "https://ghp.ci/raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/biliych.json",
+      "origin_url": "https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/biliych.json",
+      "origin_status": 200,
+      "origin_bytes": 8484,
+      "origin_md5": "fa9d3115c81ba6460736e215622e7b25",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 633,
+          "bytes": 8484,
+          "md5": "fa9d3115c81ba6460736e215622e7b25",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "小学┃课堂",
+      "id": "s_d56277fb21",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "ghp.ci",
+      "probe_url": "https://ghp.ci/raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/小学课堂.json",
+      "origin_url": "https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/小学课堂.json",
+      "origin_status": 200,
+      "origin_bytes": 9659,
+      "origin_md5": "3c31407904d0cdc57deffeaaaf196f82",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 732,
+          "bytes": 9659,
+          "md5": "3c31407904d0cdc57deffeaaaf196f82",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "少儿",
+      "id": "s_2d8fa052af",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "raw.kkgithub.com",
+      "probe_url": "https://raw.kkgithub.com/2hacc/TVBox/main/json/少儿教育.json",
+      "origin_url": "https://raw.githubusercontent.com/2hacc/TVBox/main/json/少儿教育.json",
+      "origin_status": 200,
+      "origin_bytes": 3714,
+      "origin_md5": "80d910d413964349ed0ae48c2661ed16",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 598,
+          "bytes": 3714,
+          "md5": "80d910d413964349ed0ae48c2661ed16",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "少儿┃教育",
+      "id": "s_8cd12ddf52",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "ghp.ci",
+      "probe_url": "https://ghp.ci/raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/少儿教育.json",
+      "origin_url": "https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/少儿教育.json",
+      "origin_status": 200,
+      "origin_bytes": 3714,
+      "origin_md5": "80d910d413964349ed0ae48c2661ed16",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 621,
+          "bytes": 3714,
+          "md5": "80d910d413964349ed0ae48c2661ed16",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "明星",
+      "id": "s_3694de6ac5",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "raw.kkgithub.com",
+      "probe_url": "https://raw.kkgithub.com/2hacc/TVBox/main/json/MTV.json",
+      "origin_url": "https://raw.githubusercontent.com/2hacc/TVBox/main/json/MTV.json",
+      "origin_status": 200,
+      "origin_bytes": 21954,
+      "origin_md5": "388c915c436bb0880a8f44ff6c4e6ac2",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 666,
+          "bytes": 21954,
+          "md5": "388c915c436bb0880a8f44ff6c4e6ac2",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "高中",
+      "id": "s_b458079bce",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "raw.kkgithub.com",
+      "probe_url": "https://raw.kkgithub.com/2hacc/TVBox/main/json/高中课堂.json",
+      "origin_url": "https://raw.githubusercontent.com/2hacc/TVBox/main/json/高中课堂.json",
+      "origin_status": 200,
+      "origin_bytes": 32078,
+      "origin_md5": "c38ce368c83e6a48f3b6880544463fae",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 692,
+          "bytes": 32078,
+          "md5": "c38ce368c83e6a48f3b6880544463fae",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    },
+    {
+      "name": "高中┃课堂",
+      "id": "s_0bec7da434",
+      "tier": "B",
+      "probe_status_now": "uncertain",
+      "mirror_host": "ghp.ci",
+      "probe_url": "https://ghp.ci/raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/高中课堂.json",
+      "origin_url": "https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/高中课堂.json",
+      "origin_status": 200,
+      "origin_bytes": 32078,
+      "origin_md5": "c38ce368c83e6a48f3b6880544463fae",
+      "origin_responded": true,
+      "origin_ok200": true,
+      "suggested_landing": "confirmed（源站返回 200，可判定为真实可用）",
+      "rounds": [
+        {
+          "status": 200,
+          "ms": 677,
+          "bytes": 32078,
+          "md5": "c38ce368c83e6a48f3b6880544463fae",
+          "ctype": "text/plain; charset=utf-8",
+          "head": "{\"class\":[{\"type_name\":\"登陆配置\",\"type_id\":\"peizhi\"},{\"type_name\""
+        }
+      ]
+    }
+  ]
+}

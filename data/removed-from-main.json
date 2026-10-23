@@ -1,0 +1,133 @@
+{
+  "generatedAt": "2026-10-19T22:45:20+08:00",
+  "purpose": "从 zijian.json（主配置）移出的客观失效站点。移出而非删除：每一条在 zijian-full.json 中都仍有完整副本，可随时恢复。",
+  "howToRestore": "把本文件 items[].site 原样 append 回 zijian.json 的 sites[] 即可；或直接从 zijian-full.json 按 key 取回。",
+  "sourceFile": "zijian.json",
+  "sitesBefore": 142,
+  "sitesAfter": 135,
+  "removedCount": 7,
+  "allStillInFull": true,
+  "notInFull": [],
+  "items": [
+    {
+      "key": "living",
+      "name": "🐼┃游戏┃直播",
+      "reason_code": "CSP_CLASS",
+      "reason": "类 com.github.catvod.spider.Living 不在 spider dex 中，点了必然空且不报错",
+      "recoverableFrom": "zijian-full.json",
+      "site": {
+        "key": "living",
+        "name": "🐼┃游戏┃直播",
+        "type": 3,
+        "api": "csp_Living",
+        "playerType": 2,
+        "ext": "https://lemonlive-api-1.deno.dev"
+      }
+    },
+    {
+      "key": "csp_LiteApple",
+      "name": "🍎┃苹果┃影视",
+      "reason_code": "CSP_CLASS",
+      "reason": "类 com.github.catvod.spider.LiteApple 不在 spider dex 中，点了必然空且不报错",
+      "recoverableFrom": "zijian-full.json",
+      "site": {
+        "key": "csp_LiteApple",
+        "name": "🍎┃苹果┃影视",
+        "type": 3,
+        "api": "csp_LiteApple",
+        "searchable": 1,
+        "quickSearch": 1,
+        "filterable": 1
+      }
+    },
+    {
+      "key": "drpy_js_310直播",
+      "name": "🏀┃体育┃直播",
+      "reason_code": "REL_HTML",
+      "reason": "./lib/drpy2.min.js 实际返回 HTML 页面而非 JS，TVBox 解析失败，该站一直转圈",
+      "recoverableFrom": "zijian-full.json",
+      "site": {
+        "key": "drpy_js_310直播",
+        "name": "🏀┃体育┃直播",
+        "type": 3,
+        "api": "./lib/drpy2.min.js",
+        "changeable": 0,
+        "gridview": 3,
+        "style": {
+          "type": "list"
+        },
+        "ext": "https://img2.gelonghui.com/library/d6014-7a5d5b19-3fe5-456a-8335-925bc845606fnull"
+      }
+    },
+    {
+      "key": "米搜",
+      "name": "🌖┃米搜┃网盘",
+      "reason_code": "EXT_LOCAL",
+      "reason": "ext 指向本机服务（127.0.0.1/localhost），用户换设备或未跑该服务即失效",
+      "recoverableFrom": "zijian-full.json",
+      "site": {
+        "key": "米搜",
+        "name": "🌖┃米搜┃网盘",
+        "type": 3,
+        "api": "csp_MiSou",
+        "ext": "http://127.0.0.1:9978/file/fatcat/kk.txt"
+      }
+    },
+    {
+      "key": "csp_PanSearch",
+      "name": "🚃┃盘搜┃网盘",
+      "reason_code": "EXT_LOCAL",
+      "reason": "ext 指向本机服务（127.0.0.1/localhost），用户换设备或未跑该服务即失效",
+      "recoverableFrom": "zijian-full.json",
+      "site": {
+        "key": "csp_PanSearch",
+        "name": "🚃┃盘搜┃网盘",
+        "type": 3,
+        "api": "csp_PanSearch",
+        "ext": "http://127.0.0.1:9978/file/fatcat/token.txt"
+      }
+    },
+    {
+      "key": "儿童",
+      "name": "📚┃儿童┃启蒙",
+      "reason_code": "REL_HTML",
+      "reason": "./lib/drpy2.min.js 实际返回 HTML 页面而非 JS，TVBox 解析失败，该站一直转圈",
+      "recoverableFrom": "zijian-full.json",
+      "site": {
+        "key": "儿童",
+        "name": "📚┃儿童┃启蒙",
+        "type": 3,
+        "api": "./lib/drpy2.min.js",
+        "searchable": 0,
+        "quickSearch": 0,
+        "changeable": 0,
+        "style": {
+          "type": "rect",
+          "ratio": 1.597
+        },
+        "ext": "./lib/兔小贝.js"
+      }
+    },
+    {
+      "key": "push_agent",
+      "name": "关注公众号：肥猫宝贝",
+      "reason_code": "CSP_NONSITE",
+      "reason": "Push 是工具类而非影视站点，不应出现在站点列表",
+      "recoverableFrom": "zijian-full.json",
+      "site": {
+        "key": "push_agent",
+        "name": "关注公众号：肥猫宝贝",
+        "type": 3,
+        "api": "csp_Push",
+        "playerType": "1",
+        "searchable": 0,
+        "ext": ".json/txt/ken.txt"
+      }
+    }
+  ],
+  "keptBack": {
+    "key": "csp_Bili",
+    "reason": "validate 报 EXT_REL「ext 依赖本仓库 lib 文件」，但 lib/0075389dca9afadd4614e9713765ff17.txt 真实存在（47,957 B，git ls-files 有记录）。TVBox 把 ./lib/ 解析为相对配置文件所在目录，zijian.json 与 lib/ 同在仓库根，路径有效，该站可用，属过度移除，已恢复。",
+    "recoverableFrom": "zijian-full.json"
+  }
+}

@@ -1,23 +1,24 @@
 {
-  "generatedAt": "2026-10-19T17:26:46+08:00",
-  "total": 39,
+  "generatedAt": "2026-10-23T11:11:48+08:00",
+  "total": 47,
   "categories": [
     "综合",
     "多仓",
+    "短剧",
     "影视",
     "采集",
     "自建"
   ],
   "rejections": {
-    "class_missing": 869,
-    "relpath_api": 247,
-    "remote_js": 175,
-    "api_not_class": 120,
+    "class_missing": 905,
+    "relpath_api": 245,
+    "remote_js": 182,
+    "api_not_class": 126,
     "type_unsupported": 34,
-    "non_site_class": 11,
-    "dep_local": 17,
+    "non_site_class": 12,
+    "dep_local": 18,
     "dep_relpath": 6,
-    "probe_dead": 28
+    "probe_dead": 31
   },
   "items": [
     {
@@ -27,7 +28,7 @@
       "format": "catvod",
       "isMulti": false,
       "category": "自建",
-      "totalSites": 142,
+      "totalSites": 135,
       "staticPass": 130,
       "probeConfirmed": 93,
       "encryptedSites": 1,
@@ -38,16 +39,16 @@
         "CatVod"
       ],
       "note": "本站维护，含自建影视与直播源",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "Inliang/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1195,
+      "probeMs": 487,
       "probeSiteCount": 142,
-      "checkedAt": "2026-10-19T17:26:35+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "qist-jsm",
@@ -56,7 +57,7 @@
       "format": "catvod",
       "isMulti": false,
       "category": "综合",
-      "totalSites": 152,
+      "totalSites": 153,
       "staticPass": 29,
       "probeConfirmed": 9,
       "encryptedSites": 0,
@@ -66,7 +67,7 @@
         "CatVod"
       ],
       "note": "qist 自用主接口，更新较勤",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [
         "https://qist.wyfc.qzz.io/jsm.json",
@@ -76,9 +77,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1363,
-      "probeSiteCount": 152,
-      "checkedAt": "2026-10-19T17:26:36+08:00"
+      "probeMs": 520,
+      "probeSiteCount": 153,
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "liucn-m",
@@ -91,22 +92,22 @@
       "staticPass": 106,
       "probeConfirmed": 5,
       "encryptedSites": 78,
-      "curatedSites": 98,
+      "curatedSites": 97,
       "recommend": true,
       "tags": [
         "CatVod"
       ],
       "note": "老刘备",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "raw.liucn.cc",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 983,
+      "probeMs": 505,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:35+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "tushen6-caiji",
@@ -125,16 +126,16 @@
         "采集"
       ],
       "note": "tushen6 采集配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "tushen6/Tomorrow",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1272,
+      "probeMs": 448,
       "probeSiteCount": 47,
-      "checkedAt": "2026-10-19T17:26:35+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "maoystv-000",
@@ -143,7 +144,7 @@
       "format": "catvod",
       "isMulti": false,
       "category": "综合",
-      "totalSites": 184,
+      "totalSites": 188,
       "staticPass": 29,
       "probeConfirmed": 16,
       "encryptedSites": 0,
@@ -153,16 +154,16 @@
         "CatVod"
       ],
       "note": "分享源",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "maoystv/6",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1151,
+      "probeMs": 505,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:36+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "guot55-ygmax",
@@ -181,16 +182,16 @@
         "CatVod"
       ],
       "note": "月光 max",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "guot55/yg",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 655,
+      "probeMs": 502,
       "probeSiteCount": 77,
-      "checkedAt": "2026-10-19T17:26:36+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "szyyds-x",
@@ -209,16 +210,16 @@
         "CatVod"
       ],
       "note": "小马接口",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "szyyds.cn",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 300,
+      "probeMs": 335,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:36+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "qist-99188",
@@ -237,16 +238,16 @@
         "CatVod"
       ],
       "note": "qist 仓库现存配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1248,
+      "probeMs": 473,
       "probeSiteCount": 64,
-      "checkedAt": "2026-10-19T17:26:37+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "niubihu-1",
@@ -265,16 +266,16 @@
         "CatVod"
       ],
       "note": "niubihu 主配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "niubihu1/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1105,
+      "probeMs": 550,
       "probeSiteCount": 134,
-      "checkedAt": "2026-10-19T17:26:37+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "qist-9918",
@@ -293,16 +294,16 @@
         "CatVod"
       ],
       "note": "qist 仓库现存配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1206,
+      "probeMs": 443,
       "probeSiteCount": 61,
-      "checkedAt": "2026-10-19T17:26:37+08:00"
+      "checkedAt": "2026-10-23T11:11:42+08:00"
     },
     {
       "id": "qist-dianshi",
@@ -311,7 +312,7 @@
       "format": "catvod",
       "isMulti": false,
       "category": "综合",
-      "totalSites": 153,
+      "totalSites": 154,
       "staticPass": 29,
       "probeConfirmed": 9,
       "encryptedSites": 0,
@@ -321,16 +322,102 @@
         "CatVod"
       ],
       "note": "qist 电视自用",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1276,
-      "probeSiteCount": 153,
-      "checkedAt": "2026-10-19T17:26:38+08:00"
+      "probeMs": 501,
+      "probeSiteCount": 154,
+      "checkedAt": "2026-10-23T11:11:43+08:00"
+    },
+    {
+      "id": "feimao-gif",
+      "name": "feimao-gif",
+      "url": "https://w.junce.dpdns.org/fm.gif",
+      "format": "catvod",
+      "isMulti": false,
+      "category": "综合",
+      "totalSites": 40,
+      "staticPass": 34,
+      "probeConfirmed": 8,
+      "encryptedSites": 0,
+      "curatedSites": 6,
+      "recommend": false,
+      "tags": [
+        "CatVod"
+      ],
+      "note": "肥猫备用2，GIF 图片尾部内嵌配置（feimaomm** + base64）",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 0,
+      "mirrors": [],
+      "source": "w.junce.dpdns.org",
+      "state": "reachable",
+      "confidence": "uncertain",
+      "httpStatus": 200,
+      "probeMs": 556,
+      "error": "not_json",
+      "checkedAt": "2026-10-23T11:11:43+08:00"
+    },
+    {
+      "id": "feimao",
+      "name": "feimao",
+      "url": "http://肥猫.net",
+      "format": "catvod",
+      "isMulti": false,
+      "category": "综合",
+      "totalSites": 40,
+      "staticPass": 26,
+      "probeConfirmed": 8,
+      "encryptedSites": 0,
+      "curatedSites": 9,
+      "recommend": false,
+      "tags": [
+        "CatVod"
+      ],
+      "note": "肥猫接口，中文域名",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 0,
+      "mirrors": [
+        "http://肥猫.net/tv"
+      ],
+      "source": "肥猫.net",
+      "state": "ok",
+      "confidence": "confirmed",
+      "httpStatus": 200,
+      "probeMs": 1939,
+      "probeSiteCount": 40,
+      "checkedAt": "2026-10-23T11:11:44+08:00"
+    },
+    {
+      "id": "xhztv-xhz",
+      "name": "xhztv-xhz",
+      "url": "http://xhztv.top/xhz",
+      "format": "catvod",
+      "isMulti": false,
+      "category": "综合",
+      "totalSites": 54,
+      "staticPass": 16,
+      "probeConfirmed": 8,
+      "encryptedSites": 0,
+      "curatedSites": 13,
+      "recommend": false,
+      "tags": [
+        "CatVod"
+      ],
+      "note": "小盒子单仓",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 0,
+      "mirrors": [],
+      "source": "xhztv.top",
+      "state": "reachable",
+      "confidence": "uncertain",
+      "httpStatus": 200,
+      "probeMs": 1214,
+      "error": "not_json",
+      "checkedAt": "2026-10-23T11:11:44+08:00"
     },
     {
       "id": "qist-0825",
@@ -349,16 +436,16 @@
         "CatVod"
       ],
       "note": "Panda Groove go 包",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1222,
+      "probeMs": 488,
       "probeSiteCount": 135,
-      "checkedAt": "2026-10-19T17:26:38+08:00"
+      "checkedAt": "2026-10-23T11:11:43+08:00"
     },
     {
       "id": "chitue-dongli",
@@ -377,16 +464,16 @@
         "CatVod"
       ],
       "note": "东篱线路",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "chitue/dongliTV",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1330,
+      "probeMs": 533,
       "probeSiteCount": 93,
-      "checkedAt": "2026-10-19T17:26:38+08:00"
+      "checkedAt": "2026-10-23T11:11:43+08:00"
     },
     {
       "id": "qist-0827",
@@ -405,7 +492,7 @@
         "CatVod"
       ],
       "note": "fongmi jar/配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [
         "https://raw.githubusercontent.com/gaotianliuyun/gao/master/0827.json"
@@ -414,9 +501,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1210,
+      "probeMs": 452,
       "probeSiteCount": 33,
-      "checkedAt": "2026-10-19T17:26:38+08:00"
+      "checkedAt": "2026-10-23T11:11:43+08:00"
     },
     {
       "id": "gao-0821",
@@ -435,16 +522,16 @@
         "CatVod"
       ],
       "note": "高天流云 0821",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "gaotianliuyun/gao",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1243,
+      "probeMs": 473,
       "probeSiteCount": 86,
-      "checkedAt": "2026-10-19T17:26:39+08:00"
+      "checkedAt": "2026-10-23T11:11:44+08:00"
     },
     {
       "id": "252035-fongmi",
@@ -463,16 +550,16 @@
         "CatVod"
       ],
       "note": "真心接口",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "www.252035.xyz",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 2722,
+      "probeMs": 323,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:41+08:00"
+      "checkedAt": "2026-10-23T11:11:44+08:00"
     },
     {
       "id": "qist-0821",
@@ -491,16 +578,16 @@
         "CatVod"
       ],
       "note": "在饭太硬配置基础上扩充",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1246,
+      "probeMs": 461,
       "probeSiteCount": 86,
-      "checkedAt": "2026-10-19T17:26:39+08:00"
+      "checkedAt": "2026-10-23T11:11:44+08:00"
     },
     {
       "id": "guot55-vip2",
@@ -519,16 +606,16 @@
         "CatVod"
       ],
       "note": "宝盒 VIP",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "guot55/YGBH",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1109,
+      "probeMs": 503,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:40+08:00"
+      "checkedAt": "2026-10-23T11:11:44+08:00"
     },
     {
       "id": "dxawi",
@@ -547,16 +634,16 @@
         "CatVod"
       ],
       "note": "dxawi GitHub Pages",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "dxawi.github.io",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 604,
+      "probeMs": 434,
       "probeSiteCount": 48,
-      "checkedAt": "2026-10-19T17:26:39+08:00"
+      "checkedAt": "2026-10-23T11:11:44+08:00"
     },
     {
       "id": "fish2018-ol-all",
@@ -576,16 +663,16 @@
         "CatVod"
       ],
       "note": "多仓入口（24 条子配置），站点需二级展开",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 24,
       "mirrors": [],
       "source": "fish2018/ol",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1228,
+      "probeMs": 416,
       "probeSiteCount": 24,
-      "checkedAt": "2026-10-19T17:26:41+08:00"
+      "checkedAt": "2026-10-23T11:11:44+08:00"
     },
     {
       "id": "fish2018-ol-tvbox",
@@ -605,17 +692,17 @@
         "CatVod"
       ],
       "note": "多仓入口（1 条子配置），站点需二级展开",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 1,
       "mirrors": [],
       "source": "fish2018/ol",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1135,
+      "probeMs": 435,
       "probeSiteCount": 0,
       "error": "no_sites",
-      "checkedAt": "2026-10-19T17:26:41+08:00"
+      "checkedAt": "2026-10-23T11:11:45+08:00"
     },
     {
       "id": "niubihu-tv8",
@@ -635,16 +722,16 @@
         "CatVod"
       ],
       "note": "多仓入口（16 条子配置），站点需二级展开",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 16,
       "mirrors": [],
       "source": "niubihu1/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1203,
+      "probeMs": 437,
       "probeSiteCount": 16,
-      "checkedAt": "2026-10-19T17:26:41+08:00"
+      "checkedAt": "2026-10-23T11:11:45+08:00"
     },
     {
       "id": "noimank-muti",
@@ -664,7 +751,7 @@
         "CatVod"
       ],
       "note": "多仓入口（14 条子配置），站点需二级展开",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 14,
       "mirrors": [
         "https://cdn.jsdelivr.net/gh/noimank/tvbox@main/tvboxmuti.json"
@@ -673,9 +760,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 814,
+      "probeMs": 424,
       "probeSiteCount": 14,
-      "checkedAt": "2026-10-19T17:26:41+08:00"
+      "checkedAt": "2026-10-23T11:11:45+08:00"
     },
     {
       "id": "qist-0707",
@@ -695,16 +782,16 @@
         "CatVod"
       ],
       "note": "多仓入口（1 条子配置），站点需二级展开",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 1,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 967,
+      "probeMs": 422,
       "probeSiteCount": 1,
-      "checkedAt": "2026-10-19T17:26:42+08:00"
+      "checkedAt": "2026-10-23T11:11:45+08:00"
     },
     {
       "id": "tushen6-lmw",
@@ -724,16 +811,103 @@
         "CatVod"
       ],
       "note": "多仓入口（16 条子配置），站点需二级展开",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 16,
       "mirrors": [],
       "source": "tushen6/Tomorrow",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1213,
+      "probeMs": 435,
       "probeSiteCount": 16,
-      "checkedAt": "2026-10-19T17:26:42+08:00"
+      "checkedAt": "2026-10-23T11:11:45+08:00"
+    },
+    {
+      "id": "xhztv-dc",
+      "name": "xhztv-dc",
+      "url": "http://xhztv.top/dc/",
+      "format": "pluto",
+      "isMulti": true,
+      "category": "多仓",
+      "totalSites": null,
+      "staticPass": null,
+      "probeConfirmed": null,
+      "encryptedSites": null,
+      "curatedSites": 0,
+      "recommend": false,
+      "tags": [
+        "多仓",
+        "CatVod"
+      ],
+      "note": "多仓入口（18 条子配置），站点需二级展开",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 18,
+      "mirrors": [],
+      "source": "xhztv.top",
+      "state": "reachable",
+      "confidence": "uncertain",
+      "httpStatus": 200,
+      "probeMs": 549,
+      "error": "not_json",
+      "checkedAt": "2026-10-23T11:11:45+08:00"
+    },
+    {
+      "id": "xhztv-dc-txt",
+      "name": "xhztv-dc-txt",
+      "url": "http://xhztv.top/DC.txt",
+      "format": "pluto",
+      "isMulti": true,
+      "category": "多仓",
+      "totalSites": null,
+      "staticPass": null,
+      "probeConfirmed": null,
+      "encryptedSites": null,
+      "curatedSites": 0,
+      "recommend": false,
+      "tags": [
+        "多仓",
+        "CatVod"
+      ],
+      "note": "多仓入口（12 条子配置），站点需二级展开",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 12,
+      "mirrors": [],
+      "source": "xhztv.top",
+      "state": "reachable",
+      "confidence": "uncertain",
+      "httpStatus": 200,
+      "probeMs": 545,
+      "error": "not_json",
+      "checkedAt": "2026-10-23T11:11:45+08:00"
+    },
+    {
+      "id": "xmbjm-dc",
+      "name": "xmbjm-dc",
+      "url": "http://xmbjm.fh4u.org/dc.txt",
+      "format": "pluto",
+      "isMulti": true,
+      "category": "多仓",
+      "totalSites": null,
+      "staticPass": null,
+      "probeConfirmed": null,
+      "encryptedSites": null,
+      "curatedSites": 0,
+      "recommend": false,
+      "tags": [
+        "多仓",
+        "CatVod"
+      ],
+      "note": "多仓入口（54 条子配置），站点需二级展开",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 54,
+      "mirrors": [],
+      "source": "xmbjm.fh4u.org",
+      "state": "reachable",
+      "confidence": "uncertain",
+      "httpStatus": 200,
+      "probeMs": 728,
+      "error": "not_json",
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "hccx-tvbox",
@@ -752,16 +926,44 @@
         "CatVod"
       ],
       "note": "荷城茶秀",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "HeChengChaXiu/tvbox",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 900,
+      "probeMs": 423,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:42+08:00"
+      "checkedAt": "2026-10-23T11:11:45+08:00"
+    },
+    {
+      "id": "ufuzi-duanju",
+      "name": "ufuzi-duanju",
+      "url": "http://box.ufuzi.com/tv/qq/短剧频道/api.json",
+      "format": "catvod",
+      "isMulti": false,
+      "category": "短剧",
+      "totalSites": 35,
+      "staticPass": 34,
+      "probeConfirmed": 0,
+      "encryptedSites": 33,
+      "curatedSites": 34,
+      "recommend": false,
+      "tags": [
+        "短剧"
+      ],
+      "note": "短剧频道，路径含中文",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 0,
+      "mirrors": [],
+      "source": "box.ufuzi.com",
+      "state": "ok",
+      "confidence": "confirmed",
+      "httpStatus": 200,
+      "probeMs": 247,
+      "probeSiteCount": 35,
+      "checkedAt": "2026-10-23T11:11:45+08:00"
     },
     {
       "id": "qist-367",
@@ -780,16 +982,16 @@
         "CatVod"
       ],
       "note": "qist 仓库现存配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1319,
+      "probeMs": 506,
       "probeSiteCount": 106,
-      "checkedAt": "2026-10-19T17:26:43+08:00"
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "qist-xyq",
@@ -808,7 +1010,7 @@
         "CatVod"
       ],
       "note": "香雅情源",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [
         "https://raw.githubusercontent.com/gaotianliuyun/gao/master/XYQ.json"
@@ -817,9 +1019,9 @@
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1069,
+      "probeMs": 453,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:43+08:00"
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "2hacc-oktv",
@@ -838,7 +1040,7 @@
         "CatVod"
       ],
       "note": "2hacc OK影视配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [
         "https://cdn.jsdelivr.net/gh/2hacc/TVBox@main/oktv.json"
@@ -847,9 +1049,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1184,
+      "probeMs": 438,
       "probeSiteCount": 41,
-      "checkedAt": "2026-10-19T17:26:43+08:00"
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "xyq-tvbox",
@@ -868,16 +1070,16 @@
         "CatVod"
       ],
       "note": "香雅情主接口",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "xyq254245/xyqonlinerule",
       "state": "reachable",
       "confidence": "uncertain",
       "httpStatus": 200,
-      "probeMs": 1064,
+      "probeMs": 463,
       "error": "not_json",
-      "checkedAt": "2026-10-19T17:26:43+08:00"
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "gao-0826",
@@ -896,16 +1098,16 @@
         "CatVod"
       ],
       "note": "高天流云 0826",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "gaotianliuyun/gao",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1186,
+      "probeMs": 445,
       "probeSiteCount": 51,
-      "checkedAt": "2026-10-19T17:26:44+08:00"
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "tushen6-tvbox",
@@ -924,16 +1126,44 @@
         "CatVod"
       ],
       "note": "tushen6 Tomorrow",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "tushen6/Tomorrow",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1243,
+      "probeMs": 449,
       "probeSiteCount": 33,
-      "checkedAt": "2026-10-19T17:26:44+08:00"
+      "checkedAt": "2026-10-23T11:11:46+08:00"
+    },
+    {
+      "id": "jundie-top98",
+      "name": "jundie-top98",
+      "url": "http://home.jundie.top:81/top98.json",
+      "format": "catvod",
+      "isMulti": false,
+      "category": "综合",
+      "totalSites": 24,
+      "staticPass": 6,
+      "probeConfirmed": 0,
+      "encryptedSites": 0,
+      "curatedSites": 5,
+      "recommend": false,
+      "tags": [
+        "CatVod"
+      ],
+      "note": "俊于接口，非标准端口",
+      "updatedAt": "2026-10-23",
+      "innerUrls": 0,
+      "mirrors": [],
+      "source": "home.jundie.top",
+      "state": "ok",
+      "confidence": "confirmed",
+      "httpStatus": 200,
+      "probeMs": 122,
+      "probeSiteCount": 24,
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "qist-js",
@@ -952,7 +1182,7 @@
         "CatVod"
       ],
       "note": "道长 drpy(js) 资源",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [
         "https://raw.githubusercontent.com/gaotianliuyun/gao/master/js.json"
@@ -961,9 +1191,9 @@
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1125,
+      "probeMs": 522,
       "probeSiteCount": 298,
-      "checkedAt": "2026-10-19T17:26:44+08:00"
+      "checkedAt": "2026-10-23T11:11:47+08:00"
     },
     {
       "id": "lushunming",
@@ -982,16 +1212,16 @@
         "CatVod"
       ],
       "note": "L 佬线路",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "android.lushunming.qzz.io",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1535,
+      "probeMs": 1586,
       "probeSiteCount": 44,
-      "checkedAt": "2026-10-19T17:26:45+08:00"
+      "checkedAt": "2026-10-23T11:11:48+08:00"
     },
     {
       "id": "yingm-dm",
@@ -1010,16 +1240,16 @@
         "CatVod"
       ],
       "note": "动漫城",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "www.yingm.cc",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 160,
+      "probeMs": 152,
       "probeSiteCount": 27,
-      "checkedAt": "2026-10-19T17:26:44+08:00"
+      "checkedAt": "2026-10-23T11:11:46+08:00"
     },
     {
       "id": "9280-kstore",
@@ -1038,16 +1268,16 @@
         "CatVod"
       ],
       "note": "王二小新接口",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "9280.kstore.vip",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 664,
+      "probeMs": 170,
       "probeSiteCount": 99,
-      "checkedAt": "2026-10-19T17:26:45+08:00"
+      "checkedAt": "2026-10-23T11:11:47+08:00"
     },
     {
       "id": "9763-aowu",
@@ -1066,16 +1296,16 @@
         "CatVod"
       ],
       "note": "嗷呜线路",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "9763.kstore.vip",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 95,
+      "probeMs": 105,
       "probeSiteCount": 76,
-      "checkedAt": "2026-10-19T17:26:44+08:00"
+      "checkedAt": "2026-10-23T11:11:47+08:00"
     },
     {
       "id": "qist-0826",
@@ -1094,16 +1324,16 @@
         "CatVod"
       ],
       "note": "饭太硬 jar/配置",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 1702,
+      "probeMs": 437,
       "probeSiteCount": 54,
-      "checkedAt": "2026-10-19T17:26:46+08:00"
+      "checkedAt": "2026-10-23T11:11:47+08:00"
     },
     {
       "id": "qist-fty",
@@ -1122,19 +1352,19 @@
         "CatVod"
       ],
       "note": "饭太硬接口镜像",
-      "updatedAt": "2026-10-19",
+      "updatedAt": "2026-10-23",
       "innerUrls": 0,
       "mirrors": [],
       "source": "qist/tvbox",
       "state": "ok",
       "confidence": "confirmed",
       "httpStatus": 200,
-      "probeMs": 518,
+      "probeMs": 476,
       "probeSiteCount": 49,
-      "checkedAt": "2026-10-19T17:26:45+08:00"
+      "checkedAt": "2026-10-23T11:11:47+08:00"
     }
   ],
-  "contentHash": "864037513535",
+  "contentHash": "fccfa3fcd9df",
   "schema": 3,
-  "sourceContentHash": "ea6e0405b2df312d"
+  "sourceContentHash": "5411f0490f8c161d"
 }

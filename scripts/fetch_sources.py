@@ -11,8 +11,23 @@ TVBox / CatVod 公开配置接口采集脚本（仅用标准库，无需 pip 安
   5. 汇总写入 data/sources.json。
 
 不做：不破解、不绕过访问控制、不猜测地址、不分析视频内容。
+
+运行环境要求（重要）：
+  HTTP 403 不足以判定站点失效——本项目实测到**两套独立原因**都会让好源返回 403：
+
+  1. **并发限流（证据较硬）**：8 路并发下多个源（含 肥猫.net）返回 403 或空响应，
+     串行间隔重试即恢复。2026-10-23 实测：同一份 candidates.json 并发跑得 49 ok，
+     串行补跑后 55 ok。因此本脚本的 HTTP 403 不提前 break，会走完重试；
+     若可用数仍偏少，用 FETCH_WORKERS=1 重跑一遍对比。
+  2. **沙箱网络拦截（未确证）**：曾观察到沙箱内跑肥猫返回 403，但同一次会话里
+     未绕过沙箱的单发探测也拿到过 200——两条证据互相矛盾，无法据此断定沙箱是主因。
+     保留此条只为提醒：看到可用数偏少时，先排除环境因素，不要直接判站点失效。
+
+  不要把 403 当结论。它可能是限流、可能是拦截、也可能是站点真的拒绝，
+  这三者从单次响应上分不开——所以才需要重试和串行对照。
 """
 
+import base64
 import concurrent.futures
 import datetime
 import gzip
@@ -98,6 +113,38 @@ def decode_body(body: bytes, content_encoding: str) -> bytes:
             except Exception:
                 return body
     return body
+
+
+# 有些配置藏在图片尾部：Content-Type 是 image/*，GIF 正常结束后再拖一段载荷。
+# 载荷格式（已实测）：[8B]"feimaomm" [2B]"**" [N B]base64 → 解码得明文 JSON。
+# 只在能找到魔法串时启用；找不到或解码失败一律按"非 JSON"处理，不猜、不截断。
+GIF_PAYLOAD_MAGIC = b"feimaomm**"
+
+
+def extract_gif_payload(body: bytes, content_type: str):
+    """从图片响应尾部取出内嵌配置。返回 (字节, 标记)；不适用时返回 (None, None)。
+
+    解码失败抛 ValueError，由调用方转成干净的错误文案。
+    """
+    if not (content_type or "").lower().startswith("image/"):
+        return None, None
+    idx = body.find(GIF_PAYLOAD_MAGIC)
+    if idx < 0:
+        return None, None
+    tail = body[idx + len(GIF_PAYLOAD_MAGIC):]
+    if not tail:
+        raise ValueError("魔法串后无载荷")
+    # 只保留 base64 字母表，滤掉可能混入的换行/补齐字节
+    b64 = re.sub(rb"[^A-Za-z0-9+/=]", b"", tail)
+    if not b64:
+        raise ValueError("魔法串后无有效 base64 字符")
+    try:
+        data = base64.b64decode(b64, validate=False)
+    except Exception as e:  # noqa: BLE001
+        raise ValueError(f"base64 解码失败: {e}")
+    if not data:
+        raise ValueError("base64 解码结果为空")
+    return data, "gif-embedded"
 
 
 def guess_encoding(body: bytes, content_type: str) -> str:
@@ -214,6 +261,19 @@ def fetch_one(item, idx):
                 last_err = "空响应"
                 continue
 
+            # 图片尾部内嵌配置：先尝试解码，解码出来的字节才是真正的配置文本
+            try:
+                embedded, payload_kind = extract_gif_payload(body, ctype)
+            except ValueError as e:
+                last_err = f"图片载荷解码失败: {e}"
+                result["error"] = last_err
+                break
+            if embedded is not None:
+                body = embedded
+                result["respBytes"] = len(body)
+                result["payload"] = payload_kind
+                ctype = "application/json"   # 后续按 JSON 处理
+
             enc = guess_encoding(body, ctype)
             text = body.decode(enc, errors="replace")
             obj, repaired = lenient_json(text)
@@ -246,7 +306,11 @@ def fetch_one(item, idx):
         except urllib.error.HTTPError as e:
             result["httpStatus"] = e.code
             last_err = f"HTTP {e.code}"
-            if e.code in (401, 403, 404, 410):
+            # 403 不提前退出：实测多个源在 8 路并发下返回 403/空响应，串行重试即恢复
+            # （同一份清单，并发跑 49 ok，串行补跑后 55 ok）。403 也可能是真 WAF，
+            # 但多花一次重试的代价远小于把可用源误判成死站。
+            # 401 是需要鉴权，重试无意义；404/410 是文件确实没了。
+            if e.code in (401, 404, 410):
                 break
         except (socket.timeout, TimeoutError):
             last_err = f"超时(>{TIMEOUT}s)"
