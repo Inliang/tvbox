@@ -1,0 +1,84 @@
+name: refresh
+
+# 每 6 小时自动检测一遍：重探站点/配置存活情况并重建页面。
+#
+# 只做「探测 + 重建」，不重新抓取上游配置（fetch_sources.py 不进本流程）。
+# 原因：全量重抓遇到网络抖动会把已有可用源冲掉，而用户要的「检测」是
+# 「看它们还活着没有」，不是「换一批源」。要更新源集合请手动跑 fetch_sources.py。
+#
+# 提交门槛是 contentHash（build.py 计算时已剔除 generatedAt/checkedAt/probeMs/builtAt
+# 这些每次必变的量）。内容没变就不提交，避免每 6 小时刷一条空提交。
+# contentHash 的语义见 build.py 内 VOLATILE 常量处的注释，不要另搞一套判断。
+
+on:
+  schedule:
+    - cron: "25 */6 * * *"   # 每 6 小时（UTC 0/6/12/18 点 25 分 → 北京时间 8:25/14:25/20:25/2:25）
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 同一时间只允许一个刷新任务，避免两次运行互相覆盖对方的提交。
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 记录构建前内容指纹
+        id: before
+        run: |
+          python - <<'PY'
+          import json, os
+          p = "docs/data/sites.json"
+          h = json.load(open(p, encoding="utf-8")).get("contentHash", "") if os.path.exists(p) else ""
+          open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8").write(f"hash={h}\n")
+          print("before contentHash =", h)
+          PY
+
+      - name: 重新探测并构建
+        run: |
+          python scripts/build_candidates.py
+          python scripts/inject_origin_probe.py
+          python scripts/build.py
+
+      - name: 内容没变则跳过提交
+        id: diff
+        run: |
+          python - <<'PY'
+          import json, os
+          before = "${{ steps.before.outputs.hash }}"
+          after = json.load(open("docs/data/sites.json", encoding="utf-8")).get("contentHash", "")
+          print("before =", before)
+          print("after  =", after)
+          changed = "false" if before == after else "true"
+          open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8").write(f"changed={changed}\n")
+          PY
+
+      - name: 提交并推送
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "refresh: 自动检测并重建（$(date -u +%Y-%m-%dT%H:%M:%SZ)）"
+          git push
+
+      - name: 摘要
+        run: |
+          {
+            echo "## 自动检测结果"
+            echo ""
+            echo "- 内容指纹变化：\`${{ steps.diff.outputs.changed }}\`"
+            echo "- 配置/站点数：$(python -c "import json;d=json.load(open('docs/data/configs.json',encoding='utf-8'));s=json.load(open('docs/data/sites.json',encoding='utf-8'));print(f\"配置 {d['total']} / 站点 {s['total']}\")")"
+            echo "- 构建时间：$(python -c "import json;print(json.load(open('docs/data/configs.json',encoding='utf-8')).get('generatedAt'))")"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -100,3 +100,28 @@ EXT_REL 从无条件 ERROR 改为：引用的本地文件不存在才 ERROR，�
 另：`fetch_sources.py` 的 HTTP 403 不再提前 break。实测 8 路并发下多个源
 （含肥猫.net）返回 403/空响应，串行重试即恢复——同一份清单并发跑 49 ok，
 串行补跑后 55 ok。403 与沙箱拦截是两套独立原因，都会把可用源误判成死站。
+
+## 2026-10-23 12:30 置顶排序 + 自动检测
+
+**前端排序（用户指定）**
+- 「整包配置」四条恒定置顶：肥猫 / 饭太硬 / 王二小 / 自建综合配置（zijian.json）
+- 其余配置随机排列；每次页面加载洗一次牌，同一会话内保持稳定（筛选/搜索不会抖）
+- 新增 `pin` 字段（build_candidates.py 的 PIN_ORDER），前端 sortItems 按它排序
+
+**命名对齐用户习惯**
+- `feimao` → 肥猫，`qist-fty` → 饭太硬，`9280-kstore` → 王二小（放牛娃）
+
+**新增采集源：饭太硬主接口**
+- `fty-art` = http://www.饭太硬.art/tv —— 图片尾部内嵌配置（JPEG EOI 后 `bCCtSiKQ**` + base64）
+- 实测解出 49 站 / 6 直播，spider md5 `654fb7dc…` 与 qist 镜像 fty.json 完全一致
+- 饭太硬.com / .net / .cc 当前均不可用（连接重置或 360 拦截页），.art 是真地址
+- fetch_sources.py 的图片载荷解码由写死 `feimaomm**` 泛化为通用 `<标记>**<base64>`，要求解出内容以 `{` 开头
+
+**自动检测**
+- 新增 `.github/workflows/refresh.yml`：每 6 小时重新探测并重建
+- 只探测不重抓（不跑 fetch_sources.py），避免网络抖动冲掉已有可用源
+- 以 contentHash 为提交门槛，内容没变不产生空提交
+
+**数据**
+- 配置 47 → 48，站点 583 不变
+- zijian.json 未改动（md5 d9f39f36e7bb48cc311a63c58c668b5a，135 站）

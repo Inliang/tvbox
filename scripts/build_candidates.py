@@ -68,7 +68,8 @@ DISPLAY_NAMES = {
     "qist-0827": "qist 蜂蜜系 0827",
     "qist-js": "qist JS 源合集",
     "qist-xyq": "qist 香雅情源",
-    "qist-fty": "qist 饭太硬源",
+    "qist-fty": "饭太硬",
+    "fty-art": "饭太硬 · 图片载体",
     "qist-xiaosa": "qist 潇洒接口",
     "qist-pages-jsm": "qist 镜像接口",
     "gao-js": "高天流云 JS 源",
@@ -84,7 +85,7 @@ DISPLAY_NAMES = {
     "chitue-dongli": "东篱线路",
     "hccx-tvbox": "荷城茶秀",
     "guot55-ygmax": "月光 Max",
-    "9280-kstore": "放牛娃新接口",
+    "9280-kstore": "王二小",
     "yingm-dm": "动漫城",
     "dxawi": "dxawi 接口",
     "252035-fongmi": "真心 FongMi",
@@ -107,6 +108,20 @@ DISPLAY_NAMES = {
     "tushen6-tvbox": "tushen6 主配置",
     "tushen6-lmw": "tushen6 多仓",
     "tushen6-caiji": "tushen6 采集源",
+    "feimao": "肥猫",
+    "feimao-gif": "肥猫 · 图片载体",
+}
+
+# 用户指定四条常驻「整包配置」列表最前，顺序即优先级：
+#   1 肥猫  2 饭太硬  3 王二小  4 自建 zijian.json
+# 只写展示排序，不参与可用性判断——置顶 ≠ 判活。其余配置由前端随机排列。
+# 命中规则按 id；同一话题只钉一条（饭太硬钉 qist 镜像那条，因为它是纯 JSON、
+# 卡片状态能被实测确认，而 .art 主接口是图片载体，只能标"需 TVBox 实测"）。
+PIN_ORDER = {
+    "feimao": 1,
+    "qist-fty": 2,
+    "9280-kstore": 3,
+    "github-inliang": 4,
 }
 
 PROBE_TYPES = {"type1_api"}
@@ -906,6 +921,7 @@ def main():
         cfg_items.append({
             "id": cid,
             "name": DISPLAY_NAMES.get(cid, cfg.get("name"))[:24],
+            "pin": PIN_ORDER.get(cid, 0),
             "url": cfg["url"],
             "format": "pluto" if is_multi else "catvod",
             "isMulti": is_multi,
@@ -926,7 +942,9 @@ def main():
         })
 
     def cfg_sort_key(x):
-        return (not x["recommend"],
+        return (0 if x.get("pin") else 1,
+                x.get("pin") or 0,
+                not x["recommend"],
                 -1 if x["probeConfirmed"] is None else -x["probeConfirmed"],
                 -1 if x["staticPass"] is None else -x["staticPass"],
                 -1 if x["totalSites"] is None else -x["totalSites"],

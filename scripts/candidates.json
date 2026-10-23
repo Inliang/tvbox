@@ -197,7 +197,13 @@
       "name": "fty-tv",
       "url": "http://www.饭太硬.net/tv",
       "category": "综合",
-      "note": "饭太硬主接口，中文域名"
+      "note": "饭太硬备用域名（当前返回 360 拦截页，勿作主地址）"
+    },
+    {
+      "name": "fty-art",
+      "url": "http://www.饭太硬.art/tv",
+      "category": "综合",
+      "note": "饭太硬主接口；图片尾部内嵌配置（bCCtSiKQ** + base64），spider md5 与 qist 镜像一致"
     },
     {
       "name": "feimao",

@@ -1,12 +1,12 @@
 {
   "updated": "2026-10-23",
-  "generatedAt": "2026-10-23T10:49:08+08:00",
+  "generatedAt": "2026-10-23T12:20:52+08:00",
   "summary": {
-    "total": 83,
-    "ok": 55,
+    "total": 84,
+    "ok": 56,
     "fail": 28,
-    "single": 40,
-    "multi": 7,
+    "single": 46,
+    "multi": 10,
     "site": 0,
     "totalSites": 3941
   },
@@ -1554,6 +1554,23 @@
       "repaired": false,
       "finalUrl": "http://xn--z7x900a.net/tv",
       "spider": "http://肥猫.net/spider.php;md5;2d842238d97d949fef5c679cb876f81d"
+    },
+    {
+      "name": "fty-art",
+      "url": "http://www.饭太硬.art/tv",
+      "category": "综合",
+      "note": "饭太硬主接口；图片尾部内嵌配置（bCCtSiKQ** + base64），spider md5 与 qist 镜像一致",
+      "status": "ok",
+      "checkedAt": "2026-10-23T12:20:52+08:00",
+      "httpStatus": 200,
+      "respBytes": 20083,
+      "sitesCount": 49,
+      "urlsCount": 0,
+      "kind": "single",
+      "error": null,
+      "elapsedMs": 0,
+      "rawFile": "data/raw/84-fty-art.json",
+      "payloadKind": "image-embedded"
     }
   ]
 }

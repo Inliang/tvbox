@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-23T11:02:18+08:00",
+ "generatedAt": "2026-10-23T12:21:09+08:00",
  "rules": {
   "A": "type1 + api 为绝对 URL + 实测返回合法 JSON",
   "B": "type3 + 类名在 dex 站点类中 + ext 含绝对 URL",
@@ -78,19 +78,19 @@
   "YGP"
  ],
  "stats": {
-  "configs": 55,
-  "rawSites": 3934,
-  "uniqueSites": 2142,
-  "duplicates": 1792,
+  "configs": 56,
+  "rawSites": 3983,
+  "uniqueSites": 2145,
+  "duplicates": 1838,
   "tiers": {
    "A": 88,
    "B": 436,
    "C": 15,
    "D": 55,
-   "E": 1504,
+   "E": 1507,
    "Y": 44
   },
-  "tierERatio": 70.2,
+  "tierERatio": 70.3,
   "recommend": 150,
   "reasonCodes": {
    "self_contained": 15,
@@ -106,21 +106,21 @@
    "type_unsupported": 34,
    "probe_uncertain": 44,
    "non_site_class": 12,
-   "remote_js": 182
+   "remote_js": 185
   },
   "probeKinds": {
    "no_ext": 498,
-   "url": 745,
+   "url": 748,
    "encrypted_ext": 730,
    "no_url": 133,
    "local_only": 36
   },
   "probe": {
-   "total": 686,
+   "total": 689,
    "confirmed": 185,
    "dead": 58,
-   "uncertain": 443,
-   "rateConfirmed": 27.0
+   "uncertain": 446,
+   "rateConfirmed": 26.9
   }
  },
  "items": [
@@ -10618,7 +10618,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "豆",
@@ -10696,7 +10697,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "YGP",
@@ -10919,7 +10921,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "糯米",
@@ -10994,7 +10997,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "文采",
@@ -11144,7 +11148,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "厂长",
@@ -11219,7 +11224,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "比特",
@@ -11369,7 +11375,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "热播",
@@ -11484,7 +11491,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "贱贱",
@@ -11523,7 +11531,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "新6V",
@@ -11561,7 +11570,8 @@
     "qist-0821",
     "qist-0826",
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "Dm84",
@@ -11747,7 +11757,8 @@
     "qist-0821",
     "qist-0826",
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "看球",
@@ -12032,7 +12043,8 @@
     "qist-0826",
     "qist-fty",
     "szyyds-x",
-    "qist-367"
+    "qist-367",
+    "fty-art"
    ],
    "site": {
     "key": "Aid",
@@ -17969,7 +17981,8 @@
    "sources": [
     "qist-0826",
     "qist-0826",
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "fan",
@@ -25601,7 +25614,8 @@
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "MDrive",
@@ -25641,7 +25655,8 @@
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "玩偶",
@@ -25679,7 +25694,8 @@
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "MTV1",
@@ -25717,7 +25733,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "seed",
@@ -25752,7 +25769,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "光影",
@@ -25786,7 +25804,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "海绵",
@@ -25821,7 +25840,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "立播",
@@ -25859,7 +25879,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "瓜子",
@@ -25894,7 +25915,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "奶酪",
@@ -25928,7 +25950,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "风云",
@@ -25965,7 +25988,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "视界",
@@ -26001,7 +26025,8 @@
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "剧圈",
@@ -26037,7 +26062,8 @@
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "奥特",
@@ -26071,7 +26097,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "AiDj",
@@ -26110,7 +26137,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "咕咕",
@@ -26145,7 +26173,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "多多",
@@ -26182,7 +26211,8 @@
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
     "qist-fty",
-    "szyyds-x"
+    "szyyds-x",
+    "fty-art"
    ],
    "site": {
     "key": "吃瓜",
@@ -26218,7 +26248,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "alllive",
@@ -26258,7 +26289,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "MTV",
@@ -26298,7 +26330,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "有声小说",
@@ -26415,7 +26448,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "ZPan",
@@ -26455,7 +26489,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "JPan",
@@ -26495,7 +26530,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "YpanSo",
@@ -26531,7 +26567,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "BpanSo",
@@ -26567,7 +26604,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "抠搜",
@@ -26603,7 +26641,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "UC",
@@ -26639,7 +26678,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "Bili",
@@ -26679,7 +26719,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "Biliych",
@@ -26757,7 +26798,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "少儿教育",
@@ -26797,7 +26839,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "小学课堂",
@@ -26837,7 +26880,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "初中课堂",
@@ -26877,7 +26921,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "高中教育",
@@ -26917,7 +26962,8 @@
    "source_url": "https://raw.githubusercontent.com/qist/tvbox/master/fty.json",
    "fetchedAt": "2026-10-23T10:48:59+08:00",
    "sources": [
-    "qist-fty"
+    "qist-fty",
+    "fty-art"
    ],
    "site": {
     "key": "push_agent",
@@ -77240,6 +77286,124 @@
     "type": 3,
     "api": "csp_AppGet",
     "ext": "https://new.app.bytegooty.com|N4yj7l7xKxHF4*gz"
+   },
+   "recommend": false
+  },
+  {
+   "key": "虎牙js",
+   "name": "🐯虎牙┃直播",
+   "type": 3,
+   "api": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/drpy2.min.js",
+   "tier": "E",
+   "reason": "api 为远程 JS 地址（js 源，MVP 不合并）",
+   "reason_code": "remote_js",
+   "probe_url": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/虎牙.js",
+   "probe_kind": "url",
+   "probe_target": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/虎牙.js",
+   "probe_status": "uncertain",
+   "probe_detail": "untested",
+   "probe_reason": null,
+   "included": false,
+   "config_ref": "fty-art",
+   "config_url": "http://www.饭太硬.art/tv",
+   "source_url": "http://www.饭太硬.art/tv",
+   "fetchedAt": "2026-10-23T12:20:52+08:00",
+   "sources": [
+    "fty-art"
+   ],
+   "site": {
+    "key": "虎牙js",
+    "name": "🐯虎牙┃直播",
+    "type": 3,
+    "api": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/drpy2.min.js",
+    "ext": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/虎牙.js",
+    "style": {
+     "type": "rect",
+     "ratio": 1.755
+    },
+    "timeout": 10,
+    "playerType": "2",
+    "searchable": 1,
+    "quickSearch": 0,
+    "changeable": 0
+   },
+   "recommend": false
+  },
+  {
+   "key": "斗鱼js",
+   "name": "🐟斗鱼┃直播",
+   "type": 3,
+   "api": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/drpy2.min.js",
+   "tier": "E",
+   "reason": "api 为远程 JS 地址（js 源，MVP 不合并）",
+   "reason_code": "remote_js",
+   "probe_url": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/斗鱼直播.js",
+   "probe_kind": "url",
+   "probe_target": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/斗鱼直播.js",
+   "probe_status": "uncertain",
+   "probe_detail": "untested",
+   "probe_reason": null,
+   "included": false,
+   "config_ref": "fty-art",
+   "config_url": "http://www.饭太硬.art/tv",
+   "source_url": "http://www.饭太硬.art/tv",
+   "fetchedAt": "2026-10-23T12:20:52+08:00",
+   "sources": [
+    "fty-art"
+   ],
+   "site": {
+    "key": "斗鱼js",
+    "name": "🐟斗鱼┃直播",
+    "type": 3,
+    "api": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/drpy2.min.js",
+    "ext": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/斗鱼直播.js",
+    "style": {
+     "type": "rect",
+     "ratio": 1.755
+    },
+    "timeout": 10,
+    "playerType": "2",
+    "searchable": 1,
+    "quickSearch": 0,
+    "changeable": 0
+   },
+   "recommend": false
+  },
+  {
+   "key": "dr_兔小贝",
+   "name": "📚儿童┃启蒙",
+   "type": 3,
+   "api": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/drpy2.min.js",
+   "tier": "E",
+   "reason": "api 为远程 JS 地址（js 源，MVP 不合并）",
+   "reason_code": "remote_js",
+   "probe_url": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/%E5%85%94%E5%B0%8F%E8%B4%9D.js",
+   "probe_kind": "url",
+   "probe_target": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/%E5%85%94%E5%B0%8F%E8%B4%9D.js",
+   "probe_status": "uncertain",
+   "probe_detail": "untested",
+   "probe_reason": null,
+   "included": false,
+   "config_ref": "fty-art",
+   "config_url": "http://www.饭太硬.art/tv",
+   "source_url": "http://www.饭太硬.art/tv",
+   "fetchedAt": "2026-10-23T12:20:52+08:00",
+   "sources": [
+    "fty-art"
+   ],
+   "site": {
+    "key": "dr_兔小贝",
+    "name": "📚儿童┃启蒙",
+    "type": 3,
+    "api": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/drpy2.min.js",
+    "ext": "https://git.yylx.win/https://raw.githubusercontent.com/fantaiying7/EXT/refs/heads/main/%E5%85%94%E5%B0%8F%E8%B4%9D.js",
+    "style": {
+     "type": "rect",
+     "ratio": 1.597
+    },
+    "searchable": 0,
+    "quickSearch": 0,
+    "changeable": 0
    },
    "recommend": false
   }

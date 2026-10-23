@@ -115,10 +115,25 @@ def decode_body(body: bytes, content_encoding: str) -> bytes:
     return body
 
 
-# 有些配置藏在图片尾部：Content-Type 是 image/*，GIF 正常结束后再拖一段载荷。
-# 载荷格式（已实测）：[8B]"feimaomm" [2B]"**" [N B]base64 → 解码得明文 JSON。
-# 只在能找到魔法串时启用；找不到或解码失败一律按"非 JSON"处理，不猜、不截断。
-GIF_PAYLOAD_MAGIC = b"feimaomm**"
+# 有些配置藏在图片尾部：Content-Type 是 image/*，图片正常结束后再拖一段载荷。
+# 载荷格式（已实测两例）：<标记><2B>"**" <N B>base64 → 解码得明文 JSON。
+#   · fm.gif         标记 "feimaomm"，GIF trailer 0x3B 之后
+#   · 饭太硬.art/tv   标记 "bCCtSiKQ"，JPEG EOI FFD9 之后
+# 所以不能再写死某一个魔法串：按 "**"+base64 通用扫，但**只认解码结果以 { 开头的**，
+# 找不到或解码失败一律按"非 JSON"处理，不猜、不截断。
+GIF_PAYLOAD_MAGIC = b"feimaomm**"  # 已知样本的快路径，保留以稳定旧产物命名
+
+
+def _decode_embedded_b64(b64: bytes):
+    """把一段 base64 解成 bytes；不合法返回 None。"""
+    b64 = re.sub(rb"[^A-Za-z0-9+/=]", b"", b64)
+    if not b64:
+        return None
+    try:
+        data = base64.b64decode(b64, validate=False)
+    except Exception:  # noqa: BLE001
+        return None
+    return data or None
 
 
 def extract_gif_payload(body: bytes, content_type: str):
@@ -128,23 +143,32 @@ def extract_gif_payload(body: bytes, content_type: str):
     """
     if not (content_type or "").lower().startswith("image/"):
         return None, None
+
+    # 快路径：已知魔法串
     idx = body.find(GIF_PAYLOAD_MAGIC)
-    if idx < 0:
-        return None, None
-    tail = body[idx + len(GIF_PAYLOAD_MAGIC):]
-    if not tail:
-        raise ValueError("魔法串后无载荷")
-    # 只保留 base64 字母表，滤掉可能混入的换行/补齐字节
-    b64 = re.sub(rb"[^A-Za-z0-9+/=]", b"", tail)
-    if not b64:
-        raise ValueError("魔法串后无有效 base64 字符")
-    try:
-        data = base64.b64decode(b64, validate=False)
-    except Exception as e:  # noqa: BLE001
-        raise ValueError(f"base64 解码失败: {e}")
-    if not data:
-        raise ValueError("base64 解码结果为空")
-    return data, "gif-embedded"
+    if idx >= 0:
+        data = _decode_embedded_b64(body[idx + len(GIF_PAYLOAD_MAGIC):])
+        if data:
+            return data, "gif-embedded"
+
+    # 通用路径：找 "**" 后面跟的 base64，要求解出来是 JSON（以 { 开头）
+    for m in re.finditer(rb"\*\*([A-Za-z0-9+/=]{16,})", body):
+        data = _decode_embedded_b64(m.group(1))
+        if data and data.lstrip()[:1] == b"{":
+            return data, "image-embedded"
+
+    # 兜底：图片结束后（GIF 0x3B / JPEG FFD9 / PNG IEND）整段尾部按 base64 解
+    starts = []
+    for sig in (b"\x3b", b"\xff\xd9", b"IEND"):
+        p = body.rfind(sig)
+        if p >= 0:
+            starts.append(p + len(sig))
+    for st in starts:
+        data = _decode_embedded_b64(body[st:])
+        if data and data.lstrip()[:1] == b"{":
+            return data, "image-embedded"
+
+    return None, None
 
 
 def guess_encoding(body: bytes, content_type: str) -> str:
