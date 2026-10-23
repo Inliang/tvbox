@@ -29,10 +29,11 @@ const stateOf = (it) => it.__state || 'ok';
 /* 被测代码把 tab / store 当自由变量用，这里必须提供同名 var 绑定，
    否则 new Function 里会抛 ReferenceError。 */
 const factory = new Function('WEIGHT', 'stripEmoji', 'stateOf',
-  'var tab = "configs"; var store = { configs: [] };\n' + src +
+  'var tab = "configs"; var store = { configs: [] }; var q = "";\n' + src +
   '\nreturn { sortItems: sortItems, ensureShuffle: ensureShuffle,' +
   ' rankLen: function(){ return shuffleRank ? Object.keys(shuffleRank).length : 0; },' +
-  ' setTab: function(t){ tab = t; }, setStore: function(s){ store = s; } };'
+  ' setTab: function(t){ tab = t; }, setStore: function(s){ store = s; },' +
+  ' setQ: function(v){ q = v; } };'
 );
 const api = factory(WEIGHT, stripEmoji, stateOf);
 

@@ -1077,9 +1077,27 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
     ids.forEach(function(id, idx){ shuffleRank[id] = idx; });
     return shuffleRank;
   }
+  /* 搜索排序：完全匹配 > 名称前缀 > 名称包含 > 其他字段命中。
+     有关键词时匹配质量是第一排序键（用户指定「完全匹配优先，其次模糊匹配」）；
+     同级内再按既有规则排——配置是置顶/随机，站点是可用性/名称。
+     无关键词时保持原顺序不变。 */
+  function searchTier(it, needle){
+    if(!needle) return 9;
+    var name = String(stripEmoji(it.name)||'').toLowerCase();
+    var key = String(tab==='configs' ? (it.url||'') : (it.api||'')).toLowerCase();
+    if(name === needle || (key && key === needle)) return 0;
+    if(name.indexOf(needle) === 0) return 1;
+    if(name.indexOf(needle) >= 0) return 2;
+    return 3;
+  }
   function sortItems(list){
+    var needle = q.trim().toLowerCase();
     if(tab !== 'configs'){
       return list.sort(function(a,b){
+        if(needle){
+          var ta = searchTier(a, needle), tb = searchTier(b, needle);
+          if(ta !== tb) return ta - tb;
+        }
         var wa = WEIGHT[stateOf(a)] || 2, wb = WEIGHT[stateOf(b)] || 2;
         if(wa!==wb) return wa-wb;
         return String(stripEmoji(a.name)||'').localeCompare(String(stripEmoji(b.name)||''), 'zh-Hans-CN');
@@ -1090,6 +1108,10 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
        其余配置随机排列，不按状态权重排——用户明确要求「其他的随机」。 */
     ensureShuffle();
     return list.sort(function(a,b){
+      if(needle){
+        var ta2 = searchTier(a, needle), tb2 = searchTier(b, needle);
+        if(ta2 !== tb2) return ta2 - tb2;
+      }
       var pa = a.pin || 0, pb = b.pin || 0;
       if(pa !== pb){
         if(!pa) return 1;

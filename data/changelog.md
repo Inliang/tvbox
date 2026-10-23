@@ -161,3 +161,18 @@ EXT_REL 从无条件 ERROR 改为：引用的本地文件不存在才 ERROR，�
 **QA**：qa_card_height PASS、qa_no_regression 通过、qa_pin_sort 10/10、
 qa_origin_probe 全过、validate 通过、CSS 括号 253:253 平衡
 **zijian.json 未改动**
+
+## 2026-10-23 13:05 搜索排序：完全匹配优先
+
+**用户指定**：「搜索的词条优先完全匹配，其次才是模糊匹配」。
+
+**改动**（docs/index.html 的 sortItems 前新增 searchTier）
+- 匹配分四级：0 名称/地址完全相等 > 1 名称前缀 > 2 名称包含 > 3 其他字段命中
+- 有关键词时匹配质量是第一排序键；同级内再按既有规则排
+  （配置：置顶/随机；站点：可用性/名称）
+- 无关键词时顺序完全不变（置顶四条 + 随机）
+- 名称比较前去 emoji，「🐱肥猫」搜「肥猫」算完全匹配
+
+**QA**：新增 scripts/qa_search_rank.js 12/12；qa_pin_sort 10/10（补 q 绑定）、
+qa_no_regression 通过
+**zijian.json 未改动**
