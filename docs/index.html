@@ -139,31 +139,52 @@ a{color:var(--accent);text-decoration:none}
 .legend{display:flex;gap:6px;align-items:flex-start;margin:0 0 12px;font-size:11.5px;line-height:1.5;color:var(--text-3)}
 .legend .ico{width:14px;height:14px;margin-top:1px;flex:none}
 
-/* 双列网格。三个必须的点：
-   1) align-items:start —— 卡片高度不统一（副行 .card-sub 会因来源名长短换成一行/两行，
-      实测高度取值 [121,139]）。缺省 stretch 会把同一行的短卡拉到跟高卡齐平，
-      底部留一大片空白。
+/* 双列网格。卡片高度统一的三个支点：
+   1) align-items:stretch —— 同一行的卡拉齐；配合 .card{height:100%}。
+      以前用 start 是为了躲开"短卡拉伸后底部留白"，但那会留下参差的高矮。
+      现在卡面改成分区定高 + 操作条 margin-top:auto 沉底，撑高之后空白落在
+      操作条上方，看着是呼吸感而不是缺内容。
    2) minmax(0,1fr) 而不是 1fr —— 卡片里有超长 URL，1fr 的最小尺寸是 auto，
       会被内容顶开把轨道撑破；0 才允许它收缩到轨道宽度再换行。
-   3) .state（空状态 / 加载失败）是整块居中的，必须跨满两列，否则会缩在左半边。 */
-#list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+   3) .state（空状态 / 加载失败）是整块居中的，必须跨满两列，否则会缩在左半边。
+   分区定高的口径：标题 2 行 / 副行 2 行 / 地址 2 行 / meta 1 行 / 操作条 44px。
+   任一区块超出就截断，不许把卡片撑高——高矮不齐的根因就是这些块在换行。 */
+#list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:stretch}
 #list[aria-busy="true"]{opacity:.92}
 #list>.state{grid-column:1/-1}
 
 /* ============ card ============ */
 .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-3);
   box-shadow:var(--shadow-1);padding:14px;display:flex;flex-direction:column;gap:10px;
+  height:100%;overflow:hidden;
   content-visibility:auto;contain-intrinsic-size:0 172px;
-  transition:border-color var(--t-fast) var(--e-out)}
+  transition:border-color var(--t-fast) var(--e-out), box-shadow var(--t-fast) var(--e-out),
+             transform var(--t-fast) var(--e-out)}
+.card:hover{border-color:var(--line-strong);box-shadow:var(--shadow-2);transform:translateY(-2px)}
 .card--site{contain-intrinsic-size:0 108px;gap:8px;padding:13px 14px}
 .card.flash{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 
+/* 置顶卡：左侧强调条 + 序号徽标。这是全站唯一的"铭牌"式处理，
+   承载的是真信息（用户指定的四条与它们的顺序），不是装饰。
+   用 accent 的软色阶而不是纯色实心，避免它在扫描时抢走状态点的注意力。 */
+.card.is-pinned{border-color:var(--accent-soft);background:
+  linear-gradient(180deg,var(--accent-soft),transparent 62%),var(--surface)}
+.card.is-pinned::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--accent);border-radius:var(--r-3) 0 0 var(--r-3)}
+.pin-rank{flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:6px;background:var(--accent);color:var(--accent-fg);
+  font-size:11px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+
 .card-top{display:flex;align-items:flex-start;gap:8px;min-width:0}
-.card-name{flex:1;min-width:0;font-size:15px;font-weight:600;line-height:1.4;
+/* 标题固定 2 行高度：不足两行的留白，超过的截断。副行同理固定 2 行。
+   这两行是高矮不齐的最大来源（名称长短、来源名换行），必须定高。 */
+.card-name{flex:1;min-width:0;font-size:15px;font-weight:600;line-height:1.4;min-height:2.8em;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   font-family:var(--emoji);word-break:break-word}
-.card--site .card-name{font-size:14.5px;-webkit-line-clamp:1}
-.card-sub{margin-top:3px;font-size:11.5px;color:var(--text-3);display:flex;flex-wrap:wrap;gap:2px 6px;align-items:center}
+.card--site .card-name{font-size:14.5px;-webkit-line-clamp:2;min-height:2.8em}
+.card-sub{margin-top:3px;font-size:11.5px;line-height:1.45;color:var(--text-3);
+  display:flex;flex-wrap:wrap;gap:2px 6px;align-items:center;
+  min-height:2.9em;max-height:2.9em;overflow:hidden}
 .card-sub .dotsep{opacity:.45}
 .badge{display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:4px;font-size:10.5px;font-weight:700;letter-spacing:.02em;flex:none}
 .badge--rec{background:var(--accent-soft);color:var(--accent)}
@@ -197,7 +218,7 @@ a{color:var(--accent);text-decoration:none}
 
 /* url */
 .card-url{position:relative;display:flex;align-items:flex-start;gap:8px}
-.url{flex:1;min-width:0;font:400 12.5px/1.6 var(--mono);color:var(--text-2);
+.url{flex:1;min-width:0;font:400 12.5px/1.6 var(--mono);color:var(--text-2);min-height:3.2em;
   word-break:break-all;overflow-wrap:anywhere;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   user-select:all;-webkit-user-select:all;cursor:copy}
@@ -212,23 +233,38 @@ a{color:var(--accent);text-decoration:none}
 .btn-expand[hidden]{display:none}
 
 /* meta line */
-.card-meta{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
-.card-meta .lat{color:var(--text-3)}
+/* meta 固定一行：note 是自由文本，必须截断，否则它会把卡片撑高。
+   用 nowrap + overflow hidden，而不是 flex-wrap，才拦得住。 */
+.card-meta{display:flex;align-items:center;flex-wrap:nowrap;gap:4px 10px;
+  font-size:11.5px;line-height:1.45;min-height:1.45em;color:var(--text-3);
+  font-variant-numeric:tabular-nums;overflow:hidden}
+.card-meta>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-meta .lat{color:var(--text-3);flex:none}
 .card-meta .lat b{color:var(--text-2);font-weight:600}
 
 /* actions */
-.card-acts{display:flex;gap:8px;align-items:stretch}
+/* margin-top:auto 把操作条钉在卡片底部：同排卡片被拉高时，空白落在操作条上方，
+   看着是留白而不是缺内容。nowrap + 主按钮 min-width:0 保证按钮多时也不换行。 */
+.card-acts{display:flex;gap:8px;align-items:stretch;margin-top:auto;flex-wrap:nowrap}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:44px;padding:0 14px;
   border-radius:var(--r-2);font-size:14px;font-weight:600;border:1px solid transparent;
   transition:background var(--t-fast) var(--e-out),border-color var(--t-fast) var(--e-out),transform var(--t-fast) var(--e-out)}
 .btn:active{transform:scale(.985)}
-.btn-primary{flex:1;background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn-primary{flex:1;min-width:0;background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 .btn-primary:hover{background:var(--accent-hi);border-color:var(--accent-hi)}
 .btn-primary.is-done{background:var(--ok);border-color:var(--ok);color:#04140B}
+.btn-primary>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-ghost{background:transparent;border-color:var(--line-strong);color:var(--text-2)}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
 .btn-icon{width:44px;height:44px;padding:0;flex:none;background:transparent;border-color:var(--line-strong);color:var(--text-2)}
 .btn-icon:hover{border-color:var(--accent);color:var(--accent)}
+/* 计数钮：把「N 站」这种信息密集的动作做成带文字的小钮，
+   比抽象图标更好认；高度对齐操作条的 44px，不破坏整行。 */
+.btn-chip{display:inline-flex;align-items:center;gap:5px;height:44px;padding:0 10px;flex:none;
+  background:transparent;border:1px solid var(--line-strong);border-radius:var(--r-2);
+  color:var(--text-2);font-size:12px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+.btn-chip:hover{border-color:var(--accent);color:var(--accent)}
+.btn-chip .ico{width:15px;height:15px;flex:none}
 .btn-link{display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 2px;font-size:12.5px;font-weight:600;color:var(--accent)}
 .btn-link .ico{width:14px;height:14px}
 
@@ -252,25 +288,29 @@ a{color:var(--accent);text-decoration:none}
 .hostbadge{font-family:var(--mono);font-size:11px;color:var(--text-2);background:var(--surface-2);border-radius:4px;padding:0 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ============ 第三方加速地址 ============ */
-/* 只是「多给一个可复制的备用地址」：不替换主地址，不碰主 CTA，不参与任何状态判定。
-   视觉上比镜像组更轻：虚线分隔 + 更小的字，避免跟「本仓库收录的镜像」抢权重。 */
-.ghacc{margin-top:2px;padding-top:8px;border-top:1px dashed var(--line)}
-.ghacc-head{display:flex;align-items:center;gap:6px;font-size:11.5px;line-height:1.45;color:var(--text-3)}
-.ghacc-head .tag{flex:none;display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:4px;
-  font-size:10.5px;font-weight:700;letter-spacing:.02em;background:var(--surface-2);color:var(--text-3)}
-.ghacc-row{display:flex;align-items:center;gap:8px;min-height:30px;font:400 11.5px/1.5 var(--mono);color:var(--text-3)}
-.ghacc-row .mu{flex:1;min-width:0;word-break:break-all;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all;cursor:copy}
+/* 卡面上已不单独成块：降级为操作条的 i-zap 钮（title 说明是第三方），
+   完整地址与「不保证更快」的说明在详情页。这里不再留样式，避免死代码。 */
 
 /* ============ 镜像源站回填 ============ */
 /* 只出现在「probe_url 落在已失效镜像 host 上」的站点卡：说清灰卡的真实原因，
    并把源站地址作为可一键复制的落点给出来。
    边界：不碰 siteState（仍是 untestable 灰），不碰 MIRROR_HOSTS 清单，
    地址由数据层 originProbe 提供，前端不实时探测（源站单次 7.9–40.8 秒，会卡死页面）。
-   视觉权重对齐 .ghacc：虚线分隔 + 11.5px 等宽，不跟主 CTA 抢。 */
-.origin{margin-top:2px;padding-top:8px;border-top:1px dashed var(--line)}
-.origin-head{display:flex;align-items:center;gap:6px;font-size:11.5px;line-height:1.45;color:var(--text-3)}
-.origin-row{display:flex;align-items:center;gap:8px;min-height:30px;font:400 11.5px/1.5 var(--mono);color:var(--text-3)}
-.origin-row .mu{flex:1;min-width:0;word-break:break-all;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all;cursor:copy}
+   做成"提示条"而不是多一行文本：带底色与圆角，这样它比邻卡高的那 51px
+   读起来是内容而不是缺口。完整成因在 title 与详情页。
+   底色跟结论走：源站实测 200 才用绿，未确认用灰、非 200 用红——
+   三者不能共用一个颜色，否则"没验出来"会被看成"验过了"。 */
+.origin{margin-top:2px;padding:7px 8px;border-radius:var(--r-2);
+  background:var(--unk-soft);border:1px solid var(--unk-line)}
+.origin[data-oc="mirror_origin_ok"]{background:var(--ok-soft);border-color:var(--ok-line)}
+.origin[data-oc="mirror_origin_dead"]{background:var(--fail-soft);border-color:var(--fail-line)}
+.origin-row{display:flex;align-items:center;gap:8px;min-height:30px;font:400 11.5px/1.5 var(--mono);color:var(--text-2)}
+.origin-row .tag{flex:none;display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:4px;
+  font:700 10.5px/1 var(--sans);letter-spacing:.02em;background:var(--surface);color:var(--text-2)}
+.origin[data-oc="mirror_origin_ok"] .tag{color:var(--ok)}
+.origin[data-oc="mirror_origin_dead"] .tag{color:var(--fail)}
+.origin-row .mu{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  user-select:all;-webkit-user-select:all;cursor:copy}
 
 /* ============ empty / error ============ */
 .state{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:56px 20px}
@@ -359,6 +399,7 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .card:hover{transform:none}
 }
 @media (min-width:768px){
   .card{padding:16px}
@@ -455,6 +496,8 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
   <symbol id="i-empty" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/><path d="M7.5 10.5h6"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></symbol>
 </defs></svg>
 
 <div class="topwrap">
@@ -1141,29 +1184,19 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
     return wrap;
   }
 
-  /* 加速地址行：与主地址同构（可点文字复制 + 独立复制按钮），但明确标注第三方。
-     文案不写「官方」/「推荐」，也不承诺更快 —— 那是别人的服务，挂了我们管不了。 */
-  function buildGhAccel(accelUrl){
-    var wrap = h('div',{class:'ghacc'});
-    var head = h('div',{class:'ghacc-head'},
-      h('span',{class:'tag'},'加速地址'),
-      h('span',null,'第三方 gh-proxy.cn · 不保证更快'));
-    var row = h('div',{class:'ghacc-row'});
-    var t = h('span',{class:'mu', text:accelUrl, title:'点击复制加速地址（第三方服务）'});
-    t.addEventListener('click', function(){ doCopy(accelUrl, '加速地址 · 第三方 gh-proxy.cn', t); });
-    var b = h('button',{class:'btn-copy-mini', type:'button','aria-label':'复制加速地址 '+accelUrl}, icon('i-copy'));
-    b.addEventListener('click', function(){ doCopy(accelUrl, '加速地址 · 第三方 gh-proxy.cn', b); });
-    row.appendChild(t); row.appendChild(b);
-    wrap.appendChild(head); wrap.appendChild(row);
-    return wrap;
-  }
+    /* 加速地址以前是卡面上的一整块，现在降级成操作条上的 i-zap 钮（见 buildConfigCard）。
+     完整地址与「第三方、不保证更快」的说明在详情页，那里本来就有。 */
 
   function buildConfigCard(c){
     var state = cfgState(c);
-    var card = h('article', { class:'card', id:'cfg-'+c.id, 'data-id':c.id });
+    var pin = Number(c.pin) || 0;
+    var card = h('article', { class:'card'+(pin?' is-pinned':''), id:'cfg-'+c.id, 'data-id':c.id });
 
     var nameWrap = h('div',{class:'card-name-wrap'});
     var topLine = h('div',{class:'card-top'});
+    /* 置顶序号：承载的是用户指定的顺序，不是装饰。放在标题行最左，
+       与「推荐」徽标并列但更靠前——顺序本身就是信息。 */
+    if(pin) topLine.appendChild(h('span',{class:'pin-rank','aria-label':'置顶第 '+pin+' 位'}, String(pin)));
     if(c.recommend) topLine.appendChild(h('span',{class:'badge badge--rec'},'推荐'));
     topLine.appendChild(h('h3',{class:'card-name',text:c.name||'(未命名配置)'}));
     nameWrap.appendChild(topLine);
@@ -1197,30 +1230,49 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
 
     card.appendChild(buildUrlBlock(c.url||''));
 
-    /* GitHub 托管的文件才给加速地址；其余（自建域名 / GitHub Pages / 已是别人代理的）一律不加 */
-    var accel = ghAccelUrl(c.url);
-    if(accel) card.appendChild(buildGhAccel(accel));
-
     var lat = cfgLatency(c), at = cfgCheckedAt(c);
     var meta = h('div',{class:'card-meta'});
     meta.appendChild(h('span',null, at ? ('最近探测 '+relTime(at)) : '未检测'));
     if(lat) meta.appendChild(h('span',{class:'lat'}, h('b',null,fmtLat(lat))));
+
+    /* 镜像与备注都收进 meta 这一行（超出截断）。以前镜像是一整块可展开区域，
+       只有 7 张卡有，正好把高度切成两种。镜像明细在详情页里完整可复制。 */
+    var mirrors = Array.isArray(c.mirrors) ? c.mirrors.filter(Boolean) : [];
+    if(mirrors.length) meta.appendChild(h('span',null,'另有 '+mirrors.length+' 个镜像'));
     if(c.note) meta.appendChild(h('span',null,c.note));
     card.appendChild(meta);
 
     /* 跨 Tab 联动：进入该配置在「站点源」下的清单（按 configId 过滤）
-       旧实现只在"已输入关键词"时才渲染这个入口，导致正常浏览时用户无法从配置卡
-       直达它的站点清单（该分支几乎不可达）。这里改为常驻：无关键词时显示总数，
-       有关键词时显示命中数。 */
+       无关键词时显示总数，有关键词时显示命中数。收进操作条的计数钮，
+       不再单独占一行——它以前是"有时有一行、有时没有"。 */
     var needle = q.trim().toLowerCase();
     var cfgSites = sitesOfConfig(c.id);
     var hits = needle ? cfgSites.filter(function(s){
       return (stripEmoji(s.name)||'').toLowerCase().indexOf(needle)>=0 ||
              (s.api||'').toLowerCase().indexOf(needle)>=0;
     }).length : cfgSites.length;
+
+    var acts = h('div',{class:'card-acts'});
+    var copyBtn = h('button',{class:'btn btn-primary',type:'button','aria-label':'复制 '+(c.name||'该配置')+' 的订阅地址'},
+      icon('i-copy'), h('span',null,'复制订阅地址'));
+    copyBtn.addEventListener('click', function(){ doCopy(c.url||'', hostOf(c.url||''), copyBtn, '复制订阅地址'); });
+    acts.appendChild(copyBtn);
+
+    /* 加速地址降级成操作条上的一个钮：卡面只留"能复制"这个动作，
+       完整地址与「第三方、不保证更快」的说明留在详情页（那里本来就有）。
+       原因：这一整块只有 GitHub 托管的卡才有（31/48），是高矮不齐的最大来源。 */
+    var accel = ghAccelUrl(c.url);
+    if(accel){
+      var accBtn = h('button',{class:'btn btn-icon',type:'button',
+        title:'复制第三方加速地址（gh-proxy.cn，不保证更快）','aria-label':'复制第三方加速地址'}, icon('i-zap'));
+      accBtn.addEventListener('click', function(){ doCopy(accel, '加速地址 · 第三方 gh-proxy.cn', accBtn); });
+      acts.appendChild(accBtn);
+    }
+
     if(hits){
-      var hb = h('button',{class:'btn-link', type:'button', style:'font-size:12px'},
-        needle ? ('内含 '+hits+' 个匹配站点') : ('查看该配置的 '+hits+' 个站点'), icon('i-chevron'));
+      var hb = h('button',{class:'btn btn-chip', type:'button',
+        title: needle ? ('该配置内有 '+hits+' 个站点匹配「'+q+'」') : ('查看该配置收录的 '+hits+' 个站点')},
+        icon('i-layers'), h('span',null, hits+' 站'));
       hb.addEventListener('click', function(){
         sourceFilter = c.id; groupFilter='all'; typeFilter='all'; stFilter='all';
         if(needle){ $('#q').value = q; } else { $('#q').value = ''; q = ''; }
@@ -1228,47 +1280,16 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
         if(tab!=='sites') switchTab('sites'); else render();
         window.scrollTo({top:0,behavior:'smooth'});
       });
-      card.appendChild(hb);
+      acts.appendChild(hb);
     }
 
-    /* 镜像地址组 */
-    var mirrors = Array.isArray(c.mirrors) ? c.mirrors.filter(Boolean) : [];
-    if(mirrors.length){
-      var okMirror = mirrors.filter(function(u){ var p=probeOf(u); return p && (p.state==='ok'||p.state==='reachable'); }).length;
-      var wrapM = h('div',{class:'mirror'});
-      var headM = h('button',{class:'mirror-head', type:'button', 'aria-expanded':'false'});
-      headM.appendChild(document.createTextNode('另有 '+mirrors.length+' 个镜像地址'+(state==='fail'&&okMirror?' · 镜像可用':'')));
-      var listM = h('div',{class:'mirror-list', hidden:'hidden'});
-      mirrors.forEach(function(u){
-        var p = probeOf(u);
-        var st = normState(p ? p.state : 'unknown');
-        var row = h('div',{class:'mirror-row','data-status':st});
-        row.appendChild(h('i',{class:'mdot','aria-hidden':'true'}));
-        var t = h('span',{class:'mu', text:u, title:'点击复制'});
-        t.addEventListener('click', function(){ doCopy(u, hostOf(u), t); });
-        var b = h('button',{class:'btn-copy-mini', type:'button','aria-label':'复制镜像地址 '+u}, icon('i-copy'));
-        b.addEventListener('click', function(){ doCopy(u, hostOf(u), b); });
-        row.appendChild(t); row.appendChild(b);
-        listM.appendChild(row);
-      });
-      headM.addEventListener('click', function(){
-        var open = listM.hidden;
-        listM.hidden = !open;
-        headM.setAttribute('aria-expanded', String(open));
-        wrapM.classList.toggle('is-open', open);
-      });
-      wrapM.appendChild(headM); wrapM.appendChild(listM);
-      card.appendChild(wrapM);
-    }
+    /* 镜像不单独给钮：meta 里已写「另有 N 个镜像」，完整清单在详情页。
+       以前这里还有个钮，图标跟上面的站点计数重复，多一个控件多一分噪音。 */
 
-    var acts = h('div',{class:'card-acts'});
-    var copyBtn = h('button',{class:'btn btn-primary',type:'button','aria-label':'复制 '+(c.name||'该配置')+' 的订阅地址'},
-      icon('i-copy'), h('span',null,'复制订阅地址'));
-    copyBtn.addEventListener('click', function(){ doCopy(c.url||'', hostOf(c.url||''), copyBtn, '复制订阅地址'); });
     var openA = h('a',{class:'btn btn-icon', href:safeUrl(c.url), target:'_blank', rel:'noopener noreferrer','aria-label':'在新窗口打开该地址',title:'在新窗口打开'}, icon('i-external'));
     var detailBtn = h('button',{class:'btn btn-icon',type:'button','aria-label':'查看 '+(c.name||'该配置')+' 详情',title:'详情'}, icon('i-info'));
     detailBtn.addEventListener('click', function(){ openConfigSheet(c); });
-    acts.appendChild(copyBtn); acts.appendChild(openA); acts.appendChild(detailBtn);
+    acts.appendChild(openA); acts.appendChild(detailBtn);
     card.appendChild(acts);
     return card;
   }
@@ -1301,17 +1322,21 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
 
     /* 源站落点（卡片侧）：灰卡用户真正想知道的是「那我该复制哪个」，
        这件事不能在详情页里才看得到——很多人根本不点开。
-       文案取 reasonText(siteReason(s))，与状态点 tooltip、详情页共用同一份，改一处三处都变；
-       地址来自数据层 originProbe，前端不写死结论（源站哪天挂了，「实测可加载」得自动变成「未确认」）。
+       压成单行：短标签 + 地址 + 复制钮。完整成因文案留在 title 与详情页，
+       与状态点 tooltip 共用同一份 reasonText，改一处三处都变；
+       地址来自数据层 originProbe，前端不写死结论（源站哪天挂了，
+       「实测可加载」得自动变成「未确认」）。
        渲染条件收紧到「reason 确实来自 originProbe」：万一采集端给非镜像站点也写了这个字段，
        这里不会凭空多出一行跟当前成因无关的地址。 */
     var op = s.originProbe;
     var oc = siteReason(s);
     if(op && op.url && oc && oc.indexOf('mirror_origin_')===0){
-      var ow = h('div',{class:'origin'});
-      ow.appendChild(h('div',{class:'origin-head'}, reasonText(oc)));
-      var orow = h('div',{class:'origin-row'});
-      var ou = h('span',{class:'mu', text:op.url, title:'点击复制'});
+      var shortTag = oc==='mirror_origin_ok' ? '源站可加载'
+                   : oc==='mirror_origin_dead' ? '源站无响应' : '源站未确认';
+      var ow = h('div',{class:'origin','data-oc':oc});
+      var orow = h('div',{class:'origin-row', title: reasonText(oc)});
+      orow.appendChild(h('span',{class:'tag'}, shortTag));
+      var ou = h('span',{class:'mu', text:op.url, title:'点击复制源站地址'});
       ou.addEventListener('click', function(){ doCopy(op.url, '源站地址 · 镜像已失效', ou); });
       var ob = h('button',{class:'btn-copy-mini', type:'button', 'aria-label':'复制源站地址 '+op.url}, icon('i-copy'));
       ob.addEventListener('click', function(){ doCopy(op.url, '源站地址 · 镜像已失效', ob); });
@@ -1320,27 +1345,30 @@ body.is-probing .toast{bottom:calc(64px + env(safe-area-inset-bottom))}
       card.appendChild(ow);
     }
 
-    var acts = h('div',{class:'card-acts', style:'justify-content:space-between'});
+    /* 操作条：所有按钮同高 44px，主次分明。以前主按钮是 .btn-link(32px)、
+       次按钮是 .btn-ghost(44px)，同一行里高矮不齐。 */
+    var acts = h('div',{class:'card-acts'});
     var cta = ctaFor(s);
     if(cta){
-      var cbRepo = h('button',{class:'btn-link',type:'button', title: cta.note || '该站已收录进本仓库配置，复制整包地址粘贴到 TVBox 订阅即可'}, cta.label, icon('i-copy'));
+      var cbRepo = h('button',{class:'btn btn-primary',type:'button',
+        title: cta.note || '该站已收录进本仓库配置，复制整包地址粘贴到 TVBox 订阅即可'},
+        icon('i-copy'), h('span',null,cta.label));
       cbRepo.addEventListener('click', function(){ doCopy(cta.url, hostOf(cta.url), cbRepo, cta.label); });
       acts.appendChild(cbRepo);
+      if(cta.note) acts.title = cta.note;
     } else if(cfg){
-      var go = h('button',{class:'btn-link',type:'button'}, '查看所属配置', icon('i-chevron'));
+      var go = h('button',{class:'btn btn-chip',type:'button', title:'在「整包配置」里定位它所属的配置'},
+        icon('i-layers'), h('span',null,'查看所属配置'));
       go.addEventListener('click', function(){ gotoConfig(cfg.id); });
       acts.appendChild(go);
-    } else {
-      acts.appendChild(h('span',{class:'card-sub'}, ''));
     }
     var snip = s.snippet || JSON.stringify({key:s.key||'', name:s.name||'', type:s.type||3, api:s.api||''});
-    var cbtn = h('button',{class:'btn btn-ghost', type:'button', style:'font-size:12.5px',
+    var cbtn = h('button',{class:'btn btn-ghost', type:'button',
       'aria-label':'复制该站点的 JSON 片段，需自行合并到配置'}, icon('i-copy'), h('span',null,'复制片段'));
     cbtn.addEventListener('click', function(){
       doCopy(snip, cta ? 'JSON 片段 · 该站已收录，直接用整包地址更省事' : 'JSON 片段 · 需合并进配置', cbtn);
     });
     acts.appendChild(cbtn);
-    if(cta && cta.note) acts.title = cta.note;
     card.appendChild(acts);
     return card;
   }
