@@ -1489,6 +1489,30 @@
       "playerType": 2,
       "epg": "http://diyp5.112114.xyz/?ch={name}&date={date}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "高清综合·vbskycn",
+      "type": 0,
+      "url": "./lib/live-vbskycn.m3u",
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/pp.xml",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "央视卫视HD·bestfan",
+      "type": 0,
+      "url": "./lib/live-bestfan.m3u",
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/pp.xml",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "4K8K超清·kaige",
+      "type": 0,
+      "url": "./lib/live-kaige.m3u",
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/pp.xml",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
     }
   ],
   "headers": [

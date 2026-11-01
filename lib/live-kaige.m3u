@@ -1,0 +1,4 @@
+#EXTM3U x-tvg-url="https://epg.aptv.app/pp.xml.gz,https://epg.aptv.app/xml"
+#EXT-X-APP APTV
+#EXT-X-APTV-TYPE remote
+#EXT-X-SUB-URL https://gh.aptv.app/https://raw.githubusercontent.com/kaige-cai/live/main/live.m3u
