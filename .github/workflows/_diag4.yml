@@ -1,0 +1,22 @@
+name: _diag4
+
+on:
+  push:
+    paths:
+      - '.github/workflows/_diag4.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: _diag4
+  cancel-in-progress: false
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "refresh-like but with push.paths trigger"
