@@ -232,7 +232,7 @@ CCTV_RE = re.compile(r"(?:CCTV|央视|中央)[\s\-_]*(\d{1,2})\s*([+＋])?", re.
 UHD_RE = re.compile(r"4K|8K|UHD|2160", re.I)
 # 画质/清晰度后缀（4K/8K 除外，它们是独立频道，不剥）
 NOISE_RE = re.compile(
-    r"[\s\-_()（）\[\]]*(?:超清|高清|标清|蓝光|流畅|HD|FHD|\d{3,4}[PIpi])"
+    r"[\s\-_()（）\[\]]*(?:超清|高清|标清|蓝光|流畅|频道|HD|FHD|\d{3,4}[PIpi])"
     r"[\s\-_()（）\[\]]*$", re.I
 )
 ALIAS = {
@@ -245,7 +245,8 @@ DATE_RE = re.compile(r"^[\d\s\-:./]+$")
 
 def normalize_name(name):
     """把同一频道的上游别名收成规范名，并去掉画质后缀。"""
-    n = name.strip()
+    # 上游偶尔把两个台名用竖线拼在一起（CBS News | CBSN Pittsburgh），取第一段
+    n = re.split(r"\s*\|\s*", name.strip())[0].strip()
     m = CCTV_RE.search(n)
     if m:
         # 央视统一成 CCTV1..CCTV17 / CCTV5+ / CCTV4K 这类编号名
@@ -296,7 +297,39 @@ GROUP_RULES = [
     # 地方台常叫「XX新闻综合」，不能按「新闻」归类，故只认明确的地区/地方字样
     ("地方频道", r"地区|地方|新闻综合|广播电视台"),
 ]
-GROUP_ORDER = [g for g, _ in GROUP_RULES] + ["其他频道"]
+GROUP_ORDER = [g for g, _ in GROUP_RULES] + [
+    "港澳台频道", "国外频道", "风景慢直播", "其他频道",
+]
+
+# 「其他频道」原本塞了 188 个来路各异的台，按地域二次归类。
+CJK_RE = re.compile(r"[\u4e00-\u9fff]")
+# 中国香港 / 中国澳门 / 中国台湾地区频道，单独成组，不并入「国外频道」
+HMT_RE = re.compile(
+    r"凤凰|TVB|翡翠|明珠|亚视|亚洲电视|香港|澳门|台湾|台视|中视|华视|中天|"
+    r"东森|三立|民视|非凡|壹电视|TVBS|纬来|年代|澳亚|ViuTV|HOY|星河|无线|"
+    r"人间卫视|BLTV", re.I
+)
+FOREIGN_RE = re.compile(
+    r"^(?:俄|韩|日|美|英|法|德|泰|新|印|意|半岛|阿拉伯)[·・:：]|"
+    r"^(?:日本|韩国|美国|俄罗斯|泰国|半岛|亚洲新闻)", re.I
+)
+FOREIGN_HOST_RE = re.compile(r"\.kr$|\.jp$|cloudfront\.net|ebs\.co\.kr", re.I)
+# 景区摄像头慢直播：同一批 /gc/ 源，不是电视频道，单列避免淹没地方台
+SCENERY_URL_RE = re.compile(r"/gc/.*contentid=2820180516001", re.I)
+
+
+def refine_group(name, url):
+    """把散落在「其他频道」的条目按地域二次归类。"""
+    if SCENERY_URL_RE.search(url):
+        return "风景慢直播"
+    if HMT_RE.search(name):
+        return "港澳台频道"
+    host = urllib.parse.urlsplit(url).netloc
+    if (FOREIGN_RE.search(name) or FOREIGN_HOST_RE.search(host)
+            or not CJK_RE.search(name)):
+        return "国外频道"
+    # 剩下的中文台名都是国内地方台 / 专业频道
+    return "地方频道"
 
 
 def classify(inf, name):
@@ -304,6 +337,9 @@ def classify(inf, name):
     # （否则「北京卫视4K」会被上游标成卫视频道，和另外几个 4K 分开）
     if UHD_RE.search(name):
         return "4K超清"
+    # 港澳台地区频道全局归组，不受上游 group-title 影响；且不并入「国外频道」
+    if HMT_RE.search(name):
+        return "港澳台频道"
     # 优先沿用上游 group-title，映射不到再按频道名判断
     m = re.search(r'group-title="([^"]*)"', inf)
     original = m.group(1) if m else ""
@@ -333,7 +369,10 @@ def build_all(written):
             if not name:
                 continue
             if name not in buckets:
-                buckets[name] = {"group": classify(inf, name), "urls": []}
+                group = classify(inf, name)
+                if group == "其他频道":
+                    group = refine_group(name, url)
+                buckets[name] = {"group": group, "urls": []}
             item = buckets[name]
             if url not in item["urls"]:
                 item["urls"].append(url)
