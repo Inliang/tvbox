@@ -67,14 +67,30 @@ jobs:
           PY
           echo "KEYSTORE_PATH=$RUNNER_TEMP/jmgo/jmgo.keystore.p12" >> "$GITHUB_ENV"
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install SDK packages (API 37)
+      - name: Install Android SDK (self-contained, no third-party action)
         run: |
-          sdkmanager "platforms;android-37" "build-tools;37.0.0"
+          set -euo pipefail
+          ANDROID_HOME="$RUNNER_TEMP/android-sdk"
+          mkdir -p "$ANDROID_HOME/cmdline-tools"
+          # 动态取最新的 commandlinetools-linux 压缩包地址（避免硬编码版本过期）
+          URL=$(python - "$RUNNER_TEMP" <<'PY'
+          import re, urllib.request
+          xml = urllib.request.urlopen("https://dl.google.com/android/repository/repository2-3.xml", timeout=30).read().decode()
+          nums = re.findall(r'commandlinetools-linux-(\d+)_latest\.zip', xml)
+          best = max(nums, key=lambda s: int(s))
+          print(f"https://dl.google.com/android/repository/commandlinetools-linux-{best}_latest.zip")
+          PY
+          )
+          echo "cmdline-tools: $URL"
+          curl -fsSL "$URL" -o /tmp/cmd.zip
+          unzip -q /tmp/cmd.zip -d "$ANDROID_HOME/cmdline-tools"
+          mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+          yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses >/dev/null
+          sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-37" "build-tools;37.0.0"
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> "$GITHUB_ENV"
 
       - name: Clone pinned upstream
         run: |
