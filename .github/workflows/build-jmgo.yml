@@ -1,25 +1,31 @@
 name: build-jmgo
 
 # 坚果 N1S 4K 高亮版兼容版 TVBox 客户端（基于 FongMi/TV 5.8.7）。
-# 推送 apps/jmgo/** 或本 workflow 自身即自动编译产出两个可安装 APK（arm64_v8a / armeabi_v7a），并上传 Artifact + Release。
+# 推送 apps/jmgo/** 或本文件即触发；也可在 Actions 页手动 workflow_dispatch。
+# 产物：tvbox-jmgo-leanback-arm64_v8a / armeabi_v7a 两个 APK + 校验文件。
 
 on:
   push:
     paths:
-      - "apps/jmgo/**"
-      - ".github/workflows/build-jmgo.yml"
-  workflow_dispatch: {}
-
-concurrency:
-  group: build-jmgo-${{ github.ref }}
-  cancel-in-progress: false
+      - 'apps/jmgo/**'
+      - '.github/workflows/build-jmgo.yml'
+  workflow_dispatch:
+    inputs:
+      upstream_sha:
+        description: 'FongMi/TV commit to build (default pinned)'
+        required: false
+        default: '4512b4c9f82534ff66acfde06ccdd68f35b074f0'
 
 permissions:
   contents: write
 
+concurrency:
+  group: build-jmgo
+  cancel-in-progress: false
+
 env:
   UPSTREAM_REPO: FongMi/TV
-  UPSTREAM_SHA: 4512b4c9f82534ff66acfde06ccdd68f35b074f0
+  UPSTREAM_SHA: ${{ github.event.inputs.upstream_sha || '4512b4c9f82534ff66acfde06ccdd68f35b074f0' }}
   BUILD_TOOLS: "37.0.0"
   PATCHES_OUT: ${{ runner.temp }}/patches-applied.json
   OUT_DIR: ${{ runner.temp }}/jmgo-out
@@ -29,32 +35,33 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - name: Checkout 本仓库
+      - name: Checkout tvbox repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Set up JDK 21 (temurin)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
+          java-version: '21'
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: '3.12'
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 安装 SDK 组件（platform-37 / build-tools / NDK / CMake）
+      - name: Install SDK packages (API 37 + NDK + CMake)
         run: |
           sdkmanager "platform-tools" "platforms;android-37" "build-tools;37.0.0" "ndk;28.2.13676358" "cmake;3.22.1"
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
 
-      - name: 克隆上游源码 @ 固定 SHA
+      - name: Clone pinned upstream
         run: |
-          set -e
           git clone -c advice.detachedHead=false --filter=blob:none --no-checkout \
             "https://github.com/$UPSTREAM_REPO.git" "$RUNNER_TEMP/upstream" \
             || git clone -c advice.detachedHead=false "https://github.com/$UPSTREAM_REPO.git" "$RUNNER_TEMP/upstream"
@@ -63,13 +70,13 @@ jobs:
           git checkout -q FETCH_HEAD
           echo "UPSTREAM_DIR=$RUNNER_TEMP/upstream" >> "$GITHUB_ENV"
 
+      - name: 准备固定签名密钥（仓库内置 b64 -> JKS）
+        run: bash apps/jmgo/scripts/gen-keystore.sh
+
       - name: 应用兼容性补丁（P-00/P-01 必需，P-03 可选）
         env:
           UPSTREAM_DIR: ${{ env.UPSTREAM_DIR }}
         run: python apps/jmgo/scripts/apply-patches.py
-
-      - name: 准备固定签名密钥
-        run: bash apps/jmgo/scripts/gen-keystore.sh
 
       - name: 注入 local.properties 到上游
         run: cp apps/jmgo/keystore/local.properties "$UPSTREAM_DIR/local.properties"
@@ -91,14 +98,18 @@ jobs:
           bash apps/jmgo/scripts/collect-apk.sh "$UP" "$OUT_DIR"
           cp "$PATCHES_OUT" "$OUT_DIR/patches-applied.json"
 
-      - name: 上传 Artifact
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: tvbox-jmgo-5.8.7
-          path: ${{ runner.temp }}/jmgo-out/*
+          path: |
+            ${{ runner.temp }}/jmgo-out/*.apk
+            ${{ runner.temp }}/jmgo-out/SHA256SUMS.txt
+            ${{ runner.temp }}/jmgo-out/build-info.json
+            ${{ runner.temp }}/jmgo-out/patches-applied.json
           if-no-files-found: error
 
-      - name: 发布 Release（仅 push 到 main）
+      - name: Publish GitHub Release (push to main only)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
