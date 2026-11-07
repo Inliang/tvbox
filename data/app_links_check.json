@@ -1,0 +1,14 @@
+{
+ "OK影视-电视版-64位": "https://github.com/FongMi/Release/releases/latest/download/leanback-arm64_v8a.apk",
+ "OK影视-电视版-32位": "https://github.com/FongMi/Release/releases/latest/download/leanback-armeabi_v7a.apk",
+ "OK影视-手机版-64位": "https://github.com/FongMi/Release/releases/latest/download/mobile-arm64_v8a.apk",
+ "OK影视-手机版-32位": "https://github.com/FongMi/Release/releases/latest/download/mobile-armeabi_v7a.apk",
+ "q215613905-Java-64位": "https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java64.apk",
+ "q215613905-Java-32位": "https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java32.apk",
+ "q215613905-Java-通用": "https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java.apk",
+ "q215613905-Python-64位": "https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python64.apk",
+ "q215613905-Python-32位": "https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python32.apk",
+ "q215613905-Python-通用": "https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python.apk",
+ "MBox-手机版": "https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile/releases/download/v1.1.1/MBox_v1.1.1_release_20240828.apk",
+ "takagen99-通用": "https://github.com/takagen99/Box/releases/download/v1.0.0-alpha/app-release.apk"
+}

@@ -121,9 +121,29 @@
 | 皮皮虾版 | [发布频道](https://t.me/pipixiawerun) | 支持直播回放，支持弹幕 |
 | 新版猫影视 | [社区复刻](https://github.com/mingjieyemen/CatVodOpen) | 界面简洁，支持多平台；原 `catvod/CatVodOpen` 已失效 |
 | 手机版 | [XiaoRanLiu3119/TVBoxOS-Mobile](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile) | 竖屏 |
-| 编译版 APK | [o0HalfLife0o/TVBoxOSC](https://github.com/o0HalfLife0o/TVBoxOSC) | q215613905 / takagen99 版编译产物 |
+| 编译版 APK | [j4Uq/TVBoxOSC](https://github.com/j4Uq/TVBoxOSC)（原 o0HalfLife0o） | q215613905 / takagen99 版编译产物 |
 
 基础客户端：[TVBox](https://tvbox.clbug.com/)、影视仓。
+
+#### 下载直链（电视版 / 手机版·平板版 / 32 位 / 64 位）
+
+选版本两步走：**电视盒子、智能电视装「电视版」，手机和平板装「手机版」**；**近几年买的设备基本都是 64 位**，只有老盒子、或安装时提示「应用未安装 / 解析包错误」才换 32 位。
+
+| 客户端 | 设备类型 | 64 位（arm64-v8a） | 32 位（armeabi-v7a） |
+| --- | --- | --- | --- |
+| **OK 影视 / 影视仓**（推荐） | 电视版 | [下载 · 49 MB](https://github.com/FongMi/Release/releases/latest/download/leanback-arm64_v8a.apk) | [下载 · 42 MB](https://github.com/FongMi/Release/releases/latest/download/leanback-armeabi_v7a.apk) |
+| **OK 影视 / 影视仓**（推荐） | 手机版 / 平板版 | [下载 · 48 MB](https://github.com/FongMi/Release/releases/latest/download/mobile-arm64_v8a.apk) | [下载 · 42 MB](https://github.com/FongMi/Release/releases/latest/download/mobile-armeabi_v7a.apk) |
+| q215613905 编译版（Java） | 通用（电视 / 手机） | [下载 · 19 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java64.apk) | [下载 · 18 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java32.apk) |
+| q215613905 编译版（Python） | 通用（电视 / 手机） | [下载 · 31 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python64.apk) | [下载 · 30 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python32.apk) |
+| MBox（竖屏） | 手机版 / 平板版 | [下载 · 40 MB](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile/releases/download/v1.1.1/MBox_v1.1.1_release_20240828.apk)（通用包） | 同左，无需区分 |
+| takagen99 版 | 通用 | [下载 · 7 MB](https://github.com/takagen99/Box/releases/download/v1.0.0-alpha/app-release.apk)（2022 旧版，通用包） | 同左，无需区分 |
+
+- OK 影视用的是 `releases/latest/download/`，**始终指向官方最新版**（当前 5.8.7，2026-11-01）；其余仓库的 APK 文件名带版本或日期，只能给固定版本直链，想要新版请去 [OK 影视 Releases](https://github.com/FongMi/Release/releases) / [编译版 Releases](https://github.com/j4Uq/TVBoxOSC/releases)（该仓库已由 `o0HalfLife0o` 改名为 `j4Uq`，直链统一用新名，避免依赖跳转）。
+- 编译版还有不分位数的通用包：[Java 31 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java.apk)、[Python 50 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python.apk)。Java 版更轻，Python 版功能更全。
+- 皮皮虾版（Telegram 发布）、新版猫影视、原版 TVBox 官网目前**没有官方 APK 直链**（官网只给夸克网盘），故不列。
+- 国内下载慢或打不开时，在直链前加 [GitHub 代理](#代理与备用接口) 前缀。
+
+> 直链由第三方维护，会随版本更新失效。维护者可运行 `python scripts/check_app_links.py` 一键复验，失效项会打印出来。
 
 ### TVBox 各路大佬配置（排名不分先后）
 
