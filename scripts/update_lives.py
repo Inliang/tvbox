@@ -10,7 +10,9 @@
 用法：python scripts/update_lives.py
 可重复运行：无上游的本地源会在首次运行时生成 .bak 原始备份，之后始终从备份读取。
 """
+import collections
 import concurrent.futures as cf
+import re
 import shutil
 import sys
 import urllib.error
@@ -181,7 +183,6 @@ def main():
     print(f"探测完成：可达 {sum(results.values())} / {len(results)}\n")
 
     # 4K/8K 精选：从所有源里挑出标注超清的频道，单独多轮复测，只留实测可达的
-    import re
     uhd = [(inf, u) for _, _, _, chs in data for inf, u in chs
            if re.search(r"4K|8K|UHD|2160", inf, re.I)]
     uhd_urls = [u for _, u in uhd]
@@ -201,6 +202,7 @@ def main():
     for _, u in uhd_kept:
         results[u] = True
 
+    written = []
     for src, target, header, channels in data:
         kept = [(inf, u) for inf, u in channels if results.get(u, True)]
         lines = [header]
@@ -208,12 +210,115 @@ def main():
             lines.append(inf)
             lines.append(u)
         target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        written.append((target, kept))
         print(f"[写出] {str(target.relative_to(ROOT)):28s} "
               f"{len(channels):4d} -> {len(kept):4d} 条"
               f"（剔除 {len(channels) - len(kept)} 死链）")
 
+    build_all(written)
     print("\n完成。播放列表已是自包含 m3u，不再依赖 #EXT-X-SUB-URL / gh.aptv.app 代理。")
 
 
+# 部分精简版 TVBox 只加载 lives[0]，因此把全部可用频道合并成一张总表放在首位。
+# 同名频道保留多条线路（播放器显示「线路 1/N」，可手动/自动换源），但限制上限避免刷屏。
+MAX_LINES = 6
+SKIP_NAME = ("春晚", "支持作者", "更新时间")
+
+# 只重建总表时读取的成品播放列表（顺序即线路优先级）
+ALL_INPUTS = [
+    "iptv.m3u",
+    "interface.txt",
+    "live-vbskycn.m3u",
+    "live-bestfan.m3u",
+    "live-kaige.m3u",
+    "live-4k.m3u",
+]
+
+GROUP_RULES = [
+    # 只认明确的 4K/8K，避免「XX超清」这类仅高清的频道混进来
+    ("4K超清", r"4K|8K|UHD|2160|4K8K"),
+    ("央视频道", r"CCTV|CGTN|央视|央视频道"),
+    ("卫视频道", r"卫视"),
+    ("体育频道", r"体育|足球|篮球"),
+    ("少儿频道", r"少儿|卡通|动画"),
+    ("影视频道", r"电影|影视|剧场"),
+    ("纪录频道", r"纪录|科教"),
+    ("音乐频道", r"音乐"),
+    # 地方台常叫「XX新闻综合」，不能按「新闻」归类，故只认明确的地区/地方字样
+    ("地方频道", r"地区|地方|新闻综合|广播电视台"),
+]
+GROUP_ORDER = [g for g, _ in GROUP_RULES] + ["其他频道"]
+
+
+def classify(inf, name):
+    # 优先沿用上游 group-title，映射不到再按频道名判断
+    m = re.search(r'group-title="([^"]*)"', inf)
+    original = m.group(1) if m else ""
+    for text in (original, name):
+        for group, pattern in GROUP_RULES:
+            if re.search(pattern, text, re.I):
+                return group
+    return "其他频道"
+
+
+def build_all(written):
+    """合并各源、剔除点播噪声、统一分组，生成 lib/live-all.m3u。
+
+    以「频道名」为唯一键：同名频道不会被拆到不同分组，也不会堆出超过
+    MAX_LINES 条线路；TVBox 会把同名条目自动收成「线路 1/N」。
+    """
+    buckets = {}
+    for _, kept in written:
+        for inf, url in kept:
+            # 手机/盒子端放不了 rtmp/组播，这类地址又无法探测，直接丢弃
+            if not url.startswith(("http://", "https://")):
+                continue
+            name = inf.rsplit(",", 1)[-1].strip()
+            if not name or any(k in name for k in SKIP_NAME):
+                continue
+            if name not in buckets:
+                buckets[name] = {"group": classify(inf, name), "urls": []}
+            item = buckets[name]
+            if url not in item["urls"] and len(item["urls"]) < MAX_LINES:
+                item["urls"].append(url)
+
+    lines = [f'#EXTM3U x-tvg-url="{EPG}"']
+    total = 0
+    for name in sorted(buckets, key=lambda n: (GROUP_ORDER.index(buckets[n]["group"]), n)):
+        group = buckets[name]["group"]
+        # 同名频道保持"名字完全一致"，TVBox 会自动合并成「线路1/N」供换源；
+        # 若在此加线路后缀，反而会拆成 N 个独立频道刷屏。
+        for url in buckets[name]["urls"]:
+            lines.append(f'#EXTINF:-1 tvg-name="{name}" '
+                         f'group-title="{group}",{name}')
+            lines.append(url)
+            total += 1
+    target = LIB / "live-all.m3u"
+    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    groups = collections.Counter(v["group"] for v in buckets.values())
+    print(f"[总表] {str(target.relative_to(ROOT)):28s} "
+          f"{total:4d} 条 / {len(buckets)} 个频道 / {len(groups)} 个分组")
+    print("        " + "  ".join(f"{g}:{n}" for g, n in
+                                sorted(groups.items(), key=lambda x: GROUP_ORDER.index(x[0]))))
+    return total
+
+
+def rebuild_all():
+    """不跑网络探测，直接由仓库内已有的成品播放列表重建总表。"""
+    written = []
+    for name in ALL_INPUTS:
+        path = LIB / name
+        if not path.exists():
+            print(f"[跳过] 缺少 {name}")
+            continue
+        kept = parse_m3u(path.read_text(encoding="utf-8", errors="ignore"))
+        written.append((path, kept))
+        print(f"[读取] {name:26s} {len(kept):4d} 条")
+    build_all(written)
+    print("完成。若需重新探测上游死链，请不带参数运行本脚本。")
+
+
 if __name__ == "__main__":
+    if "--all-only" in sys.argv:
+        sys.exit(rebuild_all())
     sys.exit(main())

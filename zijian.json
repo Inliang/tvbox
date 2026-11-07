@@ -1477,6 +1477,14 @@
   ],
   "lives": [
     {
+      "name": "全部频道·聚合",
+      "type": 0,
+      "url": "./lib/live-all.m3u",
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/pp.xml",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
       "name": "Kimentanm",
       "type": 0,
       "url": "./lib/iptv.m3u",

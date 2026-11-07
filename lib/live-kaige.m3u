@@ -14,6 +14,8 @@ http://1.197.250.157:9901/tsfile/live/0001_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV1.png" group-title="央视频道" response-time="62ms",CCTV1
 http://61.136.172.236:9901/tsfile/live/0001_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV1.png" group-title="央视频道" response-time="77ms",CCTV1
+http://119.129.172.221:9901/tsfile/live/0001_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV1.png" group-title="央视频道" response-time="77ms",CCTV1
 http://49.234.31.101:7033/tsfile/live/1018_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV1" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV1.png" group-title="央视频道" response-time="103ms",CCTV1
 http://36.136.38.87:9901/tsfile/live/0001_1.m3u8?key=txiptv&playlive=1&authid=0
@@ -57,6 +59,8 @@ http://120.198.95.220:9901/tsfile/live/1018_1.m3u8?key=txiptv&playlive=1&down=1
 http://1.197.250.157:9901/tsfile/live/0004_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV4.png" group-title="央视频道" response-time="80ms",CCTV4
 http://119.129.172.221:9901/tsfile/live/0004_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV4.png" group-title="央视频道" response-time="96ms",CCTV4
+http://124.228.160.112:9901/tsfile/live/0004_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV4.png" group-title="央视频道" response-time="99ms",CCTV4
 http://218.13.170.98:9901/tsfile/live/0004_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV4" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV4.png" group-title="央视频道" response-time="114ms",CCTV4
@@ -233,6 +237,8 @@ http://36.136.38.87:9901/tsfile/live/0015_1.m3u8?key=txiptv&playlive=1&authid=0
 http://113.25.252.226:9901/tsfile/live/1019_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV16" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV16.png" group-title="央视频道" response-time="27ms",CCTV16
 http://121.19.134.149:808/tsfile/live/0016_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="CCTV17" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV17.png" group-title="央视频道" response-time="19ms",CCTV17
+http://121.19.134.149:808/tsfile/live/0017_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV17" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV17.png" group-title="央视频道" response-time="31ms",CCTV17
 http://1.197.250.157:9901/tsfile/live/0007_2.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV17" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV17.png" group-title="央视频道" response-time="47ms",CCTV17
@@ -385,6 +391,8 @@ http://61.136.172.236:9901/tsfile/live/0122_1.m3u8?key=txiptv&playlive=1&authid=
 http://119.129.172.221:9901/tsfile/live/0127_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="东方卫视" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/东方卫视.png" group-title="卫视频道" response-time="44ms",东方卫视
 http://119.129.172.221:9901/tsfile/live/0107_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="广西卫视" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/广西卫视.png" group-title="卫视频道" response-time="45ms",广西卫视
+http://119.129.172.221:9901/tsfile/live/1006_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="江西卫视" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/江西卫视.png" group-title="卫视频道" response-time="45ms",江西卫视
 http://124.228.160.112:9901/tsfile/live/0138_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="广东卫视" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/广东卫视.png" group-title="卫视频道" response-time="45ms",广东卫视
@@ -687,6 +695,8 @@ http://120.198.95.220:9901/tsfile/live/1069_1.m3u8?key=txiptv&playlive=1&down=1
 http://218.13.170.98:9901/tsfile/live/0018_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="世界地理" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/世界地理.png" group-title="科教频道" response-time="74ms",世界地理
 http://49.234.31.101:7033/tsfile/live/1088_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="山东教育" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/山东教育.png" group-title="科教频道" response-time="79ms",山东教育
+http://49.234.31.101:7033/tsfile/live/1084_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="广东经济科教" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/广东经济科教.png" group-title="科教频道" response-time="95ms",广东经济科教
 http://49.234.31.101:7033/tsfile/live/1005_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV14" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV14.png" group-title="卡通频道" response-time="19ms",CCTV14
@@ -709,6 +719,8 @@ http://218.13.170.98:9901/tsfile/live/0014_1.m3u8?key=txiptv&playlive=1&authid=0
 http://121.19.134.149:808/tsfile/live/1003_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="金鹰卡通" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/金鹰卡通.png" group-title="卡通频道" response-time="36ms",金鹰卡通
 http://1.197.250.157:9901/tsfile/live/1020_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="广东少儿" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/广东少儿.png" group-title="卡通频道" response-time="41ms",广东少儿
+http://119.129.172.221:9901/tsfile/live/1004_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="嘉佳卡通" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/嘉佳卡通.png" group-title="卡通频道" response-time="42ms",嘉佳卡通
 http://119.129.172.221:9901/tsfile/live/1005_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="深圳少儿" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/深圳少儿.png" group-title="卡通频道" response-time="47ms",深圳少儿
@@ -735,6 +747,8 @@ http://59.39.89.130:60901/tsfile/live/0125_25.m3u8?key=txiptv&playlive=1&authid=
 http://36.136.38.87:9901/tsfile/live/1006_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="风云音乐" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/风云音乐.png" group-title="娱乐综艺" response-time="78ms",风云音乐
 http://49.234.31.101:7033/tsfile/live/1089_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="岭南戏曲" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/岭南戏曲.png" group-title="娱乐综艺" response-time="80ms",岭南戏曲
+http://49.234.31.101:7033/tsfile/live/1078_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV5" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV5.png" group-title="体育频道" response-time="19ms",CCTV5
 http://121.19.134.149:808/tsfile/live/0005_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="CCTV5+" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/CCTV5+.png" group-title="体育频道" response-time="27ms",CCTV5+
@@ -767,6 +781,8 @@ http://121.19.134.149:808/tsfile/live/0016_1.m3u8?key=txiptv&playlive=1&authid=0
 http://119.129.172.221:9901/tsfile/live/1003_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="武术世界" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/武术世界.png" group-title="体育频道" response-time="42ms",武术世界
 http://1.197.250.157:9901/tsfile/live/1012_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="广东体育" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/广东体育.png" group-title="体育频道" response-time="50ms",广东体育
+http://120.198.95.220:9901/tsfile/live/1013_1.m3u8?key=txiptv&playlive=1&down=1
 #EXTINF:-1 tvg-name="广东体育" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/广东体育.png" group-title="体育频道" response-time="52ms",广东体育
 http://120.198.95.220:9901/tsfile/live/1010_1.m3u8?key=txiptv&playlive=1&down=1
 #EXTINF:-1 tvg-name="广东体育" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/广东体育.png" group-title="体育频道" response-time="54ms",广东体育
@@ -781,6 +797,8 @@ http://120.198.95.220:9901/tsfile/live/1001_1.m3u8?key=txiptv&playlive=1&down=1
 http://120.198.95.220:9901/tsfile/live/1002_1.m3u8?key=txiptv&playlive=1&down=1
 #EXTINF:-1 tvg-name="涿州新闻" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/涿州新闻.png" group-title="其他频道" response-time="13ms",涿州新闻
 http://121.19.134.33:808/tsfile/live/1010_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="党建新闻" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/党建新闻.png" group-title="其他频道" response-time="16ms",党建新闻
+http://flv4mp4.people.com.cn/videofile7/pvmsvideo/2021/3/10/ShiXinPei_71ec1680d031363446f16a2366abccb9_android_c.mp4
 #EXTINF:-1 tvg-name="河北经济生活" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/河北经济生活.png" group-title="其他频道" response-time="17ms",河北经济生活
 http://121.19.134.149:808/tsfile/live/1000_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="河北都市" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/河北都市.png" group-title="其他频道" response-time="19ms",河北都市
@@ -855,6 +873,8 @@ http://49.234.31.101:7033/tsfile/live/1017_1.m3u8?key=txiptv&playlive=1&authid=0
 http://49.234.31.101:7033/tsfile/live/1013_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="世界地理" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/世界地理.png" group-title="其他频道" response-time="74ms",世界地理
 http://49.234.31.101:7033/tsfile/live/1088_1.m3u8?key=txiptv&playlive=1&authid=0
+#EXTINF:-1 tvg-name="移动" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/移动.png" group-title="其他频道" response-time="77ms",移动
+http://49.234.31.101:7033/tsfile/live/1082_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="财富天下" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/财富天下.png" group-title="其他频道" response-time="79ms",财富天下
 http://49.234.31.101:7033/tsfile/live/1085_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-name="五华台" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/五华台.png" group-title="其他频道" response-time="92ms",五华台
@@ -871,6 +891,8 @@ http://120.198.95.220:9901/tsfile/live/1003_1.m3u8?key=txiptv&playlive=1&down=1
 http://120.198.95.220:9901/tsfile/live/1005_1.m3u8?key=txiptv&playlive=1&down=1
 #EXTINF:-1 tvg-name="翡翠台" tvg-logo="https://gitee.com/mytv-android/myTVlogo/raw/main/img/翡翠台.png" group-title="其他频道" response-time="106ms",翡翠台
 http://120.198.95.220:9901/tsfile/live/1004_1.m3u8?key=txiptv&playlive=1&down=1
+#EXTINF:-1,内蒙古新闻综合
+https://livestream-bt.nmtv.cn/nmtv/2316general.m3u8?txSecret=173f71025a2de64458989cfb281a0a37&txTime=771E8800
 #EXTINF:-1,内蒙古经济生活
 https://livestream-bt.nmtv.cn/nmtv/2317general.m3u8?txSecret=8e4b7cf6a2c8a75f74aef1a8a07cef43&txTime=771E8800
 #EXTINF:-1,内蒙古少儿频道
@@ -923,12 +945,8 @@ http://l.cztvcloud.com/channels/lantian/SXshengzhou1/720p.m3u8
 http://l.cztvcloud.com/channels/lantian/SXshengsi1/720p.m3u8
 #EXTINF:-1,诸暨新闻综合
 http://l.cztvcloud.com/channels/lantian/SXzhuji3/720p.m3u8
-#EXTINF:-1,上虞新闻综合
-http://l.cztvcloud.com/channels/lantian/SXshangyu1/720p.m3u8
 #EXTINF:-1,上虞文化影视
 http://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8
-#EXTINF:-1,上虞新商都
-http://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8
 #EXTINF:-1,兰溪新闻综合
 http://l.cztvcloud.com/channels/lantian/SXlanxi1/720p.m3u8
 #EXTINF:-1,苍南新闻综合
@@ -975,6 +993,8 @@ http://3gvod.zjgonline.com.cn:1935/live/shehuishenghuo2/playlist.m3u8
 http://3gvod.zjgonline.com.cn:1935/live/xinwenzonghe2/playlist.m3u8?checkedby:hlscat.com
 #EXTINF:-1,江苏·张家港综合
 http://3gvod.zjgonline.com.cn:1935/live/xinwenzonghe2/playlist.m3u8
+#EXTINF:-1 #EXTINF:-1,大丰新闻综合
+http://dafeng-tv-hls.cm.jstv.com/dafeng-tv/dafengyt.m3u8
 #EXTINF:-1 #EXTINF:-1,大丰公共频道
 http://dafeng-tv-hls.cm.jstv.com/dafeng-tv/dafenget.m3u8
 #EXTINF:-1 #EXTINF:-1,如东新闻综合
@@ -1003,12 +1023,18 @@ https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001
 https://gcalic.v.myalicdn.com/gc/yxhcnh_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,黟县西递牌坊
 https://gcalic.v.myalicdn.com/gc/yxxdpf_1/index.m3u8?contentid=2820180516001
+#EXTINF:-1,黟县西递半山亭俯瞰
+https://gcalic.v.myalicdn.com/gc/yxxdbst_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,黄山卧云峰
 https://gcalic.v.myalicdn.com/gc/hswlf_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,黄山排云亭
 https://gcalic.v.myalicdn.com/gc/hspyt_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,黄山西海大峡谷
 https://gcalic.v.myalicdn.com/gc/hsxhdxg_1/index.m3u8?contentid=2820180516001
+#EXTINF:-1,黄山平天矼
+https://gcalic.v.myalicdn.com/gc/hsptgz_1/index.m3u8?contentid=2820180516001
+#EXTINF:-1,云台山红石硖
+https://gcalic.v.myalicdn.com/gc/ytshsx_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,泰山迎客松
 https://gcalic.v.myalicdn.com/gc/taishan02_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,泰山拱北石
@@ -1019,8 +1045,6 @@ https://gcalic.v.myalicdn.com/gc/taishan06_1/index.m3u8?contentid=2820180516001
 https://gcalic.v.myalicdn.com/gc/taishan05_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,武夷山玉女峰
 https://gcalic.v.myalicdn.com/gc/wysynf_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1,张家界阿凡达悬浮山
-https://gcalic.v.myalicdn.com/gc/zjjafdxfs_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,水长城镜头一
 https://gcalic.v.myalicdn.com/gc/wgw01_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,水长城镜头二
@@ -1029,8 +1053,6 @@ https://gcalic.v.myalicdn.com/gc/wgw02_1/index.m3u8?contentid=2820180516001
 https://gcalic.v.myalicdn.com/gc/ljgcwglytylxs_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,井冈山
 https://gcalic.v.myalicdn.com/gc/ljgcdyhxgjt_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1,远眺万佛顶
-https://gcalic.v.myalicdn.com/gc/emswfs_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,两江四案
 https://gcalic.v.myalicdn.com/gc/emspxps_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,悬空寺全景
@@ -1043,8 +1065,6 @@ https://gcalic.v.myalicdn.com/gc/hsxkscj_1/index.m3u8?contentid=2820180516001
 https://gcalic.v.myalicdn.com/gc/mdjxxdsb_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,白头叶猴保护区
 https://gcalic.v.myalicdn.com/gc/ztd_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1,广州塔
-https://gcalic.v.myalicdn.com/gc/ztb_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,黟县宏村月沼
 https://gctxyc.liveplay.myqcloud.com/gc/yxhcyz_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,婺源江岭1
@@ -1055,6 +1075,8 @@ https://gctxyc.liveplay.myqcloud.com/gc/hssxf_1/index.m3u8?contentid=28201805160
 https://gctxyc.liveplay.myqcloud.com/gc/taishan01_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,泰山大观峰
 https://gctxyc.liveplay.myqcloud.com/gc/taishan03_1/index.m3u8?contentid=2820180516001
+#EXTINF:-1,印象大红袍
+https://gctxyc.liveplay.myqcloud.com/gc/wysyxdhp_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,武夷山大红袍茶园
 https://gctxyc.liveplay.myqcloud.com/gc/wysdhpcy_1/index.m3u8?contentid=2820180516001
 #EXTINF:-1,张家界将军列队
@@ -1089,8 +1111,6 @@ https://pac12-samsungus.amagi.tv/playlist.m3u8
 https://fox-foxnewsnow-samsungus.amagi.tv/playlist.m3u8
 #EXTINF:-1,OAN Plus
 http://oneamericanews-roku-us.amagi.tv/playlist.m3u8
-#EXTINF:-1,CNA 新加坡
-http://d2e1asnsl7br7b.cloudfront.net/7782e205e72f43aeb4a48ec97f66ebbe/index_4.m3u8
 #EXTINF:-1,News Max
 https://nmxairy.akamaized.net/hls/live/529965/Live_1/index.m3u8
 #EXTINF:-1,CBS News New York
@@ -1133,22 +1153,26 @@ https://cdntv.tbs.seoul.kr/tbs/_definst_/tbs_tv_web_720.smil/playlist.m3u8
 https://kbsworld-ott.akamaized.net/hls/live/2002341/kbsworld/01.m3u8
 #EXTINF:-1,韩·EBS1
 http://ebsonairios.ebs.co.kr/groundwavefamilypc/familypc1m/playlist.m3u8
+#EXTINF:-1,韩·EBS2
+http://ebsonairios.ebs.co.kr/ebs2familypc/familypc1m/playlist.m3u8
 #EXTINF:-1,韩·EBSe
 http://ebsonairios.ebs.co.kr/plus3familypc/familypc1m/playlist.m3u8
 #EXTINF:-1,韩·NBS
 https://media.joycorp.co.kr:4443/live/live_720p/playlist.m3u8
+#EXTINF:-1,俄·IGITV
+http://hls-igi.cdnvideo.ru/igi/igi_hq/playlist.m3u8
 #EXTINF:-1,俄·RBC
 http://92.50.128.180/utv/1358/index.m3u8
 #EXTINF:-1,美·红牛运动
 http://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_1660.m3u8
-#EXTINF:-1,越·ANTV
-http://antvlive.ab5c6921.cdnviet.com/antv/chunklist.m3u8
 #EXTINF:-1,NewsmaxTV
 http://nmxlive.akamaized.net/hls/live/529965/Live_1/index.m3u8
 #EXTINF:-1,CanadaOne
 http://cdn8.live247stream.com/canadaone/tv/playlist.m3u8
 #EXTINF:-1,CA
 https://rcavlive.akamaized.net/hls/live/704025/xcanrdi/master.m3u8
+#EXTINF:-1,InsightTV
+https://insighttv-samsung-canada.amagi.tv/playlist.m3u8
 #EXTINF:-1,Astrakhan24
 http://streaming.astrakhan.ru/astrakhan24/index.m3u8
 #EXTINF:-1,Самара
@@ -1167,8 +1191,6 @@ https://skyanywhere3-i.akamaihd.net/hls/live/510697/interactive/playlist.m3u8
 https://content.uplynk.com/channel/ff809e6d9ec34109abfb333f0d4444b5.m3u8
 #EXTINF:-1,ABC 2 WMAR
 https://content.uplynk.com/channel/cf4dfec179064664ae326fa10ff4a43f.m3u8
-#EXTINF:-1,ABC 7 Denver (KMGH)
-https://content.uplynk.com/channel/64ca339f04964a5e961c3207a7771bf1.m3u8
 #EXTINF:-1,ABC Las Vegas NV
 https://content.uplynk.com/channel/39919d3f7a074eefa8bf579214e952f9.m3u8
 #EXTINF:-1,ABC News Australiaᴴᴰ
@@ -1181,10 +1203,6 @@ https://5d658d7e9f562.streamlock.net/alhorreya.tv/alhorreya.smil/playlist.m3u8
 https://liveproduseast.akamaized.net/us/Channel-USTV-AWS-virginia-1/Source-USTV-1000-1_live.m3u8
 #EXTINF:-1,CBS 3 Omaha(KMTV)
 http://content.uplynk.com/channel/328d1434fb51476cb6567c74d5b2cc70.m3u8
-#EXTINF:-1,CBS News | CBSN Chicago
-https://dai.google.com/linear/hls/event/DWt8iR1YQ-OJQsxczu8KfQ/master.m3u8?iu=/4128/CBS.CHI.OTT
-#EXTINF:-1,CBS News | CBSN Denver
-https://dai.google.com/linear/hls/event/EUo67MWSRh6toPi0heJKnQ/master.m3u8?iu=/4128/CBS.DENVER.OTT
 #EXTINF:-1,CBS News | CBSN Pittsburgh
 https://dai.google.com/linear/hls/event/i5SXVKI4QIuV-eF2XAH4FQ/master.m3u8?iu=/4128/CBS.PITTS.OTT
 #EXTINF:-1,CBS News Los Angeles
@@ -1195,10 +1213,10 @@ https://dai.google.com/linear/hls/event/o5J3g4U9T16CvYnS7Qd86Q/master.m3u8
 https://dai.google.com/linear/hls/event/TxSbNMu4R5anKrjV02VOBg/master.m3u8
 #EXTINF:-1,CBSN Baltimore
 https://cbsnews.akamaized.net/hls/live/2020607/cbsnlineup_8/master.m3u8
-#EXTINF:-1,CBSN Chicago
-https://dai.google.com/linear/hls/event/DWt8iR1YQ-OJQsxczu8KfQ/master.m3u8
 #EXTINF:-1,CBSN Dallas
 http://dai.google.com/linear/hls/event/o5J3g4U9T16CvYnS7Qd86Q/master.m3u8
+#EXTINF:-1,CBSN Minnesota
+https://dai.google.com/linear/hls/event/zcWPVCfURNSPxeidcckQLA/master.m3u8
 #EXTINF:-1,CBSN New York
 http://dai.google.com/linear/hls/event/rtcMlf4RTvOEkaudeany5w/master.m3u8
 #EXTINF:-1,CBSN Philly
@@ -1223,12 +1241,12 @@ https://stream.swagit.com/live-edge/houstontx/smil:hd-16x9-2-a/chunklist_w444601
 https://content.uplynk.com/channel/edcc7b94bf074eaf8df9fc6454b0086b.m3u8
 #EXTINF:-1,Motorvisison TV |
 https://stream.ads.ottera.tv/playlist.m3u8?network_id=535
+#EXTINF:-1,NASA TV
+https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8
 #EXTINF:-1,NASA TV 2
 https://ntv2.akamaized.net/hls/live/2013923/NASA-NTV2-HLS/master.m3u8
 #EXTINF:-1,NBC 26 Green Bay WI (WGBA)
 https://content.uplynk.com/channel/1fbfb28ae5044f619f75ae0adb011989.m3u8
-#EXTINF:-1,NBC WTMJ4
-https://content.uplynk.com/channel/50bb38f57f0547319060274f3b94db4e.m3u8
 #EXTINF:-1,Nothing Scripted
 https://30a-tv.com/NothingScripted.m3u8
 #EXTINF:-1,WCCA-TV (Worcester)
