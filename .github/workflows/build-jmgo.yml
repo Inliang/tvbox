@@ -29,9 +29,9 @@ concurrency:
 env:
   UPSTREAM_REPO: FongMi/TV
   UPSTREAM_SHA: ${{ github.event.inputs.upstream_sha || '4512b4c9f82534ff66acfde06ccdd68f35b074f0' }}
-  KEY_ALIAS: jmgo
-  KEY_PASSWORD: jmgo-compat-2026
-  STORE_PASSWORD: jmgo-compat-2026
+  JMGO_KEY_ALIAS: jmgo
+  JMGO_KEY_PASSWORD: jmgo-compat-2026
+  JMGO_STORE_PASSWORD: jmgo-compat-2026
   TV_RUNTIME_CATALOG: ${{ github.event.inputs.tv_runtime_catalog || '' }}
 
 jobs:
@@ -69,25 +69,27 @@ jobs:
 
       - name: Install Android SDK (self-contained, no third-party action)
         run: |
-          set -euo pipefail
+          set -uo pipefail
           ANDROID_HOME="$RUNNER_TEMP/android-sdk"
           mkdir -p "$ANDROID_HOME/cmdline-tools"
-          # 动态取最新的 commandlinetools-linux 压缩包地址（避免硬编码版本过期）
-          URL=$(python - "$RUNNER_TEMP" <<'PY'
-          import re, urllib.request
-          xml = urllib.request.urlopen("https://dl.google.com/android/repository/repository2-3.xml", timeout=30).read().decode()
-          nums = re.findall(r'commandlinetools-linux-(\d+)_latest\.zip', xml)
-          best = max(nums, key=lambda s: int(s))
-          print(f"https://dl.google.com/android/repository/commandlinetools-linux-{best}_latest.zip")
-          PY
-          )
-          echo "cmdline-tools: $URL"
-          curl -fsSL "$URL" -o /tmp/cmd.zip
+          # 固定使用稳定版 commandlinetools（新版已废弃 sdkmanager --licenses，会触发 broken pipe 失败）
+          CMDTOOLS="commandlinetools-linux-11076708_latest.zip"
+          curl -fsSL "https://dl.google.com/android/repository/$CMDTOOLS" -o /tmp/cmd.zip
           unzip -q /tmp/cmd.zip -d "$ANDROID_HOME/cmdline-tools"
           mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
-          yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses >/dev/null
-          sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-37" "build-tools;37.0.0"
+          # 许可证接受：新版 cmdline-tools 可能废弃该子命令，失败可忽略
+          yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses >/dev/null 2>&1 || true
+          # build-tools 37 必需
+          sdkmanager --sdk_root="$ANDROID_HOME" "build-tools;37.0.0"
+          # platforms：优先 android-37（compileSdk=37）；稳定仓若无 37 则退回 36 并软链为 37
+          if sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-37" 2>/dev/null; then
+            echo "Installed platforms;android-37"
+          else
+            echo "platforms;android-37 缺失，退回 android-36 并软链 android-37"
+            sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-36"
+            ln -sfn "$ANDROID_HOME/platforms/android-36" "$ANDROID_HOME/platforms/android-37"
+          fi
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> "$GITHUB_ENV"
@@ -115,9 +117,9 @@ jobs:
           up = pathlib.Path(os.environ["UPSTREAM_DIR"])
           (up / "local.properties").write_text(
               f"storeFile={os.environ['KEYSTORE_PATH']}\n"
-              f"storePassword={os.environ['STORE_PASSWORD']}\n"
-              f"keyAlias={os.environ['KEY_ALIAS']}\n"
-              f"keyPassword={os.environ['KEY_PASSWORD']}\n"
+              f"storePassword={os.environ['JMGO_STORE_PASSWORD']}\n"
+              f"keyAlias={os.environ['JMGO_KEY_ALIAS']}\n"
+              f"keyPassword={os.environ['JMGO_KEY_PASSWORD']}\n"
           )
           gp = up / "gradle.properties"
           extra = "\norg.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8 --add-exports jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED\norg.gradle.configuration-cache=false\n"
