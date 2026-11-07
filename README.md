@@ -145,7 +145,7 @@
 
 ### Star
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Inliang/tvbox&type=Timeline)](https://star-history.com/#Inliang/tvbox&Timeline)
+<a href="https://star-history.com/#Inliang/tvbox&amp;Timeline"><img src="https://api.star-history.com/svg?repos=Inliang/tvbox&amp;type=Timeline" alt="Star History Chart" width="480"></a>
 
 > 图表由 [star-history.com](https://star-history.com) 生成，随仓库 Star 数自动更新。觉得有用，欢迎点个 Star。
 
