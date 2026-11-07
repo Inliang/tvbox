@@ -6214,21 +6214,23 @@
       "type": 0,
       "url": "./lib/live-all.m3u",
       "playerType": 2,
-      "epg": "https://epg.112114.xyz/pp.xml",
+      "epg": "https://epg.112114.xyz/?ch={name}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
       "name": "Kimentanm",
       "type": 0,
       "url": "./lib/iptv.m3u",
-      "playerType": 2
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/?ch={name}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
       "name": "develop202",
       "type": 0,
       "url": "./lib/interface.txt",
       "playerType": 2,
-      "epg": "http://diyp5.112114.xyz/?ch={name}&date={date}",
+      "epg": "https://epg.112114.xyz/?ch={name}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
@@ -6236,7 +6238,7 @@
       "type": 0,
       "url": "./lib/live-vbskycn.m3u",
       "playerType": 2,
-      "epg": "https://epg.112114.xyz/pp.xml",
+      "epg": "https://epg.112114.xyz/?ch={name}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
@@ -6244,7 +6246,7 @@
       "type": 0,
       "url": "./lib/live-bestfan.m3u",
       "playerType": 2,
-      "epg": "https://epg.112114.xyz/pp.xml",
+      "epg": "https://epg.112114.xyz/?ch={name}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
@@ -6252,7 +6254,7 @@
       "type": 0,
       "url": "./lib/live-kaige.m3u",
       "playerType": 2,
-      "epg": "https://epg.112114.xyz/pp.xml",
+      "epg": "https://epg.112114.xyz/?ch={name}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
@@ -6260,7 +6262,7 @@
       "type": 0,
       "url": "./lib/live-4k.m3u",
       "playerType": 2,
-      "epg": "https://epg.112114.xyz/pp.xml",
+      "epg": "https://epg.112114.xyz/?ch={name}",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     }
   ],

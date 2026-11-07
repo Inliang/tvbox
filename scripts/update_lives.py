@@ -32,6 +32,8 @@ UA = "Mozilla/5.0 (Linux; Android 11) okHttp/Mod-1.5.0.0"
 TIMEOUT = 6
 WORKERS = 64
 ROUNDS = 2  # 公网探测有抖动，多轮取并集，避免误杀间歇可达的源
+# 这里只用于 m3u 头的 x-tvg-url，给支持 XMLTV 的播放器备用；
+# 配置里的 lives[].epg 走 DIYP 按名查询（见 zijian*.json），两者互不冲突。
 EPG = "https://epg.112114.xyz/pp.xml"
 
 # 原「直播中国」景区摄像头 CDN（gcalic / gctxyc / gccncc / gcksc 等 /gc/ 路径）
