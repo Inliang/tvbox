@@ -12,6 +12,7 @@
 """
 import collections
 import concurrent.futures as cf
+import json
 import re
 import shutil
 import sys
@@ -350,12 +351,136 @@ def classify(inf, name):
     return "其他频道"
 
 
+# 同一条流在不同上游被标成点播/占位内容（春晚录像、构建时间戳）时，
+# 它根本不是这个频道的直播，放进正规频道就表现为「串台」。
+NOISE_MARK_RE = re.compile(r"春晚|更新日期|更新时间|支持作者|测试|^\d{4}[-/.]\d", re.I)
+CCTV_URL_RE = re.compile(r"cctv[-_ ]?(\d{1,2})", re.I)
+LOGO_BASE = "https://epg.112114.xyz/logo/"
+LOGO_NAMES = LIB / "logo-names.json"
+
+
+def build_votes(written):
+    """url -> Counter(归一化频道名)：看同一条流在各上游被标成什么，用于裁决串台。"""
+    votes = collections.defaultdict(collections.Counter)
+    for _, kept in written:
+        for inf, url in kept:
+            votes[url][normalize_name(inf.rsplit(",", 1)[-1].strip())] += 1
+    return votes
+
+
+def build_id_votes(written):
+    """IPTV 数字编号 -> Counter(频道名)，用于识别编号被上游标错的流。
+
+    例如 1030_1 在多数上游是「重庆卫视」、只有一处被标成 CCTV5+，
+    那条流就不该进 CCTV5+ 的线路。
+    """
+    votes = collections.defaultdict(collections.Counter)
+    for _, kept in written:
+        for inf, url in kept:
+            m = re.search(r"/tsfile/live/(\d{4})_\d+\.m3u8", url)
+            if m:
+                votes[m.group(1)][normalize_name(inf.rsplit(",", 1)[-1].strip())] += 1
+    return votes
+
+
+def line_trust(name, url, votes, id_votes):
+    """线路裁决：噪声流、上游标注分歧、URL 台号不符、编号标错，一律不采用。"""
+    v = votes.get(url, {})
+    if any(NOISE_MARK_RE.search(k) for k in v):
+        return False
+    real = {k: c for k, c in v.items() if not NOISE_MARK_RE.search(k)}
+    if real:
+        top = max(real.values())
+        tops = [k for k, c in real.items() if c == top]
+        # 只在「当前标注严格少于唯一多数票」时剔除。平票时保留两边归属：
+        # 地方台常有同流异名，若平票也全剔，会把整条频道的唯一线路抹掉。
+        if len(tops) == 1 and real.get(name, 0) < top:
+            return False
+    # URL 里写死的 cctvN 必须和目标频道号一致
+    m = re.fullmatch(r"CCTV(\d{1,2})(\+)?(4K|8K)?", name)
+    if m:
+        num = int(m.group(1))
+        for hit in CCTV_URL_RE.finditer(url):
+            if int(hit.group(1)) != num:
+                return False
+        # CCTV5+ 里不能混入纯 CCTV5 的流地址
+        if m.group(2) and re.search(r"cctv5(?!plus|p\b|\+)", url, re.I):
+            return False
+    # 流编号在多个上游被一致地标成另一个频道，当前标注只是少数票 -> 剔除。
+    # 仅对央视系列生效：地方台共用同一批 IPTV 编号，各运营商含义完全不同，
+    # 全局裁决会把大量地方频道的唯一线路误删。
+    mid = re.search(r"/tsfile/live/(\d{4})_\d+\.m3u8", url)
+    if mid and name.startswith("CCTV"):
+        iv = id_votes.get(mid.group(1), {})
+        if iv:
+            top = max(iv.values())
+            tops = [k for k, c in iv.items() if c == top]
+            if len(tops) == 1 and top >= 2 and iv.get(name, 0) < top:
+                return False
+    return True
+
+
+def load_logo_names():
+    """读取已探测过的台标名单（lib/logo-names.json），避免每次重建都打网络。"""
+    if not LOGO_NAMES.exists():
+        return set()
+    try:
+        return set(json.loads(LOGO_NAMES.read_text(encoding="utf-8")))
+    except Exception:
+        return set()
+
+
+def probe_logo_names(names):
+    """探测 epg.112114.xyz 台标库里真实存在哪些频道的 logo。"""
+    hdr = {"User-Agent": "Mozilla/5.0 (Linux; Android 11) okHttp/Mod-1.5.0.0"}
+
+    def chk(n):
+        u = LOGO_BASE + urllib.parse.quote(n, safe="") + ".png"
+        try:
+            r = urllib.request.urlopen(urllib.request.Request(u, headers=hdr), timeout=8)
+            r.read(32)
+            return n, (r.status == 200
+                       and r.headers.get("Content-Type", "").startswith("image/"))
+        except Exception:
+            return n, False
+
+    names = sorted(set(names))
+    res = {}
+    with cf.ThreadPoolExecutor(max_workers=16) as ex:
+        for n, ok in ex.map(chk, names):
+            res[n] = ok
+    # 失败的重试一轮，避免网络抖动误判
+    miss = [n for n, ok in res.items() if not ok]
+    with cf.ThreadPoolExecutor(max_workers=16) as ex:
+        for n, ok in ex.map(chk, miss):
+            res[n] = ok
+    return sorted(n for n, ok in res.items() if ok)
+
+
+def refresh_logos():
+    """重新探测台标覆盖，写回 lib/logo-names.json。"""
+    path = LIB / "live-all.m3u"
+    if not path.exists():
+        print("[跳过] 尚无 lib/live-all.m3u，请先重建总表")
+        return
+    names = {l.rsplit(",", 1)[-1].strip()
+             for l in path.read_text(encoding="utf-8", errors="ignore").splitlines()
+             if l.startswith("#EXTINF")}
+    hits = probe_logo_names(names)
+    LOGO_NAMES.write_text(json.dumps(hits, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"[台标] 探测 {len(names)} 个频道，{len(hits)} 个有台标 -> {LOGO_NAMES.name}")
+
+
 def build_all(written):
     """合并各源、归一化频道名、统一分组，生成 lib/live-all.m3u。
 
     归一化后的「频道名」是唯一键：同一套频道的不同上游别名会收成一个频道，
     多路流地址变成该频道的「线路 1/N」；https 线路优先，最多 MAX_LINES 条。
     """
+    votes = build_votes(written)
+    id_votes = build_id_votes(written)
+    logo_names = load_logo_names()
+    dropped = collections.Counter()
     buckets = {}
     for _, kept in written:
         for inf, url in kept:
@@ -368,6 +493,10 @@ def build_all(written):
             name = normalize_name(raw)
             if not name:
                 continue
+            # 上游标错、点播占位流、URL 台号不符 -> 不进这个频道的线路
+            if not line_trust(name, url, votes, id_votes):
+                dropped["串台/歧义流"] += 1
+                continue
             if name not in buckets:
                 group = classify(inf, name)
                 if group == "其他频道":
@@ -377,23 +506,33 @@ def build_all(written):
             if url not in item["urls"]:
                 item["urls"].append(url)
 
-    # 收尾：https 优先（Android 9+ 默认禁明文），再截断到 MAX_LINES
-    for item in buckets.values():
-        item["urls"].sort(key=lambda u: 0 if u.startswith("https://") else 1)
+    # 清洗后可能整条频道都没有可信线路了，去掉避免出现空频道
+    buckets = {n: v for n, v in buckets.items() if v["urls"]}
+    # 收尾：上游标注越一致越靠前，其次 https 优先（Android 9+ 默认禁明文）
+    for name, item in buckets.items():
+        item["urls"].sort(key=lambda u: (
+            -votes.get(u, {}).get(name, 0),
+            0 if u.startswith("https://") else 1,
+        ))
         del item["urls"][MAX_LINES:]
 
     lines = [f'#EXTM3U x-tvg-url="{EPG}"']
-    total = 0
+    total = logo_count = 0
     for name, item in sorted(
         ((n, v) for n, v in buckets.items()),
         key=lambda pair: channel_sort_key((pair[0], pair[1]["group"])),
     ):
         group = item["group"]
+        # 只为台标库里确实存在的频道写 tvg-logo，其余交给 lives 的 logo 模板兜底
+        logo = ""
+        if name in logo_names:
+            logo = f' tvg-logo="{LOGO_BASE}{urllib.parse.quote(name, safe="")}.png"'
+            logo_count += 1
         # 同名频道保持"名字完全一致"，TVBox 会自动合并成「线路1/N」供换源；
         # 若在此加线路后缀，反而会拆成 N 个独立频道刷屏。
         for url in item["urls"]:
             lines.append(f'#EXTINF:-1 tvg-id="{name}" tvg-name="{name}" '
-                         f'group-title="{group}",{name}')
+                         f'group-title="{group}"{logo},{name}')
             lines.append(url)
             total += 1
     target = LIB / "live-all.m3u"
@@ -403,6 +542,9 @@ def build_all(written):
           f"{total:4d} 条 / {len(buckets)} 个频道 / {len(groups)} 个分组")
     print("        " + "  ".join(f"{g}:{n}" for g, n in
                                 sorted(groups.items(), key=lambda x: GROUP_ORDER.index(x[0]))))
+    print(f"[台标] {logo_count}/{len(buckets)} 个频道写入 tvg-logo")
+    if dropped:
+        print(f"[清洗] {dict(dropped)}")
     return total
 
 
@@ -422,6 +564,8 @@ def rebuild_all():
 
 
 if __name__ == "__main__":
-    if "--all-only" in sys.argv:
+    if "--refresh-logo" in sys.argv:
+        refresh_logos()
+    if "--all-only" in sys.argv or "--refresh-logo" in sys.argv:
         sys.exit(rebuild_all())
     sys.exit(main())
