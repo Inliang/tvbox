@@ -27,8 +27,8 @@ env:
   UPSTREAM_REPO: FongMi/TV
   UPSTREAM_SHA: ${{ github.event.inputs.upstream_sha || '4512b4c9f82534ff66acfde06ccdd68f35b074f0' }}
   BUILD_TOOLS: "37.0.0"
-  PATCHES_OUT: ${{ runner.temp }}/patches-applied.json
-  OUT_DIR: ${{ runner.temp }}/jmgo-out
+  PATCHES_OUT: ${{ github.workspace }}/patches-applied.json
+  OUT_DIR: ${{ github.workspace }}/jmgo-out
 
 jobs:
   build:
@@ -103,10 +103,10 @@ jobs:
         with:
           name: tvbox-jmgo-5.8.7
           path: |
-            ${{ runner.temp }}/jmgo-out/*.apk
-            ${{ runner.temp }}/jmgo-out/SHA256SUMS.txt
-            ${{ runner.temp }}/jmgo-out/build-info.json
-            ${{ runner.temp }}/jmgo-out/patches-applied.json
+            ${{ github.workspace }}/jmgo-out/*.apk
+            ${{ github.workspace }}/jmgo-out/SHA256SUMS.txt
+            ${{ github.workspace }}/jmgo-out/build-info.json
+            ${{ github.workspace }}/jmgo-out/patches-applied.json
           if-no-files-found: error
 
       - name: Publish GitHub Release (push to main only)
@@ -116,10 +116,10 @@ jobs:
           tag_name: jmgo-${{ github.run_id }}
           name: JMGO 兼容版 5.8.7 (run ${{ github.run_id }})
           files: |
-            ${{ runner.temp }}/jmgo-out/tvbox-jmgo-leanback-arm64_v8a-5.8.7-*.apk
-            ${{ runner.temp }}/jmgo-out/tvbox-jmgo-leanback-armeabi_v7a-5.8.7-*.apk
-            ${{ runner.temp }}/jmgo-out/SHA256SUMS.txt
-            ${{ runner.temp }}/jmgo-out/build-info.json
-            ${{ runner.temp }}/jmgo-out/patches-applied.json
+            ${{ github.workspace }}/jmgo-out/tvbox-jmgo-leanback-arm64_v8a-5.8.7-*.apk
+            ${{ github.workspace }}/jmgo-out/tvbox-jmgo-leanback-armeabi_v7a-5.8.7-*.apk
+            ${{ github.workspace }}/jmgo-out/SHA256SUMS.txt
+            ${{ github.workspace }}/jmgo-out/build-info.json
+            ${{ github.workspace }}/jmgo-out/patches-applied.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
