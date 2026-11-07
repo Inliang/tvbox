@@ -1,5 +1,15 @@
 # tvbox
 
+[![Stars](https://img.shields.io/github/stars/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/stargazers)
+[![Forks](https://img.shields.io/github/forks/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/network/members)
+[![Watchers](https://img.shields.io/github/watchers/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/watchers)
+[![Last commit](https://img.shields.io/github/last-commit/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/commits/main)
+[![Pages](https://img.shields.io/badge/Pages-%E6%8E%A5%E5%8F%A3%E5%9C%B0%E5%9D%80%E5%BA%93-blue?style=flat-square)](https://inliang.github.io/tvbox/)
+
+自建 TVBox / 影视仓配置文件、实测可用直播源，以及一个可搜索的接口地址库。如果喜欢，请 Fork 自用。
+
+**目录**：[接口地址](#接口地址) · [接口地址库（网页版）](#接口地址库网页版) · [数据是怎么筛的](#数据是怎么筛的) · [维护脚本](#维护脚本) · [已知问题](#已知问题原有配置遗留未擅自改动) · [相关资源](#相关资源) · [APP 推荐](#app-推荐) · [各路大佬配置](#tvbox-各路大佬配置排名不分先后) · [Star](#star) · [免责声明](#免责声明)
+
 ## 自建tvbox接口，接口模板借鉴饭肥猫大佬，大佬接口：[http://肥猫.com](http://肥猫.com)
 
 ## 接口地址
@@ -31,8 +41,7 @@
 正因如此，站点页永远不会出现红叉。你在页面顶部看到的数字会比 517 小一些
 （灰色里含大量无法预验证的加密源），这不是缺陷，是"我们不知道"和"它坏了"被严格分开了。
 
-### 推荐软件
-TVBox（http://tvbox.clbug.com）；影视仓。
+> 配套客户端与更多公开配置见文末「相关资源」。
 
 ---
 
@@ -174,6 +183,59 @@ v2 要做的是把判据从"抛没抛异常"改成"失败耗时 + 细分错误�
 确认办法：`https://api.github.com/repos/Inliang/tvbox/contents/zijian.json?ref=main`
 这个接口直读仓库、不走 CDN。它 OK 就说明仓库是对的，等缓存即可。
 jsdelivr 可以主动刷：`https://purge.jsdelivr.net/gh/Inliang/tvbox@main/zijian.json`。
+
+---
+
+## 相关资源
+
+> 以下 APP 与配置清单整理自 [qist/tvbox](https://github.com/qist/tvbox)，版权归各自维护者所有；链接有效性由第三方决定，仅供学习与技术交流。
+
+### APP 推荐
+
+| 客户端 | 项目地址 | 特点 |
+| --- | --- | --- |
+| **OK 影视**（FongMi） | [FongMi/TV](https://github.com/FongMi/TV) | 直播多线路、自动换源、直播倍速、手机投屏 |
+| q215613905 版 | [q215613905/TVBoxOS](https://github.com/q215613905/TVBoxOS) | 支持直播回放 |
+| takagen99 版 | [takagen99/Box](https://github.com/takagen99/Box) | 支持直播回放，界面美观 |
+| 皮皮虾版 | [发布频道](https://t.me/pipixiawerun) | 支持直播回放，支持弹幕 |
+| 新版猫影视 | [社区复刻](https://github.com/mingjieyemen/CatVodOpen) | 界面简洁，支持多平台；原 `catvod/CatVodOpen` 已失效 |
+| 手机版 | [XiaoRanLiu3119/TVBoxOS-Mobile](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile) | 竖屏 |
+| 编译版 APK | [o0HalfLife0o/TVBoxOSC](https://github.com/o0HalfLife0o/TVBoxOSC) | q215613905 / takagen99 版编译产物 |
+
+基础客户端：[TVBox](http://tvbox.clbug.com)、影视仓。
+
+### TVBox 各路大佬配置（排名不分先后）
+
+| 维护者 | 配置地址 |
+| --- | --- |
+| 饭太硬 | `http://www.饭太硬.top/tv/` |
+| okjack | `https://jihulab.com/okcaptain/kko/raw/main/ok.txt` |
+| 王二小放牛娃 | `http://tvbox.王二小放牛娃.xyz` |
+| 摸鱼儿 | `http://我不是.摸鱼儿.top` |
+| 霜辉月明 py | `https://raw.githubusercontent.com/lm317379829/PyramidStore/pyramid/py.json` |
+| 小米小爆脾气 | `http://xhww.fun/小米/DEMO.json` |
+| 南风 | `https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json` |
+| 神器 | `https://神器每日推送.tk/pz.json` |
+| 巧技 | `http://pandown.pro/tvbox/tvbox.json` |
+| Ray | `https://100km.top/0` |
+| 俊于 | `http://home.jundie.top:81/top98.json` |
+| 橘子柚 | `https://raw.githubusercontent.com/hackyjso/box/main/jzy.txt` |
+| 电视（自用） | `https://raw.githubusercontent.com/qist/tvbox/master/jsm.json` |
+
+**代理与备用接口**
+
+| 用途 | 地址 |
+| --- | --- |
+| GitHub 代理（择一使用） | `https://github.moeyy.xyz`、`https://mirror.ghproxy.com/`、`https://gh-proxy.com`、`https://ghproxy.net` |
+| Cloudflare Pages 镜像 | `https://qist.wyfc.qzz.io/jsm.json` |
+| 潇洒接口 | `https://raw.githubusercontent.com/qist/tvbox/master/xiaosa/api.json`（或 `https://qist.wyfc.qzz.io/xiaosa/api.json`） |
+| 饭太硬接口 | `https://raw.githubusercontent.com/qist/tvbox/master/fty.json`（或 `https://qist.wyfc.qzz.io/fty.json`） |
+
+### Star
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Inliang/tvbox&type=Timeline)](https://star-history.com/#Inliang/tvbox&Timeline)
+
+> 图表由 [star-history.com](https://star-history.com) 生成，随仓库 Star 数自动更新。觉得有用，欢迎点个 Star。
 
 ---
 
