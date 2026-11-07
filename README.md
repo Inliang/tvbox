@@ -6,8 +6,7 @@
 [![Last commit](https://img.shields.io/github/last-commit/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/commits/main)
 [![Pages](https://img.shields.io/badge/Pages-%E6%8E%A5%E5%8F%A3%E5%9C%B0%E5%9D%80%E5%BA%93-blue?style=flat-square)](https://inliang.github.io/tvbox/)
 
-给 TVBox / 影视仓 / OK 影视 用的**配置文件**：装好客户端，填一个网址，就能看点播和直播。
-本仓库只提供配置地址，不提供任何影片，也不提供播放功能。如果喜欢，请 Fork 自用。
+给 TVBox / 影视仓 / OK 影视 用的**配置文件**：本仓库只提供配置地址，不提供任何影片，也不提供播放功能。如果喜欢，请 Fork 自用。
 
 配置模板借鉴 [饭肥猫](http://肥猫.com) 等公开接口，在此致谢。
 
