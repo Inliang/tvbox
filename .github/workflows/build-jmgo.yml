@@ -1,167 +1,124 @@
 name: build-jmgo
 
-# 坚果 N1S 4K 高亮版（J31-8K2）兼容版 FongMi 客户端自动构建。
-# 推送 apps/jmgo/** 或本文件即触发；也可在 Actions 页手动 workflow_dispatch。
-# 产物：tvbox-jmgo-leanback-arm64_v8a / armeabi_v7a 两个 APK + 校验文件。
+# 坚果 N1S 4K 高亮版兼容版 TVBox 客户端（基于 FongMi/TV 5.8.7）。
+# 推送即自动编译产出两个可安装 APK（arm64_v8a / armeabi_v7a），并上传 Artifact + Release。
+# 仅在 apps/jmgo/** 或本 workflow 自身变更时触发，避免每次改直播源都重编 Android。
+
 on:
   push:
     paths:
-      - 'apps/jmgo/**'
-      - '.github/workflows/build-jmgo.yml'
-  workflow_dispatch:
-    inputs:
-      upstream_sha:
-        description: 'FongMi/TV commit to build (default pinned)'
-        required: false
-        default: '4512b4c9f82534ff66acfde06ccdd68f35b074f0'
-      tv_runtime_catalog:
-        description: 'Runtime catalog URL. Leave empty for offline/lightweight (no GitHub fetch on first launch).'
-        required: false
-        default: ''
-
-permissions:
-  contents: write   # 用于发布 GitHub Release
+      - "apps/jmgo/**"
+      - ".github/workflows/build-jmgo.yml"
+  workflow_dispatch: {}
 
 concurrency:
-  group: build-jmgo
+  group: build-jmgo-${{ github.ref }}
   cancel-in-progress: false
+
+permissions:
+  contents: write
 
 env:
   UPSTREAM_REPO: FongMi/TV
-  UPSTREAM_SHA: ${{ github.event.inputs.upstream_sha || '4512b4c9f82534ff66acfde06ccdd68f35b074f0' }}
-  JMGO_KEY_ALIAS: jmgo
-  JMGO_KEY_PASSWORD: jmgo-compat-2026
-  JMGO_STORE_PASSWORD: jmgo-compat-2026
-  TV_RUNTIME_CATALOG: ${{ github.event.inputs.tv_runtime_catalog || '' }}
+  UPSTREAM_SHA: 4512b4c9f82534ff66acfde06ccdd68f35b074f0
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  BUILD_TOOLS: "37.0.0"
+  COMPILE_SDK: "37"
+  PATCHES_OUT: ${{ runner.temp }}/patches-applied.json
+  OUT_DIR: ${{ runner.temp }}/jmgo-out
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - name: Checkout tvbox repo
+      - name: Checkout 本仓库
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Set up JDK 21 (temurin)
-        uses: actions/setup-java@v4
+        uses: setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
+          cache: gradle
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
-      - name: Decode signing keystore (committed .b64 -> p12)
+      - name: 安装 Android SDK（platform-37 / build-tools / NDK / CMake）
         run: |
-          mkdir -p "$RUNNER_TEMP/jmgo"
-          python - <<'PY'
-          import base64, os, pathlib
-          b64 = pathlib.Path("apps/jmgo/keystore/jmgo.p12.b64").read_text().strip()
-          out = pathlib.Path(os.environ["RUNNER_TEMP"]) / "jmgo" / "jmgo.keystore.p12"
-          out.write_bytes(base64.b64decode(b64))
-          print("keystore ->", out, out.stat().st_size, "bytes")
-          PY
-          echo "KEYSTORE_PATH=$RUNNER_TEMP/jmgo/jmgo.keystore.p12" >> "$GITHUB_ENV"
-
-      - name: Install Android SDK (self-contained, no third-party action)
-        run: |
-          set -uo pipefail
-          ANDROID_HOME="$RUNNER_TEMP/android-sdk"
-          mkdir -p "$ANDROID_HOME/cmdline-tools"
-          # 固定使用稳定版 commandlinetools（新版已废弃 sdkmanager --licenses，会触发 broken pipe 失败）
-          CMDTOOLS="commandlinetools-linux-11076708_latest.zip"
-          curl -fsSL "https://dl.google.com/android/repository/$CMDTOOLS" -o /tmp/cmd.zip
-          unzip -q /tmp/cmd.zip -d "$ANDROID_HOME/cmdline-tools"
-          mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
-          export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
-          # 许可证接受：新版 cmdline-tools 可能废弃该子命令，失败可忽略
-          yes | sdkmanager --sdk_root="$ANDROID_HOME" --licenses >/dev/null 2>&1 || true
-          # build-tools 37 必需
-          sdkmanager --sdk_root="$ANDROID_HOME" "build-tools;37.0.0"
-          # platforms：优先 android-37（compileSdk=37）；稳定仓若无 37 则退回 36 并软链为 37
-          if sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-37" 2>/dev/null; then
-            echo "Installed platforms;android-37"
+          set -e
+          CS="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$CS" --licenses >/dev/null 2>&1 || true
+          install_37() {
+            "$CS" "platform-tools" "platforms;android-37" "build-tools;37.0.0" "ndk;28.2.13676358" "cmake;3.22.1"
+          }
+          if install_37; then
+            echo "SDK 37 installed"
           else
-            echo "platforms;android-37 缺失，退回 android-36 并软链 android-37"
-            sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-36"
-            ln -sfn "$ANDROID_HOME/platforms/android-36" "$ANDROID_HOME/platforms/android-37"
+            echo "::warning::android-37 不可用，回退到 36 并改写版本目录"
+            sed -i -E "s/compileSdk = \"[0-9]+\"/compileSdk = \"36\"/; s/targetSdk = \"[0-9]+\"/targetSdk = \"36\"/; s/buildTools = \"[0-9.]+\"/buildTools = \"36.0.0\"/" "${{ github.workspace }}/upstream/gradle/libs.versions.toml" 2>/dev/null || true
+            echo "BUILD_TOOLS=36.0.0" >> "$GITHUB_ENV"
+            "$CS" "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;28.2.13676358" "cmake;3.22.1"
           fi
-          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
-          echo "PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> "$GITHUB_ENV"
 
-      - name: Clone pinned upstream
+      - name: 克隆上游源码 @ 固定 SHA
         run: |
-          git clone -c advice.detachedHead=false --filter=blob:none --no-checkout \
-            "https://github.com/$UPSTREAM_REPO.git" "$RUNNER_TEMP/upstream"
-          cd "$RUNNER_TEMP/upstream"
-          git fetch --depth 1 origin "$UPSTREAM_SHA"
-          git checkout -q FETCH_HEAD
-          echo "UPSTREAM_DIR=$RUNNER_TEMP/upstream" >> "$GITHUB_ENV"
+          set -e
+          git clone --filter=blob:none --no-checkout "https://github.com/$UPSTREAM_REPO.git" upstream \
+            || git clone "https://github.com/$UPSTREAM_REPO.git" upstream
+          cd upstream
+          git checkout -f "$UPSTREAM_SHA" \
+            || { git fetch origin "$UPSTREAM_SHA"; git checkout -f "$UPSTREAM_SHA"; }
 
-      - name: Apply jmgo compatibility patches
-        run: |
-          python apps/jmgo/scripts/apply_patches.py \
-            --upstream "$UPSTREAM_DIR" \
-            --patches-dir apps/jmgo/patches/jmgo-v1 \
-            --upstream-sha "$UPSTREAM_SHA"
+      - name: 应用兼容性补丁（P-00/P-01 必需，P-03 可选）
+        env:
+          UPSTREAM_DIR: ${{ github.workspace }}/upstream
+        run: python apps/jmgo/scripts/apply-patches.py
 
-      - name: Write local.properties (signing) + tune gradle.properties
-        run: |
-          python - <<'PY'
-          import os, pathlib
-          up = pathlib.Path(os.environ["UPSTREAM_DIR"])
-          (up / "local.properties").write_text(
-              f"storeFile={os.environ['KEYSTORE_PATH']}\n"
-              f"storePassword={os.environ['JMGO_STORE_PASSWORD']}\n"
-              f"keyAlias={os.environ['JMGO_KEY_ALIAS']}\n"
-              f"keyPassword={os.environ['JMGO_KEY_PASSWORD']}\n"
-          )
-          gp = up / "gradle.properties"
-          extra = "\norg.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8 --add-exports jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED\norg.gradle.configuration-cache=false\n"
-          gp.write_text(gp.read_text(encoding="utf-8") + extra, encoding="utf-8")
-          print("local.properties + gradle.properties tuned")
-          PY
+      - name: 准备固定签名密钥
+        run: bash apps/jmgo/scripts/gen-keystore.sh
 
-      - name: Build leanback release (both ABIs)
+      - name: 注入 local.properties 到上游
+        run: cp apps/jmgo/keystore/local.properties upstream/local.properties
+
+      - name: 编译 leanback release（双 ABI）
+        working-directory: upstream
         run: |
-          cd "$UPSTREAM_DIR"
+          set -e
+          sed -i 's/-Xmx2048m/-Xmx4096m/' gradle.properties
           chmod +x gradlew
-          ./gradlew :app:assembleLeanbackRelease -PtvRuntimeCatalog="$TV_RUNTIME_CATALOG" --no-daemon
+          ./gradlew :app:assembleLeanbackRelease -PtvRuntimeCatalog= \
+            -Dorg.gradle.configuration-cache=false -Dorg.gradle.jvmargs=-Xmx4096m --no-daemon
 
-      - name: Collect, verify and package APKs
+      - name: 收集并静态校验产物
+        env:
+          UP: ${{ github.workspace }}/upstream
+          BUILD_TOOLS: ${{ env.BUILD_TOOLS }}
         run: |
-          python apps/jmgo/scripts/collect_apk.py \
-            --apk-dir "$UPSTREAM_DIR/app/build/outputs/apk/leanback/release" \
-            --out-dir "$RUNNER_TEMP/jmgo-out" \
-            --android-home "$ANDROID_HOME" \
-            --upstream-sha "$UPSTREAM_SHA" \
-            --repo-sha "$GITHUB_SHA" \
-            --run-id "$GITHUB_RUN_ID" \
-            --patches-json "$UPSTREAM_DIR/patches-applied.json"
+          bash apps/jmgo/scripts/collect-apk.sh "$UP" "$OUT_DIR"
+          cp "$PATCHES_OUT" "$OUT_DIR/patches-applied.json"
 
-      - name: Upload build artifacts
+      - name: 上传 Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tvbox-jmgo-apks
-          path: |
-            ${{ runner.temp }}/jmgo-out/*.apk
-            ${{ runner.temp }}/jmgo-out/SHA256SUMS.txt
-            ${{ runner.temp }}/jmgo-out/build-info.json
+          name: tvbox-jmgo-5.8.7
+          path: ${{ runner.temp }}/jmgo-out/*
           if-no-files-found: error
 
-      - name: Publish GitHub Release (push to main only)
+      - name: 发布 Release（仅 push 到 main）
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: jmgo-${{ github.run_number }}
-          name: JMGO 兼容版 ${{ github.run_number }}
-          body_path: ${{ runner.temp }}/jmgo-out/build-info.json
+          tag_name: jmgo-${{ github.run_id }}
+          name: JMGO 兼容版 5.8.7 (run ${{ github.run_id }})
           files: |
-            ${{ runner.temp }}/jmgo-out/*.apk
+            ${{ runner.temp }}/jmgo-out/tvbox-jmgo-leanback-arm64_v8a-5.8.7-*.apk
+            ${{ runner.temp }}/jmgo-out/tvbox-jmgo-leanback-armeabi_v7a-5.8.7-*.apk
             ${{ runner.temp }}/jmgo-out/SHA256SUMS.txt
-        continue-on-error: true
+            ${{ runner.temp }}/jmgo-out/build-info.json
+            ${{ runner.temp }}/jmgo-out/patches-applied.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
