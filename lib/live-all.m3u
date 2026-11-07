@@ -1727,87 +1727,103 @@ https://media.joycorp.co.kr:4443/live/live_720p/playlist.m3u8
 https://cdntv.tbs.seoul.kr/tbs/_definst_/tbs_tv_web_720.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="韩·阿里郎Korea" tvg-name="韩·阿里郎Korea" group-title="国外频道",韩·阿里郎Korea
 http://amdlive.ctnd.com.edgesuite.net/arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="两江四案" tvg-name="两江四案" group-title="风景慢直播",两江四案
-https://gcalic.v.myalicdn.com/gc/emspxps_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="云台山红石硖" tvg-name="云台山红石硖" group-title="风景慢直播",云台山红石硖
-https://gcalic.v.myalicdn.com/gc/ytshsx_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="井冈山" tvg-name="井冈山" group-title="风景慢直播",井冈山
-https://gcalic.v.myalicdn.com/gc/ljgcdyhxgjt_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="全国风景总览" tvg-name="全国风景总览" group-title="风景慢直播",全国风景总览
-https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="千佛山" tvg-name="千佛山" group-title="风景慢直播",千佛山
-https://gcalic.v.myalicdn.com/gc/taishan05_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="南天一柱" tvg-name="南天一柱" group-title="风景慢直播",南天一柱
-https://gctxyc.liveplay.myqcloud.com/gc/tyhjntyz_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="印象大红袍" tvg-name="印象大红袍" group-title="风景慢直播",印象大红袍
-https://gctxyc.liveplay.myqcloud.com/gc/wysyxdhp_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="嘉峪关长城" tvg-name="嘉峪关长城" group-title="风景慢直播",嘉峪关长城
-https://gctxyc.liveplay.myqcloud.com/gc/jyg04_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="天涯石" tvg-name="天涯石" group-title="风景慢直播",天涯石
-https://gctxyc.liveplay.myqcloud.com/gc/tyhjtys_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="天涯鸟瞰" tvg-name="天涯鸟瞰" group-title="风景慢直播",天涯鸟瞰
-https://gctxyc.liveplay.myqcloud.com/gc/tyhjtynl_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="婺源江岭1" tvg-name="婺源江岭1" group-title="风景慢直播",婺源江岭1
-https://gctxyc.liveplay.myqcloud.com/gc/wygjt1_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="小布达拉宫" tvg-name="小布达拉宫" group-title="风景慢直播",小布达拉宫
-https://gcalic.v.myalicdn.com/gc/bsszxbdlg_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="峨眉云海日出" tvg-name="峨眉云海日出" group-title="风景慢直播",峨眉云海日出
-https://gctxyc.liveplay.myqcloud.com/gc/emsarm_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="张家界大峡谷" tvg-name="张家界大峡谷" group-title="风景慢直播",张家界大峡谷
-https://gcalic.v.myalicdn.com/gc/hsxkssqdzrqj_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="张家界将军列队" tvg-name="张家界将军列队" group-title="风景慢直播",张家界将军列队
-https://gctxyc.liveplay.myqcloud.com/gc/zjjjjdl_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="悬空寺全景" tvg-name="悬空寺全景" group-title="风景慢直播",悬空寺全景
-https://gcalic.v.myalicdn.com/gc/hsxksqj_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="武夷山大红袍茶园" tvg-name="武夷山大红袍茶园" group-title="风景慢直播",武夷山大红袍茶园
-https://gctxyc.liveplay.myqcloud.com/gc/wysdhpcy_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="武夷山玉女峰" tvg-name="武夷山玉女峰" group-title="风景慢直播",武夷山玉女峰
-https://gcalic.v.myalicdn.com/gc/wysynf_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="水长城镜头一" tvg-name="水长城镜头一" group-title="风景慢直播",水长城镜头一
-https://gcalic.v.myalicdn.com/gc/wgw01_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="水长城镜头二" tvg-name="水长城镜头二" group-title="风景慢直播",水长城镜头二
-https://gcalic.v.myalicdn.com/gc/wgw02_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="泰山主峰" tvg-name="泰山主峰" group-title="风景慢直播",泰山主峰
-https://gctxyc.liveplay.myqcloud.com/gc/taishan01_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="泰山大观峰" tvg-name="泰山大观峰" group-title="风景慢直播",泰山大观峰
-https://gctxyc.liveplay.myqcloud.com/gc/taishan03_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="泰山拱北石" tvg-name="泰山拱北石" group-title="风景慢直播",泰山拱北石
-https://gcalic.v.myalicdn.com/gc/taishan04_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="泰山玉皇顶" tvg-name="泰山玉皇顶" group-title="风景慢直播",泰山玉皇顶
-https://gcalic.v.myalicdn.com/gc/taishan06_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="泰山迎客松" tvg-name="泰山迎客松" group-title="风景慢直播",泰山迎客松
-https://gcalic.v.myalicdn.com/gc/taishan02_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="滨海新区2" tvg-name="滨海新区2" group-title="风景慢直播",滨海新区2
-https://gcalic.v.myalicdn.com/gc/ljgcwglytylxs_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="火星基地" tvg-name="火星基地" group-title="风景慢直播",火星基地
-https://gcalic.v.myalicdn.com/gc/mdjxxdsb_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="白头叶猴保护区" tvg-name="白头叶猴保护区" group-title="风景慢直播",白头叶猴保护区
-https://gcalic.v.myalicdn.com/gc/ztd_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="贡嘎雪山" tvg-name="贡嘎雪山" group-title="风景慢直播",贡嘎雪山
-https://gctxyc.liveplay.myqcloud.com/gc/emsyh_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="车八岭" tvg-name="车八岭" group-title="风景慢直播",车八岭
-https://gcalic.v.myalicdn.com/gc/hsxkscj_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="远眺山庄" tvg-name="远眺山庄" group-title="风景慢直播",远眺山庄
-https://gcalic.v.myalicdn.com/gc/bssztt_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="金山" tvg-name="金山" group-title="风景慢直播",金山
-https://gcalic.v.myalicdn.com/gc/bsszjs_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="雪乡梦幻家园" tvg-name="雪乡梦幻家园" group-title="风景慢直播",雪乡梦幻家园
-https://gctxyc.liveplay.myqcloud.com/gc/mdjxxmhjyxj_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黄山卧云峰" tvg-name="黄山卧云峰" group-title="风景慢直播",黄山卧云峰
-https://gcalic.v.myalicdn.com/gc/hswlf_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黄山始信峰" tvg-name="黄山始信峰" group-title="风景慢直播",黄山始信峰
-https://gctxyc.liveplay.myqcloud.com/gc/hssxf_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黄山平天矼" tvg-name="黄山平天矼" group-title="风景慢直播",黄山平天矼
-https://gcalic.v.myalicdn.com/gc/hsptgz_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黄山排云亭" tvg-name="黄山排云亭" group-title="风景慢直播",黄山排云亭
-https://gcalic.v.myalicdn.com/gc/hspyt_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黄山西海大峡谷" tvg-name="黄山西海大峡谷" group-title="风景慢直播",黄山西海大峡谷
-https://gcalic.v.myalicdn.com/gc/hsxhdxg_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黟县宏村南湖" tvg-name="黟县宏村南湖" group-title="风景慢直播",黟县宏村南湖
-https://gcalic.v.myalicdn.com/gc/yxhcnh_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黟县宏村月沼" tvg-name="黟县宏村月沼" group-title="风景慢直播",黟县宏村月沼
-https://gctxyc.liveplay.myqcloud.com/gc/yxhcyz_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黟县西递半山亭俯瞰" tvg-name="黟县西递半山亭俯瞰" group-title="风景慢直播",黟县西递半山亭俯瞰
-https://gcalic.v.myalicdn.com/gc/yxxdbst_1/index.m3u8?contentid=2820180516001
-#EXTINF:-1 tvg-id="黟县西递牌坊" tvg-name="黟县西递牌坊" group-title="风景慢直播",黟县西递牌坊
-https://gcalic.v.myalicdn.com/gc/yxxdpf_1/index.m3u8?contentid=2820180516001
+#EXTINF:-1 tvg-id="GMR行车慢直播" tvg-name="GMR行车慢直播" group-title="风景慢直播",GMR行车慢直播
+https://goodiptv.club/bilibili/25942308
+#EXTINF:-1 tvg-id="GMR行车慢直播" tvg-name="GMR行车慢直播" group-title="风景慢直播",GMR行车慢直播
+https://live.ottiptv.cc/bilibili/25942308
+#EXTINF:-1 tvg-id="GMR行车慢直播" tvg-name="GMR行车慢直播" group-title="风景慢直播",GMR行车慢直播
+https://live.metshop.top/bilibili/25942308
+#EXTINF:-1 tvg-id="丽江玉龙雪山古城全景" tvg-name="丽江玉龙雪山古城全景" group-title="风景慢直播",丽江玉龙雪山古城全景
+https://goodiptv.club/bilibili/30487299
+#EXTINF:-1 tvg-id="丽江玉龙雪山古城全景" tvg-name="丽江玉龙雪山古城全景" group-title="风景慢直播",丽江玉龙雪山古城全景
+https://live.ottiptv.cc/bilibili/30487299
+#EXTINF:-1 tvg-id="丽江玉龙雪山古城全景" tvg-name="丽江玉龙雪山古城全景" group-title="风景慢直播",丽江玉龙雪山古城全景
+https://live.metshop.top/bilibili/30487299
+#EXTINF:-1 tvg-id="云养柯尔鸭" tvg-name="云养柯尔鸭" group-title="风景慢直播",云养柯尔鸭
+https://goodiptv.club/bilibili/26599442
+#EXTINF:-1 tvg-id="云养柯尔鸭" tvg-name="云养柯尔鸭" group-title="风景慢直播",云养柯尔鸭
+https://live.metshop.top/bilibili/26599442
+#EXTINF:-1 tvg-id="云游客风景直播间" tvg-name="云游客风景直播间" group-title="风景慢直播",云游客风景直播间
+https://goodiptv.club/bilibili/22689676
+#EXTINF:-1 tvg-id="云游客风景直播间" tvg-name="云游客风景直播间" group-title="风景慢直播",云游客风景直播间
+https://live.ottiptv.cc/bilibili/22689676
+#EXTINF:-1 tvg-id="云游客风景直播间" tvg-name="云游客风景直播间" group-title="风景慢直播",云游客风景直播间
+https://live.metshop.top/bilibili/22689676
+#EXTINF:-1 tvg-id="元谋土林慢直播" tvg-name="元谋土林慢直播" group-title="风景慢直播",元谋土林慢直播
+https://goodiptv.club/bilibili/1922174473
+#EXTINF:-1 tvg-id="元谋土林慢直播" tvg-name="元谋土林慢直播" group-title="风景慢直播",元谋土林慢直播
+https://live.ottiptv.cc/bilibili/1922174473
+#EXTINF:-1 tvg-id="元谋土林慢直播" tvg-name="元谋土林慢直播" group-title="风景慢直播",元谋土林慢直播
+https://live.metshop.top/bilibili/1922174473
+#EXTINF:-1 tvg-id="北京国贸东三环慢直播" tvg-name="北京国贸东三环慢直播" group-title="风景慢直播",北京国贸东三环慢直播
+https://goodiptv.club/bilibili/3291055
+#EXTINF:-1 tvg-id="北京国贸东三环慢直播" tvg-name="北京国贸东三环慢直播" group-title="风景慢直播",北京国贸东三环慢直播
+https://live.ottiptv.cc/bilibili/3291055
+#EXTINF:-1 tvg-id="北京国贸东三环慢直播" tvg-name="北京国贸东三环慢直播" group-title="风景慢直播",北京国贸东三环慢直播
+https://live.metshop.top/bilibili/3291055
+#EXTINF:-1 tvg-id="南迦巴瓦日照金山" tvg-name="南迦巴瓦日照金山" group-title="风景慢直播",南迦巴瓦日照金山
+https://live.ottiptv.cc/bilibili/22297925
+#EXTINF:-1 tvg-id="南迦巴瓦日照金山" tvg-name="南迦巴瓦日照金山" group-title="风景慢直播",南迦巴瓦日照金山
+https://live.metshop.top/bilibili/22297925
+#EXTINF:-1 tvg-id="厦门海景慢直播" tvg-name="厦门海景慢直播" group-title="风景慢直播",厦门海景慢直播
+https://goodiptv.club/bilibili/22160228
+#EXTINF:-1 tvg-id="厦门海景慢直播" tvg-name="厦门海景慢直播" group-title="风景慢直播",厦门海景慢直播
+https://live.ottiptv.cc/bilibili/22160228
+#EXTINF:-1 tvg-id="厦门海景慢直播" tvg-name="厦门海景慢直播" group-title="风景慢直播",厦门海景慢直播
+https://live.metshop.top/bilibili/22160228
+#EXTINF:-1 tvg-id="国际空间站俯瞰地球" tvg-name="国际空间站俯瞰地球" group-title="风景慢直播",国际空间站俯瞰地球
+https://live.ottiptv.cc/bilibili/14047
+#EXTINF:-1 tvg-id="国际空间站俯瞰地球" tvg-name="国际空间站俯瞰地球" group-title="风景慢直播",国际空间站俯瞰地球
+https://live.metshop.top/bilibili/14047
+#EXTINF:-1 tvg-id="夏威夷星空慢直播" tvg-name="夏威夷星空慢直播" group-title="风景慢直播",夏威夷星空慢直播
+https://goodiptv.club/bilibili/2065673
+#EXTINF:-1 tvg-id="夏威夷星空慢直播" tvg-name="夏威夷星空慢直播" group-title="风景慢直播",夏威夷星空慢直播
+https://live.ottiptv.cc/bilibili/02065673
+#EXTINF:-1 tvg-id="夏威夷星空慢直播" tvg-name="夏威夷星空慢直播" group-title="风景慢直播",夏威夷星空慢直播
+https://live.ottiptv.cc/bilibili/2065673
+#EXTINF:-1 tvg-id="夏威夷星空慢直播" tvg-name="夏威夷星空慢直播" group-title="风景慢直播",夏威夷星空慢直播
+https://live.metshop.top/bilibili/2065673
+#EXTINF:-1 tvg-id="夏季银河流星直播" tvg-name="夏季银河流星直播" group-title="风景慢直播",夏季银河流星直播
+https://live.ottiptv.cc/bilibili/21723579
+#EXTINF:-1 tvg-id="平潭海景慢直播" tvg-name="平潭海景慢直播" group-title="风景慢直播",平潭海景慢直播
+https://live.ottiptv.cc/bilibili/29774
+#EXTINF:-1 tvg-id="平潭海景慢直播" tvg-name="平潭海景慢直播" group-title="风景慢直播",平潭海景慢直播
+https://live.metshop.top/bilibili/29774
+#EXTINF:-1 tvg-id="泸沽湖星空慢直播" tvg-name="泸沽湖星空慢直播" group-title="风景慢直播",泸沽湖星空慢直播
+https://goodiptv.club/bilibili/24896254
+#EXTINF:-1 tvg-id="泸沽湖星空慢直播" tvg-name="泸沽湖星空慢直播" group-title="风景慢直播",泸沽湖星空慢直播
+https://live.ottiptv.cc/bilibili/24896254
+#EXTINF:-1 tvg-id="泸沽湖星空慢直播" tvg-name="泸沽湖星空慢直播" group-title="风景慢直播",泸沽湖星空慢直播
+https://live.metshop.top/bilibili/24896254
+#EXTINF:-1 tvg-id="济南泉城大明湖慢直播" tvg-name="济南泉城大明湖慢直播" group-title="风景慢直播",济南泉城大明湖慢直播
+https://goodiptv.club/bilibili/11235702
+#EXTINF:-1 tvg-id="济南泉城大明湖慢直播" tvg-name="济南泉城大明湖慢直播" group-title="风景慢直播",济南泉城大明湖慢直播
+https://live.ottiptv.cc/bilibili/11235702
+#EXTINF:-1 tvg-id="济南泉城大明湖慢直播" tvg-name="济南泉城大明湖慢直播" group-title="风景慢直播",济南泉城大明湖慢直播
+https://live.metshop.top/bilibili/11235702
+#EXTINF:-1 tvg-id="维港美景慢直播" tvg-name="维港美景慢直播" group-title="风景慢直播",维港美景慢直播
+https://goodiptv.club/bilibili/13131453
+#EXTINF:-1 tvg-id="维港美景慢直播" tvg-name="维港美景慢直播" group-title="风景慢直播",维港美景慢直播
+https://live.ottiptv.cc/bilibili/13131453
+#EXTINF:-1 tvg-id="维港美景慢直播" tvg-name="维港美景慢直播" group-title="风景慢直播",维港美景慢直播
+https://live.metshop.top/bilibili/13131453
+#EXTINF:-1 tvg-id="重庆雾都实景" tvg-name="重庆雾都实景" group-title="风景慢直播",重庆雾都实景
+https://goodiptv.club/bilibili/22418773
+#EXTINF:-1 tvg-id="重庆雾都实景" tvg-name="重庆雾都实景" group-title="风景慢直播",重庆雾都实景
+https://live.ottiptv.cc/bilibili/22418773
+#EXTINF:-1 tvg-id="重庆雾都实景" tvg-name="重庆雾都实景" group-title="风景慢直播",重庆雾都实景
+https://live.metshop.top/bilibili/22418773
+#EXTINF:-1 tvg-id="青岛海景慢直播" tvg-name="青岛海景慢直播" group-title="风景慢直播",青岛海景慢直播
+https://live.ottiptv.cc/bilibili/22570982
+#EXTINF:-1 tvg-id="青岛海景慢直播" tvg-name="青岛海景慢直播" group-title="风景慢直播",青岛海景慢直播
+https://live.metshop.top/bilibili/22570982
+#EXTINF:-1 tvg-id="高崖子天文台" tvg-name="高崖子天文台" group-title="风景慢直播",高崖子天文台
+https://goodiptv.club/bilibili/22325806
+#EXTINF:-1 tvg-id="高崖子天文台" tvg-name="高崖子天文台" group-title="风景慢直播",高崖子天文台
+https://live.ottiptv.cc/bilibili/22325806
+#EXTINF:-1 tvg-id="高崖子天文台" tvg-name="高崖子天文台" group-title="风景慢直播",高崖子天文台
+https://live.metshop.top/bilibili/22325806
+#EXTINF:-1 tvg-id="鱼缸慢直播" tvg-name="鱼缸慢直播" group-title="风景慢直播",鱼缸慢直播
+https://live.ottiptv.cc/bilibili/21310561
+#EXTINF:-1 tvg-id="鱼缸慢直播" tvg-name="鱼缸慢直播" group-title="风景慢直播",鱼缸慢直播
+https://live.metshop.top/bilibili/21310561

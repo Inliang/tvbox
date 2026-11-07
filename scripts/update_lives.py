@@ -7,7 +7,11 @@
 自包含 m3u，不能只放一个远程订阅头。本脚本拉取上游 -> 全量并发探测流地址 ->
 剔除明确死链 -> 写出自包含播放列表。
 
-用法：python scripts/update_lives.py
+用法：
+  python scripts/update_lives.py                  拉上游、探测死链、重建全部播放列表
+  python scripts/update_lives.py --all-only       不联网，由仓库内成品重建总表
+  python scripts/update_lives.py --refresh-scenery  重测风景慢直播线路并重建总表
+  python scripts/update_lives.py --refresh-logo     重测台标并重建总表
 可重复运行：无上游的本地源会在首次运行时生成 .bak 原始备份，之后始终从备份读取。
 """
 import collections
@@ -29,6 +33,12 @@ TIMEOUT = 6
 WORKERS = 64
 ROUNDS = 2  # 公网探测有抖动，多轮取并集，避免误杀间歇可达的源
 EPG = "https://epg.112114.xyz/pp.xml"
+
+# 原「直播中国」景区摄像头 CDN（gcalic / gctxyc / gccncc / gcksc 等 /gc/ 路径）
+# 已整体停服：主列表仍可能返回 200，但子列表一律断连，播放器根本出不了流。
+# 上游清单仍在下发这批地址，故在「探测」与「合并总表」两处都拦掉，防止死源回流。
+DEAD_SCENERY_RE = re.compile(r"/gc/[^\s]*\.m3u8", re.I)
+SCENERY_FILE = ROOT / "data" / "scenery.json"
 
 RAW = "https://raw.githubusercontent.com"
 
@@ -98,6 +108,8 @@ def normalize(url):
 
 def probe(url):
     """返回是否保留。403/405 保留（防盗链，播放器带 Referer 可播）。"""
+    if DEAD_SCENERY_RE.search(url):
+        return False  # 老景区 CDN 已停服，主列表能开也拿不到分片
     if not url.startswith(("http://", "https://")):
         return True  # rtp/igmp 等组播源，无法探测，保留
     try:
@@ -147,15 +159,16 @@ def collect(src):
     return target, header, uniq
 
 
-def probe_many(urls, rounds=ROUNDS):
+def probe_many(urls, rounds=ROUNDS, workers=None):
     """多轮探测取并集：任一轮可达即保留，降低网络抖动造成的误杀。"""
+    workers = workers or WORKERS
     urls = sorted(set(urls))
     verdict = {u: False for u in urls}
     for i in range(rounds):
         pending = [u for u, ok in verdict.items() if not ok]
         if not pending:
             break
-        with cf.ThreadPoolExecutor(max_workers=WORKERS) as ex:
+        with cf.ThreadPoolExecutor(max_workers=workers) as ex:
             res = dict(zip(pending, ex.map(probe, pending)))
         for u, ok in res.items():
             verdict[u] = verdict[u] or ok
@@ -315,7 +328,8 @@ FOREIGN_RE = re.compile(
     r"^(?:日本|韩国|美国|俄罗斯|泰国|半岛|亚洲新闻)", re.I
 )
 FOREIGN_HOST_RE = re.compile(r"\.kr$|\.jp$|cloudfront\.net|ebs\.co\.kr", re.I)
-# 景区摄像头慢直播：同一批 /gc/ 源，不是电视频道，单列避免淹没地方台
+# 防御：万一上游又混入 /gc/ 景区源（现已在 build_all 中统一剔除），仍单列不淹没地方台。
+# 当前「风景慢直播」分组由 data/scenery.json 注入，见 load_scenery()。
 SCENERY_URL_RE = re.compile(r"/gc/.*contentid=2820180516001", re.I)
 
 
@@ -471,6 +485,47 @@ def refresh_logos():
     print(f"[台标] 探测 {len(names)} 个频道，{len(hits)} 个有台标 -> {LOGO_NAMES.name}")
 
 
+def load_scenery():
+    """读取实测可播的风景慢直播频道；文件缺失时不影响其余频道生成。"""
+    if not SCENERY_FILE.exists():
+        print(f"[跳过] 缺少 {SCENERY_FILE.relative_to(ROOT)}，风景慢直播分组为空")
+        return []
+    try:
+        data = json.loads(SCENERY_FILE.read_text(encoding="utf-8"))
+        return [c for c in data.get("channels", [])
+                if c.get("name") and c.get("urls")]
+    except Exception as e:
+        print(f"[警告] 读取风景源失败：{e}")
+        return []
+
+
+def refresh_scenery():
+    """重新探测风景源线路（房间下播/代理调整会 404），写回 data/scenery.json。
+
+    代理对高并发会限流，故低并发 + 两轮取并集，避免把好线路误杀。
+    """
+    if not SCENERY_FILE.exists():
+        print("[跳过] 缺少 data/scenery.json")
+        return
+    data = json.loads(SCENERY_FILE.read_text(encoding="utf-8"))
+    channels = data.get("channels", [])
+    urls = sorted({u for c in channels for u in c.get("urls", [])})
+    print(f"[风景源] 低并发探测 {len(urls)} 条线路 ...")
+    verdict = probe_many(urls, rounds=2, workers=8)
+    kept_channels, dead = [], 0
+    for c in channels:
+        kept = [u for u in c.get("urls", []) if verdict.get(u)]
+        dead += len(c.get("urls", [])) - len(kept)
+        if kept:
+            kept_channels.append({"name": c["name"], "urls": kept})
+    data["channels"] = kept_channels
+    data["updated"] = datetime.now().strftime("%Y-%m-%d")
+    SCENERY_FILE.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"[风景源] 保留 {len(kept_channels)} 个频道 / "
+          f"{sum(len(c['urls']) for c in kept_channels)} 条线路，剔除 {dead} 条失效线路")
+
+
 def build_all(written):
     """合并各源、归一化频道名、统一分组，生成 lib/live-all.m3u。
 
@@ -486,6 +541,10 @@ def build_all(written):
         for inf, url in kept:
             # 手机/盒子端放不了 rtmp/组播，这类地址又无法探测，直接丢弃
             if not url.startswith(("http://", "https://")):
+                continue
+            # 上游清单仍在下发已停服的「直播中国」景区摄像头地址
+            if DEAD_SCENERY_RE.search(url):
+                dropped["老景区停服源"] += 1
                 continue
             raw = inf.rsplit(",", 1)[-1].strip()
             if not raw or DATE_RE.fullmatch(raw) or any(k in raw for k in SKIP_NAME):
@@ -508,6 +567,10 @@ def build_all(written):
 
     # 清洗后可能整条频道都没有可信线路了，去掉避免出现空频道
     buckets = {n: v for n, v in buckets.items() if v["urls"]}
+    # 注入实测可播的风景慢直播频道：多条代理地址就是 TVBox 的「线路 1/N」
+    scenery = load_scenery()
+    for ch in scenery:
+        buckets[ch["name"]] = {"group": "风景慢直播", "urls": list(ch["urls"])}
     # 收尾：上游标注越一致越靠前，其次 https 优先（Android 9+ 默认禁明文）
     for name, item in buckets.items():
         item["urls"].sort(key=lambda u: (
@@ -564,6 +627,9 @@ def rebuild_all():
 
 
 if __name__ == "__main__":
+    if "--refresh-scenery" in sys.argv:
+        refresh_scenery()
+        sys.exit(rebuild_all())
     if "--refresh-logo" in sys.argv:
         refresh_logos()
     if "--all-only" in sys.argv or "--refresh-logo" in sys.argv:

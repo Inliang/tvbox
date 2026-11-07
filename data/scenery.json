@@ -1,0 +1,151 @@
+{
+  "updated": "2026-11-07",
+  "note": "原「直播中国」景区摄像头 CDN（gcalic / gctxyc / gccncc / gcksc 等 /gc/ 路径）已整体停服：主列表可能返回 200，但子列表一律断连，播放器无法出流。本文件改为经分片级实测的风景/慢直播房间，每个频道配 1-4 条不同代理的备份线路（TVBox 显示为线路 1/N）。房间下播或代理调整时线路会 404，运行 python scripts/update_lives.py --refresh-scenery 可刷新。",
+  "channels": [
+    {
+      "name": "夏威夷星空慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/2065673",
+        "https://live.ottiptv.cc/bilibili/02065673",
+        "https://live.ottiptv.cc/bilibili/2065673",
+        "https://live.metshop.top/bilibili/2065673"
+      ]
+    },
+    {
+      "name": "维港美景慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/13131453",
+        "https://live.ottiptv.cc/bilibili/13131453",
+        "https://live.metshop.top/bilibili/13131453"
+      ]
+    },
+    {
+      "name": "济南泉城大明湖慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/11235702",
+        "https://live.ottiptv.cc/bilibili/11235702",
+        "https://live.metshop.top/bilibili/11235702"
+      ]
+    },
+    {
+      "name": "元谋土林慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/1922174473",
+        "https://live.ottiptv.cc/bilibili/1922174473",
+        "https://live.metshop.top/bilibili/1922174473"
+      ]
+    },
+    {
+      "name": "厦门海景慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/22160228",
+        "https://live.ottiptv.cc/bilibili/22160228",
+        "https://live.metshop.top/bilibili/22160228"
+      ]
+    },
+    {
+      "name": "高崖子天文台",
+      "urls": [
+        "https://goodiptv.club/bilibili/22325806",
+        "https://live.ottiptv.cc/bilibili/22325806",
+        "https://live.metshop.top/bilibili/22325806"
+      ]
+    },
+    {
+      "name": "重庆雾都实景",
+      "urls": [
+        "https://goodiptv.club/bilibili/22418773",
+        "https://live.ottiptv.cc/bilibili/22418773",
+        "https://live.metshop.top/bilibili/22418773"
+      ]
+    },
+    {
+      "name": "泸沽湖星空慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/24896254",
+        "https://live.ottiptv.cc/bilibili/24896254",
+        "https://live.metshop.top/bilibili/24896254"
+      ]
+    },
+    {
+      "name": "GMR行车慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/25942308",
+        "https://live.ottiptv.cc/bilibili/25942308",
+        "https://live.metshop.top/bilibili/25942308"
+      ]
+    },
+    {
+      "name": "丽江玉龙雪山古城全景",
+      "urls": [
+        "https://goodiptv.club/bilibili/30487299",
+        "https://live.ottiptv.cc/bilibili/30487299",
+        "https://live.metshop.top/bilibili/30487299"
+      ]
+    },
+    {
+      "name": "北京国贸东三环慢直播",
+      "urls": [
+        "https://goodiptv.club/bilibili/3291055",
+        "https://live.ottiptv.cc/bilibili/3291055",
+        "https://live.metshop.top/bilibili/3291055"
+      ]
+    },
+    {
+      "name": "国际空间站俯瞰地球",
+      "urls": [
+        "https://live.ottiptv.cc/bilibili/14047",
+        "https://live.metshop.top/bilibili/14047"
+      ]
+    },
+    {
+      "name": "南迦巴瓦日照金山",
+      "urls": [
+        "https://live.ottiptv.cc/bilibili/22297925",
+        "https://live.metshop.top/bilibili/22297925"
+      ]
+    },
+    {
+      "name": "青岛海景慢直播",
+      "urls": [
+        "https://live.ottiptv.cc/bilibili/22570982",
+        "https://live.metshop.top/bilibili/22570982"
+      ]
+    },
+    {
+      "name": "平潭海景慢直播",
+      "urls": [
+        "https://live.ottiptv.cc/bilibili/29774",
+        "https://live.metshop.top/bilibili/29774"
+      ]
+    },
+    {
+      "name": "夏季银河流星直播",
+      "urls": [
+        "https://live.ottiptv.cc/bilibili/21723579"
+      ]
+    },
+    {
+      "name": "云游客风景直播间",
+      "urls": [
+        "https://goodiptv.club/bilibili/22689676",
+        "https://live.ottiptv.cc/bilibili/22689676",
+        "https://live.metshop.top/bilibili/22689676"
+      ]
+    },
+    {
+      "name": "鱼缸慢直播",
+      "urls": [
+        "https://live.ottiptv.cc/bilibili/21310561",
+        "https://live.metshop.top/bilibili/21310561"
+      ]
+    },
+    {
+      "name": "云养柯尔鸭",
+      "urls": [
+        "https://goodiptv.club/bilibili/26599442",
+        "https://live.metshop.top/bilibili/26599442"
+      ]
+    }
+  ]
+}
