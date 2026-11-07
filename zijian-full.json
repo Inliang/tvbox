@@ -6240,9 +6240,17 @@
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
-      "name": "4K8K超清·kaige",
+      "name": "全网聚合·高清",
       "type": 0,
       "url": "./lib/live-kaige.m3u",
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/pp.xml",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
+      "name": "4K超清精选",
+      "type": 0,
+      "url": "./lib/live-4k.m3u",
       "playerType": 2,
       "epg": "https://epg.112114.xyz/pp.xml",
       "logo": "https://epg.112114.xyz/logo/{name}.png"
