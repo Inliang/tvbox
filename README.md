@@ -141,7 +141,7 @@
 | Ray | `https://100km.top/0` |
 | 俊于 | `http://home.jundie.top:81/top98.json` |
 | 橘子柚 | `https://raw.githubusercontent.com/hackyjso/box/main/jzy.txt` |
-| 电视（自用） | `https://raw.githubusercontent.com/qist/tvbox/master/jsm.json` |
+| 电视 | `https://raw.githubusercontent.com/qist/tvbox/master/jsm.json` |
 
 ### 代理与备用接口
 
