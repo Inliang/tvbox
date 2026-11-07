@@ -1,0 +1,23 @@
+name: _diag2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/_diag2.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  UPSTREAM_REPO: FongMi/TV
+  BUILD_TOOLS: "37.0.0"
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    env:
+      PATCHES_OUT: ${{ runner.temp }}/patches-applied.json
+      OUT_DIR: ${{ runner.temp }}/jmgo-out
+    steps:
+      - run: echo "env ok: $UPSTREAM_REPO / $BUILD_TOOLS / $PATCHES_OUT / $OUT_DIR"
