@@ -11,9 +11,13 @@ BT="${BUILD_TOOLS:-37.0.0}"
 mkdir -p "$OUT"
 
 for abi in arm64_v8a armeabi_v7a; do
+  # AbiApkPackaging 把产物导出到 Release/apk/；个别版本可能留在 gradle 输出目录，做兜底。
   src="$UP/Release/apk/leanback-${abi}.apk"
   if [[ ! -f "$src" ]]; then
-    echo "MISSING: $src" >&2
+    src="$UP/app/build/outputs/apk/leanback/release/leanback-${abi}.apk"
+  fi
+  if [[ ! -f "$src" ]]; then
+    echo "MISSING: leanback-${abi}.apk (tried Release/apk and gradle outputs)" >&2
     exit 1
   fi
   cp "$src" "$OUT/tvbox-jmgo-leanback-${abi}-5.8.7-${SHORT}.apk"
