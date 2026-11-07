@@ -1,10 +1,10 @@
 # tvbox
 
-[![Stars](https://img.shields.io/github/stars/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/stargazers)
-[![Forks](https://img.shields.io/github/forks/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/network/members)
-[![Watchers](https://img.shields.io/github/watchers/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/watchers)
-[![Last commit](https://img.shields.io/github/last-commit/Inliang/tvbox?style=flat-square)](https://github.com/Inliang/tvbox/commits/main)
-[![Pages](https://img.shields.io/badge/Pages-%E6%8E%A5%E5%8F%A3%E5%9C%B0%E5%9D%80%E5%BA%93-blue?style=flat-square)](https://inliang.github.io/tvbox/)
+[![Stars](https://img.shields.io/github/stars/Inliang/tvbox?style=flat-square&label=Stars&labelColor=24292F&logo=github&logoColor=white&color=E3B341)](https://github.com/Inliang/tvbox/stargazers)
+[![Forks](https://img.shields.io/github/forks/Inliang/tvbox?style=flat-square&label=Forks&labelColor=24292F&logo=git&logoColor=white&color=58A6FF)](https://github.com/Inliang/tvbox/network/members)
+[![Watchers](https://img.shields.io/github/watchers/Inliang/tvbox?style=flat-square&label=Watchers&labelColor=24292F&logo=github&logoColor=white&color=3FB950)](https://github.com/Inliang/tvbox/watchers)
+[![Last commit](https://img.shields.io/github/last-commit/Inliang/tvbox?style=flat-square&label=Last%20commit&labelColor=24292F&logo=clockify&logoColor=white&color=A371F7)](https://github.com/Inliang/tvbox/commits/main)
+[![Pages](https://img.shields.io/badge/Pages-%E6%8E%A5%E5%8F%A3%E5%9C%B0%E5%9D%80%E5%BA%93-DB6D28?style=flat-square&labelColor=24292F&logo=githubpages&logoColor=white)](https://inliang.github.io/tvbox/)
 
 给 TVBox / 影视仓 / OK 影视 用的**配置文件**：本仓库只提供配置地址，不提供任何影片，也不提供播放功能。如果喜欢，请 Fork 自用。
 
