@@ -222,7 +222,56 @@ def main():
 # 部分精简版 TVBox 只加载 lives[0]，因此把全部可用频道合并成一张总表放在首位。
 # 同名频道保留多条线路（播放器显示「线路 1/N」，可手动/自动换源），但限制上限避免刷屏。
 MAX_LINES = 6
-SKIP_NAME = ("春晚", "支持作者", "更新时间")
+# 点播噪声 / 上游临时频道，不进直播列表
+SKIP_NAME = ("春晚", "支持作者", "更新时间", "更新日期", "测试")
+
+# 上游 6 个源对同一套频道有 6 套命名习惯（CCTV1 / CCTV1综合 / CCTV-1 (720p) /
+# CCTV13新闻 / CCTV-4 中文国际 ...）。只按字面去重会把它们当成不同频道，
+# 所以合并前必须先归一化成同一个名字，TVBox 才会收成「线路 1/N」。
+CCTV_RE = re.compile(r"(?:CCTV|央视|中央)[\s\-_]*(\d{1,2})\s*([+＋])?", re.I)
+UHD_RE = re.compile(r"4K|8K|UHD|2160", re.I)
+# 画质/清晰度后缀（4K/8K 除外，它们是独立频道，不剥）
+NOISE_RE = re.compile(
+    r"[\s\-_()（）\[\]]*(?:超清|高清|标清|蓝光|流畅|HD|FHD|\d{3,4}[PIpi])"
+    r"[\s\-_()（）\[\]]*$", re.I
+)
+ALIAS = {
+    "福建东南卫视": "东南卫视",
+    "凤凰卫视中文": "凤凰卫视中文台",
+}
+# 上游会把构建时间戳也写成一条「频道」
+DATE_RE = re.compile(r"^[\d\s\-:./]+$")
+
+
+def normalize_name(name):
+    """把同一频道的上游别名收成规范名，并去掉画质后缀。"""
+    n = name.strip()
+    m = CCTV_RE.search(n)
+    if m:
+        # 央视统一成 CCTV1..CCTV17 / CCTV5+ / CCTV4K 这类编号名
+        uhd = ""
+        u = UHD_RE.search(n)
+        if u:
+            uhd = "4K" if u.group(0).upper() in ("UHD", "2160") else u.group(0).upper()
+        return f"CCTV{int(m.group(1))}{'+' if m.group(2) else ''}{uhd}"
+    if UHD_RE.search(n):
+        return n  # 4K/8K 是独立频道，别和同名的普通频道并掉
+    while True:
+        stripped = NOISE_RE.sub("", n).strip()
+        if stripped == n:
+            break
+        n = stripped
+    return ALIAS.get(n, n) or name.strip()
+
+
+def channel_sort_key(item):
+    """分组内排序：CCTV 按数字自然序（CCTV1, CCTV2 ... 而不是 CCTV1, CCTV10）。"""
+    name, group = item
+    gi = GROUP_ORDER.index(group)
+    m = re.fullmatch(r"CCTV(\d{1,2})(\+)?(4K|8K)?", name)
+    if m:
+        return (gi, 0, int(m.group(1)), m.group(2) or "", m.group(3) or "")
+    return (gi, 1, 0, "", name)
 
 # 只重建总表时读取的成品播放列表（顺序即线路优先级）
 ALL_INPUTS = [
@@ -251,6 +300,10 @@ GROUP_ORDER = [g for g, _ in GROUP_RULES] + ["其他频道"]
 
 
 def classify(inf, name):
+    # 4K/8K 一律归到「4K超清」，不受上游 group-title 影响
+    # （否则「北京卫视4K」会被上游标成卫视频道，和另外几个 4K 分开）
+    if UHD_RE.search(name):
+        return "4K超清"
     # 优先沿用上游 group-title，映射不到再按频道名判断
     m = re.search(r'group-title="([^"]*)"', inf)
     original = m.group(1) if m else ""
@@ -262,10 +315,10 @@ def classify(inf, name):
 
 
 def build_all(written):
-    """合并各源、剔除点播噪声、统一分组，生成 lib/live-all.m3u。
+    """合并各源、归一化频道名、统一分组，生成 lib/live-all.m3u。
 
-    以「频道名」为唯一键：同名频道不会被拆到不同分组，也不会堆出超过
-    MAX_LINES 条线路；TVBox 会把同名条目自动收成「线路 1/N」。
+    归一化后的「频道名」是唯一键：同一套频道的不同上游别名会收成一个频道，
+    多路流地址变成该频道的「线路 1/N」；https 线路优先，最多 MAX_LINES 条。
     """
     buckets = {}
     for _, kept in written:
@@ -273,23 +326,34 @@ def build_all(written):
             # 手机/盒子端放不了 rtmp/组播，这类地址又无法探测，直接丢弃
             if not url.startswith(("http://", "https://")):
                 continue
-            name = inf.rsplit(",", 1)[-1].strip()
-            if not name or any(k in name for k in SKIP_NAME):
+            raw = inf.rsplit(",", 1)[-1].strip()
+            if not raw or DATE_RE.fullmatch(raw) or any(k in raw for k in SKIP_NAME):
+                continue
+            name = normalize_name(raw)
+            if not name:
                 continue
             if name not in buckets:
                 buckets[name] = {"group": classify(inf, name), "urls": []}
             item = buckets[name]
-            if url not in item["urls"] and len(item["urls"]) < MAX_LINES:
+            if url not in item["urls"]:
                 item["urls"].append(url)
+
+    # 收尾：https 优先（Android 9+ 默认禁明文），再截断到 MAX_LINES
+    for item in buckets.values():
+        item["urls"].sort(key=lambda u: 0 if u.startswith("https://") else 1)
+        del item["urls"][MAX_LINES:]
 
     lines = [f'#EXTM3U x-tvg-url="{EPG}"']
     total = 0
-    for name in sorted(buckets, key=lambda n: (GROUP_ORDER.index(buckets[n]["group"]), n)):
-        group = buckets[name]["group"]
+    for name, item in sorted(
+        ((n, v) for n, v in buckets.items()),
+        key=lambda pair: channel_sort_key((pair[0], pair[1]["group"])),
+    ):
+        group = item["group"]
         # 同名频道保持"名字完全一致"，TVBox 会自动合并成「线路1/N」供换源；
         # 若在此加线路后缀，反而会拆成 N 个独立频道刷屏。
-        for url in buckets[name]["urls"]:
-            lines.append(f'#EXTINF:-1 tvg-name="{name}" '
+        for url in item["urls"]:
+            lines.append(f'#EXTINF:-1 tvg-id="{name}" tvg-name="{name}" '
                          f'group-title="{group}",{name}')
             lines.append(url)
             total += 1
