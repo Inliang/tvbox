@@ -1,0 +1,13 @@
+# jmgo-patch v1
+# id: P008
+# why: 固定签名用 PKCS12（.p12）。AGP 通常会从 .p12 扩展名推断 storeType=pkcs12，
+#      但不同 AGP 版本行为不一致；显式设置可避免 “Keystore was tampered with, or password incorrect”
+#      之类因 storeType 不匹配导致的签名失败。
+# target: app/build.gradle
+@@
+            storeFile file(localProps['storeFile'])
+            keyAlias localProps['keyAlias']
+--- NEW
+            storeFile file(localProps['storeFile'])
+            storeType "pkcs12"
+            keyAlias localProps['keyAlias']

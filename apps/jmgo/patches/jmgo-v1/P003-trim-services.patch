@@ -1,0 +1,19 @@
+# jmgo-patch v1
+# id: P003
+# why: UpdateService 是前台 dataSync 服务，负责应用内更新检查。本交付走 GitHub Release
+#      手动覆盖安装，不需要常驻更新服务。保留 PlaybackService（播放必需）、ActionReceiver
+#      （媒体按键）、NodeService（按需 Binder 服务，START_NOT_STICKY，不是常驻进程）。
+#      不改 android:largeHeap：上游已为 true，3GB 设备再放大堆会加速 lmkd 回收。
+# target: app/src/main/AndroidManifest.xml
+@@
+        <service
+            android:name=".service.UpdateService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+--- NEW
+        <!-- JMGO: 应用内更新检查由 GitHub Release 手动覆盖安装承担，关闭前台 dataSync 服务。 -->
+        <service
+            android:name=".service.UpdateService"
+            android:enabled="false"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />

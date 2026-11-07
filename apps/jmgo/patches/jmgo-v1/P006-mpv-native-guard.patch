@@ -1,0 +1,31 @@
+# jmgo-patch v1
+# id: P006
+# required: true
+# why: 上游 .gitignore 含 lib-*.aar，两个 MpvNative 校验用的
+#      app/libs/lib-mpvplayer-release.aar 与 lib-decoder-ffmpeg-release.aar 不在公开仓库里。
+#      VerifyMpvNativeTask 把它们声明为 @InputFile，干净 CI 检出时 merge*NativeLibs 必然
+#      因文件缺失而失败（这是 A 基线 CI 最典型的阻塞点）。主 APK 已通过 jniLibs.excludes
+#      排除 mpv/ffmpeg/thunder/nodejs/quickjs 的 so（这些库由独立 runtime 模块提供），
+#      该校验只是构建期一致性检查，跳过不改变最终产物。本地同时具备两个 AAR 时仍执行校验。
+# target: buildSrc/src/main/groovy/com/fongmi/gradle/AbiApkPackaging.groovy
+@@
+        def validation = project.tasks.register("verify${variant.name.capitalize()}MpvNative", VerifyMpvNativeTask) { task ->
+            task.mpvArchive.set(project.layout.projectDirectory.file('libs/lib-mpvplayer-release.aar'))
+            task.ffmpegArchive.set(project.layout.projectDirectory.file('libs/lib-decoder-ffmpeg-release.aar'))
+            task.abis.set(abis)
+        }
+        project.tasks.matching { it.name == "merge${variant.name.capitalize()}NativeLibs" }.configureEach { it.dependsOn(validation) }
+--- NEW
+        // JMGO: 两个 AAR 被上游 .gitignore 排除，干净 CI 检出时不存在；有则校验，无则跳过。
+        def mpvAar = project.layout.projectDirectory.file('libs/lib-mpvplayer-release.aar').asFile
+        def ffmpegAar = project.layout.projectDirectory.file('libs/lib-decoder-ffmpeg-release.aar').asFile
+        if (mpvAar.isFile() && ffmpegAar.isFile()) {
+            def validation = project.tasks.register("verify${variant.name.capitalize()}MpvNative", VerifyMpvNativeTask) { task ->
+                task.mpvArchive.set(project.layout.projectDirectory.file('libs/lib-mpvplayer-release.aar'))
+                task.ffmpegArchive.set(project.layout.projectDirectory.file('libs/lib-decoder-ffmpeg-release.aar'))
+                task.abis.set(abis)
+            }
+            project.tasks.matching { it.name == "merge${variant.name.capitalize()}NativeLibs" }.configureEach { it.dependsOn(validation) }
+        } else {
+            project.logger.lifecycle("JMGO: 跳过 MpvNative 一致性校验（本地未提供两个 lib-*.aar）")
+        }

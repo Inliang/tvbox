@@ -1,0 +1,17 @@
+# jmgo-patch v1
+# id: P007
+# why: :app 仅依赖 :catvod；nodejs / chaquo / quickjs / thunder 是独立 runtime 模块 APK，
+#      不在编译依赖图里，但 settings.gradle 会把它们纳入配置并要求原生工具链（NDK/CMake）在场。
+#      剪掉它们可完全省去原生工具链安装，CI 更快更稳，且不影响最终 leanback APK 功能
+#      （runtime 的 so 由独立的 runtime 模块 APK 在运行时提供）。
+# target: settings.gradle
+@@
+include ':app'
+include ':catvod'
+include ':chaquo'
+include ':nodejs'
+include ':quickjs'
+include ':thunder'
+--- NEW
+include ':app'
+include ':catvod'

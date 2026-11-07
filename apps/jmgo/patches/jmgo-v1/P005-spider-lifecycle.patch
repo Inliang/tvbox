@@ -1,0 +1,16 @@
+# jmgo-patch v1
+# id: P005
+# why: 上游 5.8.7 的 Spider.close() 已实现 closeJavaScript / closeNetwork 资源释放，
+#      但 destroy() 是空实现。只走 destroy 的调用链会留下对话框里挂起的
+#      CompletableFuture 与 Activity 引用，是「用一会儿随机闪退」常见的生命周期滞留点。
+#      Dialog.close() 只是置 closed=true 并 cancel 挂起请求，幂等，重复调用安全。
+#      不改 close() 本身，避免破坏 JS / OkHttp 的释放语义。
+# target: catvod/src/main/java/com/github/catvod/crawler/Spider.java
+@@
+    public void destroy() {
+    }
+--- NEW
+    public void destroy() {
+        // JMGO: destroy 路径此前不释放对话框挂起请求，收敛爬虫生命周期。
+        closeDialog();
+    }

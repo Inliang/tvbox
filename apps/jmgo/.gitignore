@@ -1,0 +1,17 @@
+# 解码后的密钥不要入库，只保留 base64 形式（apps/jmgo/keystore/jmgo.p12.b64）
+*.p12
+*.jks
+*.keystore
+
+# 本地签名配置（CI 在运行时写入上游 checkout，不入库）
+local.properties
+
+# 构建产物
+upstream/
+Release/
+*.apk
+build/
+
+# Python
+__pycache__/
+*.pyc
