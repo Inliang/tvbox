@@ -210,6 +210,9 @@ jobs:
             --build-tools "$BUILD_TOOLS_DIR"
 
       - name: Rename and prepare JMGO 兼容版 single-apk delivery
+        env:
+          LC_ALL: C.UTF-8
+          LANG: C.UTF-8
         run: |
           set -euo pipefail
           python3 "$VERIFY_SCRIPT" package \
