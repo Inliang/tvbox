@@ -39,7 +39,7 @@
 
 | 项 | 值 | 核实来源 |
 | --- | --- | --- |
-| 基线来源 | 官方 `FongMi/Release` tag `5.8.7` | team-lead 核实；下载前缀 `https://github.com/FongMi/Release/releases/download/5.8.7/` |
+| 基线来源 | 官方 `FongMi/Release` tag `5.8.7` | team-lead 核实；下载前缀 `https://github.com/FongMi/Release/releases/download/5.8.7/`（**CI 下载经 GitHub API release assets endpoint**，官方下载页连续下载多个大文件会 504；同一 tag、同一 4 个 asset、同一份字节，溯源 URL 仍为该前缀） |
 | 产物数量 | 4 个完整 APK：leanback/mobile × arm64_v8a/armeabi_v7a | 官方 Release |
 | 基线字节数 | leanback-arm64_v8a 51412139 / leanback-armeabi_v7a 44768123 / mobile-arm64_v8a 51326563 / mobile-armeabi_v7a 44682547 B | team-lead 核实，聚合时逐包校验 |
 | 签名 | **官方原签名**（主通道零改造、不重签）；`keystore/jmgo.p12.b64` 仅实验通道重签用 | 裁定二 |
@@ -59,7 +59,7 @@
 | C-03 | `apksigner verify --verbose --print-certs`：解析签名证书 SHA-256 指纹与 v2/v3 方案；**四包指纹一致性** `signingCertificateSha256Consistent`，任一缺失或不一致即把 4 包全部标 `fail` | 指纹不一致/仅 v1/解析失败即失败 | 必需 |
 | C-04 | `aapt2 dump badging`（缺 aapt2 时回退 `aapt`）：确认 `package` / `native-code` / `versionName` / `targetSdkVersion` / `launchable-activity`(LEANBACK_LAUNCHER) | 与基线不符即失败 | 必需 |
 | C-05 | 生成 `build-info.json`：来源 tag `5.8.7` / run id / 本仓库 commit sha / short sha / 4 包各自 sha256 + 字节数 + ABI + flavor + 下载 URL + 官方证书指纹 / `deliveryMode=upstream-aggregate` / `signingMode=upstream-original` / `compatPatchStatus` / 聚合时间戳 | 生成失败即失败 | 必需 |
-| C-06 | 交付清单门禁 + 发布说明：4 个 APK + `SHA256SUMS.txt` + `build-info.json` + `upstream-verify.json` + `docs/FIELD-TEST.md` 缺一即失败；发布说明含 4 包清单 + 保持官方签名可覆盖安装 + 不承诺修好闪退 + ABI 选择须实机 `getprop` / AC-31 对照（工程推断，非结论） | 缺项即失败 | 必需 |
+| C-06 | 交付清单门禁 + 发布说明：4 个 APK + `SHA256SUMS.txt` + `build-info.json` + `upstream-verify.json` + `docs/FIELD-TEST.md` 缺一或为空即失败；手册另须命中 4 个结构性行首锚点 `^### 3.1 ` / `^### 3.5 判定表` / `^## 4. 三类死因判别` / `^## 5. 结果回传模板`（QA 复跑证明裸词「判定表」会命中 3.2 正文、删光 3.5/4/5/6 章仍假绿；这 4 个标题是 CI 硬依赖，QA 修订手册时必须保留）；发布说明含 4 包清单 + 保持官方签名可覆盖安装 + 不承诺修好闪退 + ABI 选择须实机 `getprop` / AC-32 四包对照试装与 AC-31 中性三组对照（工程推断，非结论） | 缺项 / 空文件 / 锚点缺失即失败 | 必需 |
 | C-07 | 官方 `module` 资产 digest | **不纳入主通道校验**（主通道不改 runtime 链路） | 排除 |
 | C-08 | 实验通道 `experimental-status.json`（四值 `succeeded`/`failed`/`skipped`/`no-artifact`） | 允许为空，但不得静默假装成功 | 仅实验通道；**当前落盘为占位、尚未产出，见第 3 节第 10 条** |
 
@@ -99,3 +99,10 @@
 | 2026-11-07 | v1.0 建立（精简版，源码编译契约） | Phase 2/3 落盘 | 全流程起点（历史） |
 | 2026-11-08 | **v2.0 方向变更**：0~4 节逐节改写为「官方四包基线 + 校验聚合 + 可选二进制兼容层」；新增第 5 节变更记录 | **私有 media3 AAR 未开源（52 个类无源码，全历史/分支/Google Maven/jitpack/module 目录均无对应 AAR），clean clone 源码编译不可行；用户拍板改走官方包兼容化** | 0/1/2/3/4 节全部；新增第 5 节；与 `SPEC.md` v0.2、`docs/TECH-VERDICT.md` v1.0 同步 |
 | 2026-11-08 | **v2.0 修订（对齐落盘实现）**：头部补「方向变更声明（v2.0，效力高于下文一切历史条款）」并逐字点名 P001~P008 / clone / `assembleLeanbackRelease` / 固定 keystore 重签为已废止历史；C-01~C-08 细化到 `verify-upstream.py` 断言项；补 `upstream-verify.json` 字段清单、`unzip -t`、体积下限、四包签名指纹一致性、交付清单门禁；清除 `collect-apk.sh` 悬空引用；登记产物命名与 `SPEC.md` 第 5 节冲突；标注实验通道当前为占位、`experimental-status.json` 尚未产出；补结论分级三级口径 | 交叉一致性预检发现契约与 `.github/workflows/build-jmgo.yml` / `apps/jmgo/scripts/verify-upstream.py` 落盘实现存在产物字段、断言项与命名差距；补齐后消除悬空引用 | 头部声明、第 0/1/2/3/4 节；**不触碰** `SPEC.md` / `TECH-VERDICT.md` / README / workflow / scripts |
+| 2026-11-08 | **v2.0 修订（CI 首跑失败收口）**：下载通道由 `github.com/.../releases/download/` 改为 GitHub API `releases/assets/{id}`（302 到 `release-assets.githubusercontent.com`），保留原下载页作回退、逐包精确字节数断言；TSV 改用二进制 stdout 写纯 LF + size 非数字字符清理，修复 Windows 下 `\r` 使 `-ne` 算术比较静默失效；手册锚点由裸词收紧为 4 个行首标题；`SPEC.md` 第 5 节产物命名冲突按 team-lead 裁决闭环；`verify-upstream.py` 成功分支补 `ok("badging")` | 首次 Actions 运行（run 42467564773）第 1 包成功、第 2 包起连续 `504` 导致 step 7 失败；QA 复跑发现锚点假绿与 `checks{}` 缺键；本机真跑 4 包下载 + ZIP 结构校验全绿 | `.github/workflows/build-jmgo.yml`、`scripts/verify-upstream.py`、README、`SPEC.md`、`docs/ACCEPTANCE.md` 末尾待办状态、本节 |
+
+
+## 6. 文档治理约定（team-lead 收口登记）
+
+- `docs/ACCEPTANCE.md` 由 QA 维护，**任何改动须经 QA 或 PM / 架构 / QA 三方书面派发**；本轮 v1.1 的末尾待办状态与 AC 编号引用由 team-lead 代笔同步，未触碰第 3 节锁定阈值与 AC-01~AC-31 条款，仅顺延 AC-32，已在该文件变更记录中如实标注。
+- `docs/FIELD-TEST.md` 的 4 个行首标题是 C-06 的 CI 硬依赖，QA 后续修订必须保留，否则构建明确失败（不放宽）。

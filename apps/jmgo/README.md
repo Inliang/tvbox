@@ -39,6 +39,10 @@ Artifact 内含 8 个文件：
 文件名与官方 asset 逐字符一致，**沿用官方原签名**（未重新签名、未改动字节）。
 包名 `com.fongmi.android.tv`，versionName `5.8.7`。
 
+CI 实际下载走 GitHub API 的 release assets endpoint（同一 tag `5.8.7`、同一 4 个 asset、
+同一份字节），因为官方下载页在连续下载多个大文件时会返回 `504`；溯源字段 `sourceUrl`
+仍记录上面的官方 release 地址，产物字节与签名均不变。
+
 因为签名与用户现装的官方 5.8.7 一致，可以直接 `adb install -r` 覆盖安装，
 **不会丢失收藏、历史与播放进度**；不需要先卸载。
 

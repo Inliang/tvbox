@@ -119,24 +119,85 @@ jobs:
           echo "build-tools ready: $BT"
 
       - name: Download 4 official 5.8.7 assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           mkdir -p "$APK_DIR" "$OUT_DIR"
-          # 固定 tag 5.8.7 的 4 个固定文件名，逐字符对齐已核实事实，禁止回退其它版本。
-          ASSETS=(
-            "leanback-arm64_v8a.apk"
-            "leanback-armeabi_v7a.apk"
-            "mobile-arm64_v8a.apk"
-            "mobile-armeabi_v7a.apk"
-          )
-          for asset in "${ASSETS[@]}"; do
-            url="${SOURCE_URL_PREFIX}${asset}"
+          meta="$OUT_DIR/release-meta.json"
+          tsv="$OUT_DIR/assets.tsv"
+          api="https://api.github.com/repos/$UPSTREAM_REPO/releases"
+
+          # github.com/.../releases/download/ 通道在 CI 连续下载多个大文件时会 504：
+          # 首次运行第 1 个包成功、第 2 个包起 4 次重试全 504。改用 GitHub API 的
+          # release assets endpoint（302 到 release-assets.githubusercontent.com），
+          # 仍固定 tag 5.8.7 与 4 个固定文件名，禁止回退其它版本；原下载页保留作回退。
+          auth=()
+          if [[ -n "${GH_TOKEN:-}" ]]; then auth=(-H "Authorization: Bearer $GH_TOKEN"); fi
+          if ! curl -fsSL --retry 3 --retry-delay 5 -H 'Accept: application/vnd.github+json' \
+               "${auth[@]}" "$api/tags/$UPSTREAM_TAG" -o "$meta"; then
+            echo "带 token 读取 release 元数据失败，改匿名重试"
+            curl -fsSL --retry 3 --retry-delay 5 -H 'Accept: application/vnd.github+json' \
+               "$api/tags/$UPSTREAM_TAG" -o "$meta"
+          fi
+
+          # 逐字校验 tag / 4 个 asset 的名称、state、精确字节数，输出 name<TAB>id<TAB>size。
+          python3 - "$meta" > "$tsv" <<'PY'
+          import json, sys
+          expected = {
+              "leanback-arm64_v8a.apk": 51412139,
+              "leanback-armeabi_v7a.apk": 44768123,
+              "mobile-arm64_v8a.apk": 51326563,
+              "mobile-armeabi_v7a.apk": 44682547,
+          }
+          data = json.load(open(sys.argv[1], encoding="utf-8"))
+          if data.get("tag_name") != "5.8.7":
+              sys.exit("tag_name 不是 5.8.7: %r" % (data.get("tag_name"),))
+          assets = {a["name"]: a for a in data.get("assets", [])}
+          rows = []
+          for name, size in expected.items():
+              a = assets.get(name)
+              if not a:
+                  sys.exit("官方 release 缺少 asset: " + name)
+              if a.get("state") != "uploaded":
+                  sys.exit("asset 未就绪 %s: %r" % (name, a.get("state")))
+              if a["size"] != size:
+                  sys.exit("asset 字节数异常 %s: %s != %s" % (name, a["size"], size))
+              rows.append("%s\t%s\t%s" % (name, a["id"], size))
+          # 二进制 stdout 写纯 LF：Windows Python 的 text stdout 会把 \n 转成 \r\n，
+          # 使 shell read 出的 size 尾部带 \r，后续 -ne 算术比较会静默失效。
+          sys.stdout.buffer.write(("\n".join(rows) + "\n").encode("utf-8"))
+          PY
+          [[ "$(wc -l < "$tsv")" -eq 4 ]] || { echo "asset 清单不是 4 行"; exit 1; }
+
+          download_one() {
+            local asset="$1" aid="$2" expected="$3"
+            local tmp="$APK_DIR/.$asset.part" dest="$APK_DIR/$asset"
+            rm -f "$tmp"
             echo "::group::download ${asset}"
-            curl -fL --retry 3 --retry-delay 5 --connect-timeout 30 -o "$APK_DIR/$asset" "$url"
+            if ! curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
+                 -H 'Accept: application/octet-stream' "${auth[@]}" \
+                 -o "$tmp" "$api/assets/$aid"; then
+              echo "API assets 通道失败，回退官方下载页: $asset"
+              curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
+                 -o "$tmp" "${SOURCE_URL_PREFIX}${asset}"
+            fi
+            # 双保险清理非数字字符（CR / 空白），保证 -ne 算术比较在任何 shell 下真正生效。
+            local actual; actual=$(wc -c < "$tmp" | tr -d '[:space:]')
+            expected="${expected//[^0-9]/}"
+            if [[ "$actual" -ne "$expected" ]]; then
+              echo "SIZE MISMATCH: $asset expected=$expected actual=$actual" >&2
+              return 1
+            fi
+            mv "$tmp" "$dest"
+            echo "$actual bytes  $asset"
             echo "::endgroup::"
-            test -s "$APK_DIR/$asset"
-            echo "$(wc -c < "$APK_DIR/$asset") bytes  $asset"
-          done
+          }
+
+          while IFS=$'\t' read -r asset aid expected; do
+            download_one "$asset" "$aid" "$expected"
+          done < "$tsv"
+          rm -f "$meta" "$tsv"
           ls -l "$APK_DIR"
 
       - name: Mechanical verification (upstream-verify.json)
@@ -186,13 +247,20 @@ jobs:
               missing=1
             fi
           done
-          # 手册内容锚点：避免被误清空或章节残缺的 FIELD-TEST.md 被当作有效交付。
-          # 锚点取 QA 手册第 3 节的四包试装表与判定表标题，均为固定结构。
+          # 手册内容锚点：必须命中 4 个结构性行首标题，防止章节残缺的手册被当作有效交付。
+          # QA 复跑证明裸词「判定表」会命中 3.2 正文 incidental 用词：删光 3.5/4/5/6 章仍假绿。
+          # 这 4 个标题是 CI 硬依赖：QA 后续修订 FIELD-TEST.md 必须保留，否则构建明确失败。
           if [[ -f "$FIELD_TEST" && -s "$FIELD_TEST" ]]; then
-            if ! grep -q '^### 3\.1 ' "$FIELD_TEST" || ! grep -q '判定表' "$FIELD_TEST"; then
-              echo "INCOMPLETE DELIVERABLE: $FIELD_TEST 缺少 3.1 四包试装表或判定表锚点" >&2
-              missing=1
-            fi
+            for anchor in \
+              '^### 3\.1 ' \
+              '^### 3\.5 判定表' \
+              '^## 4\. 三类死因判别' \
+              '^## 5\. 结果回传模板'; do
+              if ! grep -q "$anchor" "$FIELD_TEST"; then
+                echo "INCOMPLETE DELIVERABLE: $FIELD_TEST 缺少锚点 $anchor" >&2
+                missing=1
+              fi
+            done
           fi
           if [[ "$missing" -ne 0 ]]; then
             echo "交付清单不完整，终止构建" >&2
