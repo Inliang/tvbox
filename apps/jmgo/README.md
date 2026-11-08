@@ -19,6 +19,23 @@ GitHub Release 发布。上游 `FongMi/TV` 依赖从未开源的私有 media3 �
    下载 `tvbox-jmgo-5.8.7.zip`。
 2. 推送到 `main` 分支时，同一批文件会发布到 **Releases**，标签 `jmgo-<run id>`。
    每次运行一个标签，历史版本都保留，可直接取回上一版（见「回滚」）。
+3. 若 Release 页面点下载一直超时：实测有网络出口对 `github.com` 下
+   `/{owner}/{repo}` 与 `/releases/download/` 这两类路径**间歇性返回 `504`**，
+   而同域名首页、`releases/tag` 页与 `api.github.com` 仍返回 200 —— 不是域名整体不可达，
+   也不是产物损坏。这是**单一网络出口的观测，未跨出口验证**，不代表所有用户都会遇到；
+   真遇到时改走 API 通道取件：
+
+   ```bash
+   # 列出该 tag 下 8 个文件及各自的 asset id
+   curl -H 'Accept: application/vnd.github+json' \
+     https://api.github.com/repos/Inliang/tvbox/releases/tags/jmgo-<run id>
+   # 按 id 下载单个文件（文件名用上一步返回的 name）
+   curl -L -H 'Accept: application/octet-stream' -o <文件名> \
+     https://api.github.com/repos/Inliang/tvbox/releases/assets/<asset id>
+   ```
+
+   下载后用 `sha256sum -c SHA256SUMS.txt` 复核 4 个 APK。这是取件通道的替换，
+   不改变文件内容与官方签名。
 
 Artifact 内含 8 个文件：
 
@@ -26,8 +43,8 @@ Artifact 内含 8 个文件：
 | --- | --- |
 | `tvbox-jmgo-leanback-arm64_v8a-5.8.7-<短哈希>.apk` | 电视端 64 位 |
 | `tvbox-jmgo-leanback-armeabi_v7a-5.8.7-<短哈希>.apk` | 电视端 32 位 |
-| `tvbox-jmgo-mobile-arm64_v8a-5.8.7-<短哈希>.apk` | 手机/触屏端 64 位（备选） |
-| `tvbox-jmgo-mobile-armeabi_v7a-5.8.7-<短哈希>.apk` | 手机/触屏端 32 位（备选） |
+| `tvbox-jmgo-mobile-arm64_v8a-5.8.7-<短哈希>.apk` | 手机/触屏端 64 位（第 3 轮对照用） |
+| `tvbox-jmgo-mobile-armeabi_v7a-5.8.7-<短哈希>.apk` | 手机/触屏端 32 位（第 4 轮对照用） |
 | `SHA256SUMS.txt` | 4 个 APK 的 sha256 清单 |
 | `build-info.json` | run id / commit sha / 上游 tag / 来源 URL / 每包 sha256、大小、ABI、原生签名指纹 |
 | `upstream-verify.json` | 逐包机械校验结果（包名 / versionName / native-code / 签名指纹一致性） |

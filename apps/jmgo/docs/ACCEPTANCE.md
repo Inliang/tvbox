@@ -97,5 +97,8 @@
 | --- | --- | --- | --- | --- |
 | v1.0 | 2026-11-07 | 初版验收契约：AC-01~AC-31 编号体系、锁定阈值、死因三类、当前评级 | QA | 源码编译基线 `FongMi/TV` @ `4512b4c9` |
 | v1.1 | 2026-11-08 | **基线变更**：源码重建证伪（52 个私有 media3 类未开源、作者私有 AAR 未入库），改走官方 `FongMi/Release` 5.8.7 四包聚合 + 机械校验 + 发布；0.1 锚定表改为四包基线、产物名改为 4 个、溯源文件增 `upstream-verify.json` 与 `docs/FIELD-TEST.md`；第 4 节产物数量与签名表述对齐、顺延 AC-32 四包对照试装；第 5 节构建侧评级去掉源码补丁口径 | QA（team-lead 派发） | **第 3 节锁定阈值一字未降；AC-01~AC-31 编号与条款不动；只改冲突段落并追加本记录，未整篇重写**。核心用户价值改为「可诊断、可对照、可归因」 |
+| v1.2 | 2026-11-08 | **CI 实跑状态同步**：run `42468716759` 13 步全绿、Release `jmgo-42468716759` 8 文件齐备；文末同步状态段由「CI 尚未实跑、四包产物尚未出」改为已闭环，上线阻断由 4 条收敛为 3 条实机侧 | QA advisory 书面动议 + team-lead 终裁代笔 | **仅改第 6 节文末同步状态段 + 追加本行**；第 3 节 8 条锁定阈值、AC-01~AC-31 与 AC-32 条款一字未动 |
 
-> 同步状态（team-lead 收口）：`build-jmgo.yml`（官方包下载/校验/聚合/发布）、`SPEC.md` v0.2、`build-contract.md` v2.0、`README.md` 已全部对齐官方包聚合口径，上述待办已关闭。**剩余阻断未解除**：实机机械证据（logcat / DropBox / bugreport / meminfo / PID 序列）仍为空白、CI 尚未实跑、四包聚合产物尚未出，产品上线维持 no-go（见第 5 节）。
+> 同步状态（team-lead 收口，2026-11-08 更新）：`build-jmgo.yml`（官方包下载/校验/聚合/发布）、`SPEC.md` v0.2、`build-contract.md` v2.0、`README.md` 已全部对齐官方包聚合口径，上述待办已关闭。
+> **CI 已实跑通过**：Actions run `42468716759`（commit `6fada51`）13 步全绿；Release `jmgo-42468716759` 已发布 8 个交付文件；`upstream-verify.json` 实测 `allPassed=true`、4 包各 10 项 checks 全为 True、签名指纹一致。
+> **剩余阻断（仅实机侧，3 条）**：① 实机机械证据（logcat / DropBox / bugreport / meminfo / PID 序列）仍为空白；② AC-28 CAOC 吞异常导致的 DropBox 假阴性 P0 未归零，AC-17 + AC-28 条款增补未正式派发（#13 pending）；③ AC-32 四包对照试装与 AC-31 中性三组对照未执行。产品上线维持 **no-go**（见第 5 节）；第 3 节锁定阈值与 AC-01~AC-31、AC-32 条款一字未动。
