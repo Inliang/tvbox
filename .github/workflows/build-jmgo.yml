@@ -1,6 +1,7 @@
 name: build-jmgo
 
-# 聚合官方 FongMi/Release 5.8.7 的 4 个已编译完整包，逐包机械校验后发布。
+# 聚合官方 FongMi/Release 5.8.7 的 4 个已编译完整包，逐包机械校验后，
+# 仅发布「JMGO 兼容版」单一可用 APK（leanback / armeabi-v7a 32 位版）。
 # 本工作流不产出源码编译产物：上游 FongMi/TV 依赖从未开源的私有 media3 类，
 # 源码重建路线已证伪。产物沿用官方原签名，未做任何二进制改造。
 # 触发：push 到 apps/jmgo/** 或本文件；也可在 Actions 页 workflow_dispatch。
@@ -66,7 +67,7 @@ jobs:
       - name: Prepare Android build-tools 34.0.0
         run: |
           set -euo pipefail
-          # 优先复用 ubuntu-latest runner 预装 Android SDK。
+          # 优先复用 ubuntu-latest runner预装 Android SDK。
           # 只补 build-tools;34.0.0 与 platform-tools；不装 SDK 37 / NDK / CMake / Gradle。
           if [[ -z "${ANDROID_HOME:-}" && -z "${ANDROID_SDK_ROOT:-}" ]]; then
             for c in "$HOME/Android/Sdk" "/usr/local/lib/android/sdk" "/opt/android-sdk"; do
@@ -100,8 +101,6 @@ jobs:
               fi
               SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
             fi
-            # license 接受动作单独处理：非 0 只打印不吞掉；真正的成败由下面的
-            # --install（set -e 生效）与随后的 test -x 硬门禁判定。
             if ! yes | "$SDKM" --licenses >/dev/null 2>&1; then
               echo "sdkmanager --licenses 返回非 0（多为已接受或管道 SIGPIPE），继续由 --install 与 test -x 判定"
             fi
@@ -210,7 +209,7 @@ jobs:
             --android-home "$ANDROID_HOME" \
             --build-tools "$BUILD_TOOLS_DIR"
 
-      - name: Rename, SHA256SUMS.txt, build-info.json
+      - name: Rename and prepare JMGO 兼容版 single-apk delivery
         run: |
           set -euo pipefail
           python3 "$VERIFY_SCRIPT" package \
@@ -222,62 +221,32 @@ jobs:
             --run-id "$GITHUB_RUN_ID" \
             --commit-sha "$GITHUB_SHA"
           ( cd "$OUT_DIR" && sha256sum -c SHA256SUMS.txt )
+          # 仅保留能用的 1 个：leanback / armeabi-v7a（32 位），改名为「JMGO 兼容版.apk」发布。
+          # 只改分发文件名，不改动 APK 字节与官方原签名。
+          cp -f "$OUT_DIR/tvbox-jmgo-leanback-armeabi_v7a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
+                "$OUT_DIR/JMGO兼容版.apk"
+          ls -l "$OUT_DIR/JMGO兼容版.apk"
 
       - name: Assert deliverable manifest is complete
         run: |
           set -euo pipefail
-          missing=0
-          FIELD_TEST="apps/jmgo/docs/FIELD-TEST.md"
-          for f in \
-            "$OUT_DIR/tvbox-jmgo-leanback-arm64_v8a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
-            "$OUT_DIR/tvbox-jmgo-leanback-armeabi_v7a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
-            "$OUT_DIR/tvbox-jmgo-mobile-arm64_v8a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
-            "$OUT_DIR/tvbox-jmgo-mobile-armeabi_v7a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
-            "$OUT_DIR/SHA256SUMS.txt" \
-            "$OUT_DIR/build-info.json" \
-            "$OUT_DIR/upstream-verify.json" \
-            "$FIELD_TEST"; do
-            if [[ ! -f "$f" ]]; then
-              echo "MISSING DELIVERABLE: $f" >&2
-              missing=1
-              continue
-            fi
-            if [[ ! -s "$f" ]]; then
-              echo "EMPTY DELIVERABLE: $f" >&2
-              missing=1
-            fi
-          done
-          # 手册内容锚点：必须命中 4 个结构性行首标题，防止章节残缺的手册被当作有效交付。
-          # QA 复跑证明裸词「判定表」会命中 3.2 正文 incidental 用词：删光 3.5/4/5/6 章仍假绿。
-          # 这 4 个标题是 CI 硬依赖：QA 后续修订 FIELD-TEST.md 必须保留，否则构建明确失败。
-          if [[ -f "$FIELD_TEST" && -s "$FIELD_TEST" ]]; then
-            for anchor in \
-              '^### 3\.1 ' \
-              '^### 3\.5 判定表' \
-              '^## 4\. 三类死因判别' \
-              '^## 5\. 结果回传模板'; do
-              if ! grep -q "$anchor" "$FIELD_TEST"; then
-                echo "INCOMPLETE DELIVERABLE: $FIELD_TEST 缺少锚点 $anchor" >&2
-                missing=1
-              fi
-            done
-          fi
-          if [[ "$missing" -ne 0 ]]; then
-            echo "交付清单不完整，终止构建" >&2
+          TARGET="$OUT_DIR/JMGO兼容版.apk"
+          if [[ ! -f "$TARGET" ]]; then
+            echo "MISSING DELIVERABLE: $TARGET" >&2
             exit 1
           fi
-          echo "deliverable manifest OK"
+          if [[ ! -s "$TARGET" ]]; then
+            echo "EMPTY DELIVERABLE: $TARGET" >&2
+            exit 1
+          fi
+          echo "deliverable manifest OK: $TARGET"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: tvbox-jmgo-5.8.7
+          name: JMGO兼容版
           path: |
-            ${{ github.workspace }}/jmgo-out/*.apk
-            ${{ github.workspace }}/jmgo-out/SHA256SUMS.txt
-            ${{ github.workspace }}/jmgo-out/build-info.json
-            ${{ github.workspace }}/jmgo-out/upstream-verify.json
-            apps/jmgo/docs/FIELD-TEST.md
+            ${{ github.workspace }}/jmgo-out/JMGO兼容版.apk
           if-no-files-found: error
           retention-days: 30
 
@@ -286,22 +255,21 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: jmgo-${{ github.run_id }}
-          name: JMGO 兼容版 5.8.7 官方包聚合 (run ${{ github.run_id }})
+          name: JMGO 兼容版
           body: |
-            聚合 FongMi/Release 5.8.7 的 4 个官方原签名包（leanback / mobile × arm64_v8a / armeabi_v7a），
-            经机械校验后发布，未做二进制改造。
+            # JMGO 兼容版
 
-            - 来源：https://github.com/FongMi/Release/releases/download/5.8.7/
-            - 包名 com.fongmi.android.tv，versionName 5.8.7，沿用官方原签名，可覆盖安装现装官方包
-            - 校验：SHA256SUMS.txt、upstream-verify.json（包名 / 版本 / ABI / 签名指纹）、build-info.json
-            - 试装手册：FIELD-TEST.md
-            - compatPatchStatus: not-applied（本版不含二进制改造补丁）
+            适配 **坚果 N1S 4K 高亮版 / K310 / Android 11 / MT9667 / 32 位系统** 的 TVBox 兼容客户端。
+
+            - 基于 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7 官方发布包，**未修改任何字节、沿用官方原签名**
+            - 仅包含 `leanback` 版 `armeabi-v7a`（32 位）安装包，已在本机（坚果 N1S）实测可装、可覆盖升级、较稳定
+            - 包名 `com.fongmi.android.tv`，versionName 5.8.7，可 `adb install -r` 覆盖现装官方包，数据保留
+            - 兼容性说明：本版**不承诺**修复「切换播放源偶发退回首页」的历史问题，仅做官方包聚合与适配分发
+
+            > 来源：https://github.com/FongMi/Release/releases/download/5.8.7/
+            > 文件名 `JMGO兼容版.apk`（内容即官方 `leanback-armeabi_v7a` 包，仅改名，未改动字节与原签名）
           files: |
-            ${{ github.workspace }}/jmgo-out/*.apk
-            ${{ github.workspace }}/jmgo-out/SHA256SUMS.txt
-            ${{ github.workspace }}/jmgo-out/build-info.json
-            ${{ github.workspace }}/jmgo-out/upstream-verify.json
-            apps/jmgo/docs/FIELD-TEST.md
+            ${{ github.workspace }}/jmgo-out/JMGO兼容版.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
