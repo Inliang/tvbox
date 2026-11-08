@@ -1,8 +1,9 @@
 name: build-jmgo
 
-# 坚果 N1S 4K 高亮版兼容版 TVBox 客户端（基于 FongMi/TV 5.8.7）。
-# 推送 apps/jmgo/** 或本文件即触发；也可在 Actions 页手动 workflow_dispatch。
-# 产物：tvbox-jmgo-leanback-arm64_v8a / armeabi_v7a 两个 APK + 校验文件。
+# 聚合官方 FongMi/Release 5.8.7 的 4 个已编译完整包，逐包机械校验后发布。
+# 本工作流不产出源码编译产物：上游 FongMi/TV 依赖从未开源的私有 media3 类，
+# 源码重建路线已证伪。产物沿用官方原签名，未做任何二进制改造。
+# 触发：push 到 apps/jmgo/** 或本文件；也可在 Actions 页 workflow_dispatch。
 
 on:
   push:
@@ -11,10 +12,11 @@ on:
       - '.github/workflows/build-jmgo.yml'
   workflow_dispatch:
     inputs:
-      upstream_sha:
-        description: 'FongMi/TV commit to build (default pinned)'
+      enable_compat_patch:
+        description: '实验通道：二进制兼容补丁（本轮不启用，待 TECH-VERDICT）'
+        type: boolean
         required: false
-        default: '4512b4c9f82534ff66acfde06ccdd68f35b074f0'
+        default: false
 
 permissions:
   contents: write
@@ -24,91 +26,179 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  UPSTREAM_REPO: FongMi/TV
-  UPSTREAM_SHA: ${{ github.event.inputs.upstream_sha || '4512b4c9f82534ff66acfde06ccdd68f35b074f0' }}
-  BUILD_TOOLS: "37.0.0"
-  PATCHES_OUT: ${{ github.workspace }}/patches-applied.json
+  UPSTREAM_REPO: FongMi/Release
+  UPSTREAM_TAG: '5.8.7'
+  SOURCE_URL_PREFIX: 'https://github.com/FongMi/Release/releases/download/5.8.7/'
+  PKG_NAME: 'com.fongmi.android.tv'
+  BUILD_TOOLS: '34.0.0'
+  APK_DIR: ${{ github.workspace }}/upstream-apks
   OUT_DIR: ${{ github.workspace }}/jmgo-out
+  VERIFY_SCRIPT: apps/jmgo/scripts/verify-upstream.py
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 30
     steps:
       - name: Checkout tvbox repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Set up JDK 21 (temurin)
+      - name: Set up JDK 17 (apksigner / aapt2)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '17'
 
-      - name: Set up Python
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Set up Android SDK (manual install)
+      - name: Resolve short sha
         run: |
-          set -e
-          export ANDROID_HOME=$HOME/android-sdk
-          export ANDROID_SDK_ROOT=$ANDROID_HOME
-          mkdir -p "$ANDROID_HOME/cmdline-tools"
-          curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-9862592_latest.zip -o /tmp/cmdtools.zip
-          unzip -q /tmp/cmdtools.zip -d "$ANDROID_HOME/cmdline-tools"
-          mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
-          export SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
-          yes | "$SDKMANAGER" --licenses >/dev/null 2>&1 || true
-          yes | "$SDKMANAGER" --update >/dev/null 2>&1 || true
-          for pkg in "platform-tools" "platforms;android-37" "build-tools;37.0.0" "ndk;28.2.13676358" "cmake;3.22.1"; do
-            for attempt in 1 2 3; do
-              if yes | "$SDKMANAGER" "$pkg"; then break; fi
-              echo "retry $pkg (attempt $attempt)"; sleep 15
+          set -euo pipefail
+          SHORT="${GITHUB_SHA::7}"
+          echo "SHORT_SHA=$SHORT" >> "$GITHUB_ENV"
+          echo "commit=$GITHUB_SHA short=$SHORT"
+
+      - name: Prepare Android build-tools 34.0.0
+        run: |
+          set -euo pipefail
+          # 优先复用 ubuntu-latest runner 预装 Android SDK。
+          # 只补 build-tools;34.0.0 与 platform-tools；不装 SDK 37 / NDK / CMake / Gradle。
+          if [[ -z "${ANDROID_HOME:-}" && -z "${ANDROID_SDK_ROOT:-}" ]]; then
+            for c in "$HOME/Android/Sdk" "/usr/local/lib/android/sdk" "/opt/android-sdk"; do
+              if [[ -d "$c" ]]; then ANDROID_HOME="$c"; break; fi
             done
-          done
+          fi
+          ANDROID_HOME="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/android-sdk}}"
+          export ANDROID_HOME
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          mkdir -p "$ANDROID_HOME"
+          BT="$ANDROID_HOME/build-tools/$BUILD_TOOLS"
+
+          # apksigner 必需；badging 只需 aapt2 / aapt 之一（脚本优先 aapt2、失败回退 aapt）。
+          need_install=0
+          if [[ ! -x "$BT/apksigner" ]]; then need_install=1; fi
+          if [[ ! -x "$BT/aapt2" && ! -x "$BT/aapt" ]]; then need_install=1; fi
+          if [[ "$need_install" -eq 1 ]]; then
+            SDKM=""
+            for c in "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+                     "$ANDROID_HOME/cmdline-tools/bin/sdkmanager" \
+                     "$ANDROID_HOME/tools/bin/sdkmanager"; do
+              if [[ -x "$c" ]]; then SDKM="$c"; break; fi
+            done
+            if [[ -z "$SDKM" ]]; then
+              echo "runner 未预装 sdkmanager，下载 commandline-tools 兜底"
+              curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-9862592_latest.zip -o /tmp/cmdtools.zip
+              mkdir -p "$ANDROID_HOME/cmdline-tools"
+              unzip -q -o /tmp/cmdtools.zip -d "$ANDROID_HOME/cmdline-tools"
+              if [[ -d "$ANDROID_HOME/cmdline-tools/cmdline-tools" && ! -d "$ANDROID_HOME/cmdline-tools/latest" ]]; then
+                mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+              fi
+              SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+            fi
+            # license 接受动作单独处理：非 0 只打印不吞掉；真正的成败由下面的
+            # --install（set -e 生效）与随后的 test -x 硬门禁判定。
+            if ! yes | "$SDKM" --licenses >/dev/null 2>&1; then
+              echo "sdkmanager --licenses 返回非 0（多为已接受或管道 SIGPIPE），继续由 --install 与 test -x 判定"
+            fi
+            "$SDKM" --install "build-tools;$BUILD_TOOLS" "platform-tools"
+          fi
+
+          test -x "$BT/apksigner"
+          if [[ ! -x "$BT/aapt2" && ! -x "$BT/aapt" ]]; then
+            echo "aapt2 与 aapt 均缺失，无法读取 badging" >&2
+            exit 1
+          fi
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "BUILD_TOOLS_DIR=$BT" >> "$GITHUB_ENV"
+          echo "build-tools ready: $BT"
 
-      - name: Clone pinned upstream
+      - name: Download 4 official 5.8.7 assets
         run: |
-          git clone -c advice.detachedHead=false --filter=blob:none --no-checkout \
-            "https://github.com/$UPSTREAM_REPO.git" "$RUNNER_TEMP/upstream" \
-            || git clone -c advice.detachedHead=false "https://github.com/$UPSTREAM_REPO.git" "$RUNNER_TEMP/upstream"
-          cd "$RUNNER_TEMP/upstream"
-          git fetch --depth 1 origin "$UPSTREAM_SHA" || git fetch origin "$UPSTREAM_SHA"
-          git checkout -q FETCH_HEAD
-          echo "UPSTREAM_DIR=$RUNNER_TEMP/upstream" >> "$GITHUB_ENV"
+          set -euo pipefail
+          mkdir -p "$APK_DIR" "$OUT_DIR"
+          # 固定 tag 5.8.7 的 4 个固定文件名，逐字符对齐已核实事实，禁止回退其它版本。
+          ASSETS=(
+            "leanback-arm64_v8a.apk"
+            "leanback-armeabi_v7a.apk"
+            "mobile-arm64_v8a.apk"
+            "mobile-armeabi_v7a.apk"
+          )
+          for asset in "${ASSETS[@]}"; do
+            url="${SOURCE_URL_PREFIX}${asset}"
+            echo "::group::download ${asset}"
+            curl -fL --retry 3 --retry-delay 5 --connect-timeout 30 -o "$APK_DIR/$asset" "$url"
+            echo "::endgroup::"
+            test -s "$APK_DIR/$asset"
+            echo "$(wc -c < "$APK_DIR/$asset") bytes  $asset"
+          done
+          ls -l "$APK_DIR"
 
-      - name: 准备固定签名密钥（仓库内置 b64 -> JKS）
-        run: bash apps/jmgo/scripts/gen-keystore.sh
-
-      - name: 应用兼容性补丁（P-00/P-01 必需，P-03 可选）
-        env:
-          UPSTREAM_DIR: ${{ env.UPSTREAM_DIR }}
-        run: python apps/jmgo/scripts/apply-patches.py
-
-      - name: 注入 local.properties 到上游
-        run: cp apps/jmgo/keystore/local.properties "$UPSTREAM_DIR/local.properties"
-
-      - name: 编译 leanback release（双 ABI）
-        working-directory: ${{ env.UPSTREAM_DIR }}
+      - name: Mechanical verification (upstream-verify.json)
         run: |
-          set -e
-          sed -i 's/-Xmx2048m/-Xmx4096m/' gradle.properties
-          chmod +x gradlew
-          ./gradlew :app:assembleLeanbackRelease -PtvRuntimeCatalog= \
-            -Dorg.gradle.configuration-cache=false -Dorg.gradle.jvmargs=-Xmx4096m --no-daemon
+          set -euo pipefail
+          # 任一断言失败 -> 脚本非零退出 -> set -e 终止构建，并打印失败包名与原因。
+          python3 "$VERIFY_SCRIPT" verify \
+            --apk-dir "$APK_DIR" \
+            --out "$OUT_DIR/upstream-verify.json" \
+            --android-home "$ANDROID_HOME" \
+            --build-tools "$BUILD_TOOLS_DIR"
 
-      - name: 收集并静态校验产物
-        env:
-          UP: ${{ env.UPSTREAM_DIR }}
-          BUILD_TOOLS: ${{ env.BUILD_TOOLS }}
+      - name: Rename, SHA256SUMS.txt, build-info.json
         run: |
-          bash apps/jmgo/scripts/collect-apk.sh "$UP" "$OUT_DIR"
-          cp "$PATCHES_OUT" "$OUT_DIR/patches-applied.json"
+          set -euo pipefail
+          python3 "$VERIFY_SCRIPT" package \
+            --apk-dir "$APK_DIR" \
+            --out-dir "$OUT_DIR" \
+            --verify-json "$OUT_DIR/upstream-verify.json" \
+            --short "$SHORT_SHA" \
+            --tag "$UPSTREAM_TAG" \
+            --run-id "$GITHUB_RUN_ID" \
+            --commit-sha "$GITHUB_SHA"
+          ( cd "$OUT_DIR" && sha256sum -c SHA256SUMS.txt )
+
+      - name: Assert deliverable manifest is complete
+        run: |
+          set -euo pipefail
+          missing=0
+          FIELD_TEST="apps/jmgo/docs/FIELD-TEST.md"
+          for f in \
+            "$OUT_DIR/tvbox-jmgo-leanback-arm64_v8a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
+            "$OUT_DIR/tvbox-jmgo-leanback-armeabi_v7a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
+            "$OUT_DIR/tvbox-jmgo-mobile-arm64_v8a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
+            "$OUT_DIR/tvbox-jmgo-mobile-armeabi_v7a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
+            "$OUT_DIR/SHA256SUMS.txt" \
+            "$OUT_DIR/build-info.json" \
+            "$OUT_DIR/upstream-verify.json" \
+            "$FIELD_TEST"; do
+            if [[ ! -f "$f" ]]; then
+              echo "MISSING DELIVERABLE: $f" >&2
+              missing=1
+              continue
+            fi
+            if [[ ! -s "$f" ]]; then
+              echo "EMPTY DELIVERABLE: $f" >&2
+              missing=1
+            fi
+          done
+          # 手册内容锚点：避免被误清空或章节残缺的 FIELD-TEST.md 被当作有效交付。
+          # 锚点取 QA 手册第 3 节的四包试装表与判定表标题，均为固定结构。
+          if [[ -f "$FIELD_TEST" && -s "$FIELD_TEST" ]]; then
+            if ! grep -q '^### 3\.1 ' "$FIELD_TEST" || ! grep -q '判定表' "$FIELD_TEST"; then
+              echo "INCOMPLETE DELIVERABLE: $FIELD_TEST 缺少 3.1 四包试装表或判定表锚点" >&2
+              missing=1
+            fi
+          fi
+          if [[ "$missing" -ne 0 ]]; then
+            echo "交付清单不完整，终止构建" >&2
+            exit 1
+          fi
+          echo "deliverable manifest OK"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -118,20 +208,41 @@ jobs:
             ${{ github.workspace }}/jmgo-out/*.apk
             ${{ github.workspace }}/jmgo-out/SHA256SUMS.txt
             ${{ github.workspace }}/jmgo-out/build-info.json
-            ${{ github.workspace }}/jmgo-out/patches-applied.json
+            ${{ github.workspace }}/jmgo-out/upstream-verify.json
+            apps/jmgo/docs/FIELD-TEST.md
           if-no-files-found: error
+          retention-days: 30
 
       - name: Publish GitHub Release (push to main only)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: jmgo-${{ github.run_id }}
-          name: JMGO 兼容版 5.8.7 (run ${{ github.run_id }})
+          name: JMGO 兼容版 5.8.7 官方包聚合 (run ${{ github.run_id }})
+          body: |
+            聚合 FongMi/Release 5.8.7 的 4 个官方原签名包（leanback / mobile × arm64_v8a / armeabi_v7a），
+            经机械校验后发布，未做二进制改造。
+
+            - 来源：https://github.com/FongMi/Release/releases/download/5.8.7/
+            - 包名 com.fongmi.android.tv，versionName 5.8.7，沿用官方原签名，可覆盖安装现装官方包
+            - 校验：SHA256SUMS.txt、upstream-verify.json（包名 / 版本 / ABI / 签名指纹）、build-info.json
+            - 试装手册：FIELD-TEST.md
+            - compatPatchStatus: not-applied（本版不含二进制改造补丁）
           files: |
-            ${{ github.workspace }}/jmgo-out/tvbox-jmgo-leanback-arm64_v8a-5.8.7-*.apk
-            ${{ github.workspace }}/jmgo-out/tvbox-jmgo-leanback-armeabi_v7a-5.8.7-*.apk
+            ${{ github.workspace }}/jmgo-out/*.apk
             ${{ github.workspace }}/jmgo-out/SHA256SUMS.txt
             ${{ github.workspace }}/jmgo-out/build-info.json
-            ${{ github.workspace }}/jmgo-out/patches-applied.json
+            ${{ github.workspace }}/jmgo-out/upstream-verify.json
+            apps/jmgo/docs/FIELD-TEST.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Experimental compat patch channel (placeholder)
+        # 本轮不读取开关值执行重打包：无论 dispatch 是否开启，都只打印占位状态。
+        # 待 TECH-VERDICT 落地后再接入 apktool；此处不实现任何二进制改造。
+        env:
+          REQUESTED: "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.enable_compat_patch || 'false' }}"
+        run: |
+          set -euo pipefail
+          echo "enable_compat_patch requested=$REQUESTED"
+          echo "compat patch disabled (pending TECH-VERDICT)"

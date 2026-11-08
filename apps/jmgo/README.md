@@ -1,103 +1,136 @@
 # 坚果 N1S 4K 兼容版 TVBox 客户端（jmgo）
 
-为 **坚果 N1S 4K 高亮版（型号 J31-8K2 / Android 11 / MT9667 / 3GB RAM）** 自动构建的
-FongMi（蜂蜜影视）电视客户端。基于上游开源源码 `FongMi/TV` 固定版本，**推送即由 GitHub Actions
-自动编译出可直接安装的 APK**，无需在本机配置 Android 开发环境。
+面向 **坚果 N1S 4K 高亮版（国行 J31-8K2 / Android 11 / MT9667 / 3GB RAM）** 的
+FongMi（蜂蜜影视）电视客户端分发包。
 
-> 这是「兼容性构建」，目标是**降低随机闪退的概率**，不是宣称已彻底修好。
-> 若装上后仍会闪退，请按文末「仍闪退怎么办」采集证据反馈。
+本仓库不产出源码编译产物：`.github/workflows/build-jmgo.yml` 自动聚合官方
+`FongMi/Release` 5.8.7 的 4 个已编译完整包，逐包做机械校验，再作为 Artifact 与
+GitHub Release 发布。上游 `FongMi/TV` 依赖从未开源的私有 media3 类，源码重建路线
+已被证伪，因此这里提供的是**官方原包 + 可核验的交付链**。
 
----
-
-## 怎么拿到 APK
-
-1. 打开本仓库 **Actions → `build-jmgo`**；
-2. 最新一次运行（绿色对勾）底部 **Artifacts** 里下载 `tvbox-jmgo-apks.zip`，
-   内含两个文件：
-   - `tvbox-jmgo-leanback-arm64_v8a-5.8.7-<commit>.apk`（64 位）
-   - `tvbox-jmgo-leanback-armeabi_v7a-5.8.7-<commit>.apk`（32 位）
-3. 推送到 `main` 分支时，也会自动发布一份到仓库 **Releases**（标签 `jmgo-<编号>`）。
-
-## 怎么安装
-
-- **两个包分别试装**，哪个能装上且连续播放更稳，就用哪个。芯片是 64 位不代表系统就是
-  64 位——这台投影仪上 32 位包往往更稳，所以**两个都构建、都提供**。
-- 覆盖安装时请用**同一个签名**：本项目的签名密钥是固定的（见 `keystore/`），能直接覆盖旧版。
-- 沿用仓库已有的 `zijian.json` 配置，无需重新导入源。
+> 目标是让「用一会儿随机闪退」变成可诊断、可对照、可归因，而不是宣称已彻底修好。
+> 本版**不包含**任何二进制改造补丁。
 
 ---
 
-## 这个版本改了什么（相对上游 5.8.7）
+## 拿到 APK
 
-所有改动都在 `patches/jmgo-v1/`，以最小、可逆、不破坏控制流的方式落地：
+1. 打开本仓库 **Actions → `build-jmgo`**，取最新一次成功运行的 **Artifacts**，
+   下载 `tvbox-jmgo-5.8.7.zip`。
+2. 推送到 `main` 分支时，同一批文件会发布到 **Releases**，标签 `jmgo-<run id>`。
+   每次运行一个标签，历史版本都保留，可直接取回上一版（见「回滚」）。
 
-| 补丁 | 改动 | 目的 |
-| --- | --- | --- |
-| P001 | 运行时模块清单地址支持 Gradle 属性 / 环境变量注入 | 可注入可达镜像，不硬编码第三方代理 |
-| P002 | 关闭 `BootReceiver` 与 `DLNARendererService` | 不开机常驻爬虫/投屏接收，省后台占用 |
-| P003 | 关闭 `UpdateService` 前台服务 | 更新由 GitHub Release 手动覆盖安装承担 |
-| P004 | 首次启动默认更保守（关闭音频透传/字幕渲染/后台播放/预加载/自动更新） | 降低 3GB 内存下的并发驻留 |
-| P005 | `Spider.destroy()` 补做对话框挂起请求释放 | 收敛爬虫资源释放/生命周期滞留 |
-| P006 | 本地缺少 mpv/ffmpeg 的 AAR 时跳过一致性校验 | 干净 CI 才能通过构建（否则必然失败） |
-| P007 | 从构建图剪掉 nodejs/chaquo/quickjs/thunder | 无需安装 NDK/CMake，CI 更快更稳 |
-| P008 | 显式声明签名 storeType=PKCS12 | 避免不同 AGP 版本下签名失败 |
+Artifact 内含 8 个文件：
 
-构建结果里 `patches-applied.json` 会记录每个补丁的实际状态（applied / skipped），
-**不会静默假装成功**。
+| 文件 | 用途 |
+| --- | --- |
+| `tvbox-jmgo-leanback-arm64_v8a-5.8.7-<短哈希>.apk` | 电视端 64 位 |
+| `tvbox-jmgo-leanback-armeabi_v7a-5.8.7-<短哈希>.apk` | 电视端 32 位 |
+| `tvbox-jmgo-mobile-arm64_v8a-5.8.7-<短哈希>.apk` | 手机/触屏端 64 位（备选） |
+| `tvbox-jmgo-mobile-armeabi_v7a-5.8.7-<短哈希>.apk` | 手机/触屏端 32 位（备选） |
+| `SHA256SUMS.txt` | 4 个 APK 的 sha256 清单 |
+| `build-info.json` | run id / commit sha / 上游 tag / 来源 URL / 每包 sha256、大小、ABI、原生签名指纹 |
+| `upstream-verify.json` | 逐包机械校验结果（包名 / versionName / native-code / 签名指纹一致性） |
+| `FIELD-TEST.md` | 实机取证与四包对照试装手册 |
 
-## 没改什么（明确不做）
+## 包的来源与签名
 
-- 不换界面、不复古皮肤；沿用上游 leanback 界面。
-- 不内置影视源、不内置配置地址（仍用仓库 `zijian.json`）。
-- 不增加 `android:largeHeap`（上游已开启，3GB 设备再加堆反而可能加速系统回收）。
-- 不引入 `ApplicationExitInfo`（需要 API 31+，本机是 API 30）。
-- 不依赖清数据 / 后台白名单 / Root / 换系统 WebView 等临时解法。
+4 个包全部来自固定地址 `https://github.com/FongMi/Release/releases/download/5.8.7/`，
+文件名与官方 asset 逐字符一致，**沿用官方原签名**（未重新签名、未改动字节）。
+包名 `com.fongmi.android.tv`，versionName `5.8.7`。
 
-## 关于运行时模块 / 离线
+因为签名与用户现装的官方 5.8.7 一致，可以直接 `adb install -r` 覆盖安装，
+**不会丢失收藏、历史与播放进度**；不需要先卸载。
 
-- 默认 **catalog 为空**，首次启动**不联网拉取模块清单**，不会因国内访问不到 GitHub 而白屏/退出。
-- 部分需要 Python / Node 解析的站点依赖独立的 runtime 模块 APK；缺失时应用会给出**明确提示**，
-  而不是闪退。需要这些解析能力时，可自行安装 `FongMi/Release` 的对应 runtime 模块。
+## 四包对照试装顺序（顺序仅为对照用，非优劣排序）
 
----
+主通道把 4 个官方原签名包原样分发（不重新签名、不改动字节、零二进制改造），
+**不预设任何一个「更稳」**。按以下顺序逐轮对照试装；顺序只是对照实验的记录编号，
+不是优劣排序：
+
+1. `tvbox-jmgo-leanback-arm64_v8a-5.8.7-<短哈希>.apk`（leanback / 64 位）
+2. `tvbox-jmgo-leanback-armeabi_v7a-5.8.7-<短哈希>.apk`（leanback / 32 位）
+3. `tvbox-jmgo-mobile-arm64_v8a-5.8.7-<短哈希>.apk`（mobile / 64 位）
+4. `tvbox-jmgo-mobile-armeabi_v7a-5.8.7-<短哈希>.apk`（mobile / 32 位）
+
+芯片是 64 位不代表系统就是 64 位。以上顺序基于 MT9667 为 64 位 SoC 的**工程推断，
+未在这台设备上实测**，不构成「哪个包更稳」的结论，也不承诺修好闪退。请先执行
+`adb shell getprop ro.product.cpu.abilist` 确认系统实际支持的 ABI，再按
+`docs/FIELD-TEST.md` 第 3 节「四包对照试装」的判定表逐轮记录，以实机 `getprop`
+与 `docs/ACCEPTANCE.md` AC-32 四包对照试装、AC-31 中性三组对照结果为准。
+
+具体操作步骤、观测窗口与取证命令见 `docs/FIELD-TEST.md`。
+
+## 机械校验做了什么
+
+CI 对每个包依次断言，任一失败即终止构建，并在 `upstream-verify.json` 写明失败包名与原因：
+
+- `unzip -t` ZIP 完整性；
+- `aapt2` / `aapt dump badging` 提取 `package=com.fongmi.android.tv`、
+  `versionName=5.8.7`、`native-code` 与文件名声明的 ABI 一致；
+- `apksigner verify --print-certs` 记录签名证书 SHA-256 指纹，并断言 **4 包指纹完全一致**；
+- 文件大小大于 30MB，且与已核实的官方 asset 精确字节数一致（防止下错版本或 asset 被替换）。
+
+下载固定为 tag 5.8.7 的 4 个固定文件名，`set -e` 下任一 `curl` 失败即终止，
+**不回退到其它版本、不静默跳过**。
+
+## 自己核验产物
+
+拿到 Artifact 后，在本机（需 Android SDK build-tools 34.0.0）复核：
+
+```bash
+cd tvbox-jmgo-5.8.7
+sha256sum -c SHA256SUMS.txt
+
+# 逐个核对签名证书指纹，应与 build-info.json 的 signingCertificateSha256 一致
+for f in *.apk; do
+  echo "== $f =="
+  "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --print-certs "$f" \
+    | grep 'SHA-256 digest'
+done
+```
+
+`build-info.json` 里 `compatPatchStatus` 恒为 `not-applied`：本版**不含**二进制改造补丁。
+`enable_compat_patch` 只是待 TECH-VERDICT 的实验通道占位，当前不启用，不执行重打包。
+
+## 回滚
+
+- 每次 push 到 `main` 生成一个独立 Release 标签 `jmgo-<run id>`，历史产物不会被覆盖；
+  需要回退时直接下载上一版标签里的 4 个 APK 覆盖安装即可（同签名，无需卸载）。
+- 上游 asset 固定在 tag `5.8.7`，文件内容不可变；即便本仓库 CI 出问题，也能从
+  `FongMi/Release` 的该标签取回同一批官方包。
+- 本仓库不产生需要迁移的数据库或服务端状态，回滚只涉及客户端 APK 覆盖安装。
 
 ## 仍闪退怎么办（取证反馈）
 
 请提供机械证据，而不是「又崩了」：
 
 ```bash
-# 设备开启开发者选项 → 网络 ADB（或 USB ADB）后，在电脑上：
 adb logcat -b all -v threadtime > logcat.txt &
 adb shell                       # 在投影仪上复现：连续播放/切源/前后台切换
 # 复现后回到电脑 Ctrl-C 停止 logcat
-# 取崩溃/回收证据：
 adb shell ls /data/system/dropbox/ | grep -iE 'crash|anr|native_crash|tombstone'
 adb bugreport bugreport.zip
 ```
 
 把 `logcat.txt` 与上述目录里对应时间戳的文件一并反馈。请区分三类死因：
-**低内存被系统回收（lmkd）** / **native 崩溃（tombstone）** / **Java 未捕获异常（customactivityoncrash 重启）**。
+**低内存被系统回收（lmkd）** / **native 崩溃（tombstone）** / **Java 未捕获异常（CAOC 重启）**。
 日志里的片名、源地址属于隐私，反馈前可自行脱敏。
 
----
-
-## 自行修改 / 切换基线
-
-- 工作流：`.github/workflows/build-jmgo.yml`（仓库根，GitHub 只识别这里）。
-- 补丁与脚本：`apps/jmgo/patches/`、`apps/jmgo/scripts/`。
-- 改上游版本：手动触发 `workflow_dispatch`，填 `upstream_sha`（需对齐 `patches/` 是否仍适用）。
-- 签名密钥以 base64 形式入库（`keystore/jmgo.p12.b64`，自签名）。如不想公开，可改为
-  GitHub Secrets（`KEYSTORE_BASE64` 等）并在工作流中解码，详见 `scripts/gen_keystore.sh`。
-
-## 目录结构
+## 目录
 
 ```
 apps/jmgo/
-  SPEC.md                 规格契约（团队内部）
-  build-contract.md       构建契约（Phase 2 技术契约）
-  docs/ACCEPTANCE.md      验收标准 AC-01~AC-31
-  patches/jmgo-v1/        P001~P008 补丁
-  scripts/                apply_patches.py / collect_apk.py / gen_keystore.sh
-  keystore/               jmgo.p12.b64（固定签名）
-.github/workflows/build-jmgo.yml   自动构建触发文件（仓库根）
+  README.md                   本文
+  SPEC.md                     规格契约（团队内部）
+  build-contract.md           构建契约（Phase 2 技术契约）
+  docs/ACCEPTANCE.md          验收标准 AC-01~AC-32（QA 维护，v1.1 顺延 AC-32）
+  docs/PRD.md                 产品需求
+  docs/FIELD-TEST.md          实机取证与四包对照试装手册（QA 维护）
+  scripts/verify-upstream.py  机械校验 + 产物打包（纯 Python，可本地复现）
+  keystore/                   上一路线遗留的固定密钥，保留备用，本轮不参与流水线
+.github/workflows/build-jmgo.yml   聚合 / 校验 / 发布触发文件（仓库根，GitHub 只识别这里）
 ```
+
+上一轮「从源码重建」所用的补丁与脚本已从流水线移除；`keystore/` 与
+`scripts/gen-keystore.sh` 按团队裁决保留，但本轮不读取、不生成签名文件。
