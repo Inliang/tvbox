@@ -13,9 +13,9 @@
 
 ## 下载与安装
 
-1. 打开本仓库 **Releases**，下载名为 **`JMGO兼容版.apk`** 的文件（即官方 `leanback-armeabi_v7a` 包，仅改名）。
+1. 打开本仓库 **Releases**，下载名为 **`JMGO-Compatible-5.8.7.apk`** 的文件（即官方 `leanback-armeabi_v7a` 包，仅改名）。
 2. 通过以下任一方式安装到投影仪：
-   - **ADB（推荐）**：`adb install -r JMGO兼容版.apk`
+   - **ADB（推荐）**：`adb install -r JMGO-Compatible-5.8.7.apk`
    - **U 盘 / 文件管理器**：把 apk 拷到 U 盘，在投影仪文件管理器里点击安装
 3. 因为是官方原签名，可直接覆盖你现装的官方 TVBox，**不会丢失收藏、历史与播放进度**，无需先卸载。
 
@@ -40,7 +40,7 @@
 拿到 apk 后，若有 Android SDK，可复核签名证书指纹是否与官方 5.8.7 一致：
 
 ```bash
-"$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --print-certs JMGO兼容版.apk
+"$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --print-certs JMGO-Compatible-5.8.7.apk
 ```
 
 ## 回滚
