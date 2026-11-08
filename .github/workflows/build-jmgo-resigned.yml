@@ -82,9 +82,9 @@ jobs:
           test -x "$BT/apksigner"
           echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
           echo "BUILD_TOOLS_DIR=$BT" >> "$GITHUB_ENV"
-          # apktool（反编译 / 重打包）
-          curl -fsSL --retry 3 --retry-delay 5 https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.9.3.jar -o /tmp/apktool.jar
-          test -f /tmp/apktool.jar
+          # apktool（反编译 / 重打包）—— 用 3.0.3（自带新版 aapt2 / framework，认识 API35+ 属性如 pageSizeCompat）
+          curl -fsSL --retry 3 --retry-delay 5 https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar -o /tmp/apktool.jar
+          test -f /tmp/apktool.jar && unzip -l /tmp/apktool.jar >/dev/null 2>&1 || { echo "apktool jar corrupt"; exit 1; }
           echo "build-tools ready: $BT"
 
       - name: Decode jmgo keystore
@@ -112,12 +112,33 @@ jobs:
                "$api/assets/$aid" -o "$APK_DIR/leanback-armeabi_v7a.apk"
           ls -l "$APK_DIR/leanback-armeabi_v7a.apk"
 
-      - name: apktool decode + rename launcher label + rebuild + resign
+      - name: Resolve keystore credentials
         run: |
           set -euo pipefail
+          P12=/tmp/jmgo.p12
+          PASS=""
+          for c in "$KEY_PASS" "jmgo-compat-2026" "jmgo-compat-2026"; do
+            [ -z "$c" ] && continue
+            if keytool -list -keystore "$P12" -storetype PKCS12 -storepass "$c" >/tmp/ks.txt 2>/dev/null; then
+              PASS="$c"; break
+            fi
+          done
+          if [ -z "$PASS" ]; then
+            echo "::error::No valid keystore password found among candidates"; exit 1
+          fi
+          ALIAS=$(grep -E 'PrivateKeyEntry' /tmp/ks.txt | head -1 | sed -E 's/^([^,[:space:]]+),.*/\1/' | tr -d ' ')
+          [ -z "$ALIAS" ] && ALIAS=jmgo
+          echo "RESIGN_PASS=$PASS" >> "$GITHUB_ENV"
+          echo "RESIGN_ALIAS=$ALIAS" >> "$GITHUB_ENV"
+          echo "keystore ok; alias=$ALIAS"
+
+      - name: apktool decode + rename launcher label + rebuild (self-healing) + resign
+        run: |
+          set -uo pipefail
           BT="$BUILD_TOOLS_DIR"
-          java -jar /tmp/apktool.jar d -f "$APK_DIR/leanback-armeabi_v7a.apk" -o /tmp/jmgo_dec
-          # 把所有 strings.xml 里的 app_name 改为「JMGO 兼容版」（UTF-8 写回）。
+          DECODED=/tmp/jmgo_dec
+          java -jar /tmp/apktool.jar d -f "$APK_DIR/leanback-armeabi_v7a.apk" -o "$DECODED" || { echo "::error::apktool decode failed"; exit 1; }
+          # 1) 把所有 strings.xml 里的 app_name 改为「JMGO 兼容版」（UTF-8 写回）。
           python3 - <<'PY'
           import re, glob
           hits = []
@@ -128,11 +149,11 @@ jobs:
                   r'\1JMGO 兼容版\2', s)
               if n:
                   open(f, 'w', encoding='utf-8').write(new_s)
-                  hits.append((f, n))
+                  hits.append(f)
           print("changed app_name in:", hits)
           PY
-          # 兜底：若 manifest 直接写死 label，同步替换（常见写法 android:label="..."）。
-          M=/tmp/jmgo_dec/AndroidManifest.xml
+          # 2) 兜底：若 manifest 直接写死 label，同步替换。
+          M="$DECODED/AndroidManifest.xml"
           if [[ -f "$M" ]]; then
             python3 - "$M" <<'PY'
           import re, sys
@@ -143,18 +164,47 @@ jobs:
           print("manifest label replaced:", n)
           PY
           fi
-          java -jar /tmp/apktool.jar b /tmp/jmgo_dec -o /tmp/jmgo-unsigned.apk
+          # 3) 写一次性剥离脚本（顶层 heredoc；循环内只调用它，规避嵌套 heredoc 缩进问题）。
+          cat > /tmp/strip_attr.py <<'PY'
+          import re, sys
+          p, attr = sys.argv[1], sys.argv[2]
+          s = open(p, encoding='utf-8').read()
+          new_s, n = re.subn(r'\s+android:' + re.escape(attr) + r'="[^"]*"', '', s)
+          print("removed", n, "occurrences of", attr, "in", p)
+          open(p, 'w', encoding='utf-8').write(new_s)
+          PY
+          # 4) 重打包；若 aapt2 报“attribute android:XXX not found”，自动剥离该属性后重试（最多 6 次）。
+          for attempt in 1 2 3 4 5 6; do
+            if java -jar /tmp/apktool.jar b "$DECODED" -o /tmp/jmgo-unsigned.apk 2> /tmp/build_err.txt; then
+              echo "apktool build ok (attempt $attempt)"; break
+            fi
+            line=$(grep -E 'attribute android:[A-Za-z_]+ not found' /tmp/build_err.txt | head -1 || true)
+            if [[ -z "$line" ]]; then
+              echo "::error::apktool build failed (non-attribute error):"; cat /tmp/build_err.txt; exit 1
+            fi
+            attr=$(printf '%s\n' "$line" | sed -E 's/.*attribute android:([A-Za-z_]+) not found.*/\1/')
+            file=$(printf '%s\n' "$line" | sed -E 's#.*(/tmp/jmgo_dec/[^:]+):[0-9]+:.*#\1#')
+            echo "attempt $attempt: stripping android:$attr from $file"
+            python3 /tmp/strip_attr.py "$file" "$attr"
+          done
+          [[ -f /tmp/jmgo-unsigned.apk ]] || { echo "::error::apktool build never succeeded after retries"; exit 1; }
+          # 5) 对齐 + 用解析出的 jmgo 密钥重签
           "$BT/zipalign" -p 4 /tmp/jmgo-unsigned.apk /tmp/jmgo-aligned.apk
-          "$BT/apksigner" sign --ks /tmp/jmgo.p12 --ks-type PKCS12 \
-            --ks-pass pass:"$KEY_PASS" --key-pass pass:"$KEY_PASS" \
-            --ks-key-alias "$KEY_ALIAS" \
+          SIGN_ARGS=(--ks /tmp/jmgo.p12 --ks-type PKCS12
+                     --ks-pass pass:"$RESIGN_PASS" --key-pass pass:"$RESIGN_PASS")
+          [[ -n "$RESIGN_ALIAS" ]] && SIGN_ARGS+=(--ks-key-alias "$RESIGN_ALIAS")
+          "$BT/apksigner" sign "${SIGN_ARGS[@]}" \
             --out "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" /tmp/jmgo-aligned.apk
           ls -l "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk"
           "$BT/apksigner" verify --print-certs "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" | head -8
-          # 确认 launcher label 已变
-          "$BT/aapt2" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || \
-          "$BT/aapt" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || \
-          echo "label check skipped (aapt unavailable)"
+          # 6) 确认 launcher label 已变
+          if [[ -x "$BT/aapt2" ]]; then
+            "$BT/aapt2" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || echo "label not found via aapt2"
+          elif [[ -x "$BT/aapt" ]]; then
+            "$BT/aapt" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || echo "label not found via aapt"
+          else
+            echo "label check skipped (aapt unavailable)"
+          fi
 
       - name: Publish resigned Release (do not delete existing)
         if: github.event_name == 'workflow_dispatch'
