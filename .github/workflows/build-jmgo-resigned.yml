@@ -1,0 +1,180 @@
+name: build-jmgo-resigned
+
+# 增强通道：在官方 FongMi/Release 5.8.7 的 leanback-armeabi_v7a 包基础上，
+# 用 apktool 把安装后桌面显示名（launcher label）改为「JMGO 兼容版」后重打包，
+# 并用仓库内置 jmgo 密钥重签，发布为一个独立 Release。
+# 既有的官方签名版 Release（JMGO 兼容版）保持不动、不删除。
+#
+# ⚠️ 重要代价：重签后 APK 不再使用官方签名，官方 runtime 模块
+# （Python / Node / QuickJS / MPV / BD-J / Thunder）与宿主 APK 的签名校验
+# 会不一致而失效；常规直链点播播放通常仍可用。
+# 触发：仅 workflow_dispatch（避免每次 push 都跑耗时的 apktool 流程）。
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_resigned:
+        description: '构建重签改造版（桌面名改为 JMGO 兼容版）'
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_REPO: FongMi/Release
+  UPSTREAM_TAG: '5.8.7'
+  PKG_NAME: 'com.fongmi.android.tv'
+  BUILD_TOOLS: '34.0.0'
+  APK_DIR: ${{ github.workspace }}/upstream-apks
+  OUT_DIR: ${{ github.workspace }}/jmgo-out
+  KEY_PASS: jmgo-compat-2026
+  KEY_ALIAS: jmgo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout tvbox repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Prepare Android build-tools + apktool
+        run: |
+          set -euo pipefail
+          if [[ -z "${ANDROID_HOME:-}" && -z "${ANDROID_SDK_ROOT:-}" ]]; then
+            for c in "$HOME/Android/Sdk" "/usr/local/lib/android/sdk" "/opt/android-sdk"; do
+              if [[ -d "$c" ]]; then ANDROID_HOME="$c"; break; fi
+            done
+          fi
+          ANDROID_HOME="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/android-sdk}}"
+          export ANDROID_HOME
+          export ANDROID_SDK_ROOT="$ANDROID_HOME"
+          mkdir -p "$ANDROID_HOME"
+          BT="$ANDROID_HOME/build-tools/$BUILD_TOOLS"
+          need_install=0
+          [[ ! -x "$BT/apksigner" ]] && need_install=1
+          if [[ "$need_install" -eq 1 ]]; then
+            SDKM=""
+            for c in "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+                     "$ANDROID_HOME/cmdline-tools/bin/sdkmanager" \
+                     "$ANDROID_HOME/tools/bin/sdkmanager"; do
+              [[ -x "$c" ]] && SDKM="$c" && break
+            done
+            [[ -z "$SDKM" ]] && {
+              curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-9862592_latest.zip -o /tmp/cmdtools.zip
+              mkdir -p "$ANDROID_HOME/cmdline-tools"
+              unzip -q -o /tmp/cmdtools.zip -d "$ANDROID_HOME/cmdline-tools"
+              mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+              SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+            }
+            "$SDKM" --install "build-tools;$BUILD_TOOLS" "platform-tools"
+          fi
+          test -x "$BT/apksigner"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "BUILD_TOOLS_DIR=$BT" >> "$GITHUB_ENV"
+          # apktool（反编译 / 重打包）
+          curl -fsSL --retry 3 --retry-delay 5 https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.9.3.jar -o /tmp/apktool.jar
+          test -f /tmp/apktool.jar
+          echo "build-tools ready: $BT"
+
+      - name: Decode jmgo keystore
+        run: |
+          set -euo pipefail
+          mkdir -p "$APK_DIR"
+          base64 -d "apps/jmgo/keystore/jmgo.p12.b64" > /tmp/jmgo.p12
+          test -s /tmp/jmgo.p12
+          echo "keystore decoded"
+
+      - name: Download official leanback-armeabi_v7a 5.8.7
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$APK_DIR"
+          api="https://api.github.com/repos/$UPSTREAM_REPO/releases"
+          auth=()
+          [[ -n "${GH_TOKEN:-}" ]] && auth=(-H "Authorization: Bearer $GH_TOKEN")
+          curl -fsSL --retry 3 --retry-delay 5 -H 'Accept: application/vnd.github+json' \
+               "${auth[@]}" "$api/tags/$UPSTREAM_TAG" -o /tmp/meta.json
+          aid=$(python3 -c "import json;d=json.load(open('/tmp/meta.json'));print([x for x in d['assets'] if x['name']=='leanback-armeabi_v7a.apk'][0]['id'])")
+          curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
+               -H 'Accept: application/octet-stream' "${auth[@]}" \
+               "$api/assets/$aid" -o "$APK_DIR/leanback-armeabi_v7a.apk"
+          ls -l "$APK_DIR/leanback-armeabi_v7a.apk"
+
+      - name: apktool decode + rename launcher label + rebuild + resign
+        run: |
+          set -euo pipefail
+          BT="$BUILD_TOOLS_DIR"
+          java -jar /tmp/apktool.jar d -f "$APK_DIR/leanback-armeabi_v7a.apk" -o /tmp/jmgo_dec
+          # 把所有 strings.xml 里的 app_name 改为「JMGO 兼容版」（UTF-8 写回）。
+          python3 - <<'PY'
+          import re, glob
+          hits = []
+          for f in glob.glob('/tmp/jmgo_dec/res/values*/strings.xml'):
+              s = open(f, encoding='utf-8').read()
+              new_s, n = re.subn(
+                  r'(<string name="app_name"[^>]*>)[^<]*(</string>)',
+                  r'\1JMGO 兼容版\2', s)
+              if n:
+                  open(f, 'w', encoding='utf-8').write(new_s)
+                  hits.append((f, n))
+          print("changed app_name in:", hits)
+          PY
+          # 兜底：若 manifest 直接写死 label，同步替换（常见写法 android:label="..."）。
+          M=/tmp/jmgo_dec/AndroidManifest.xml
+          if [[ -f "$M" ]]; then
+            python3 - "$M" <<'PY'
+          import re, sys
+          p = sys.argv[1]
+          s = open(p, encoding='utf-8').read()
+          new_s, n = re.subn(r'(android:label=")[^"]*(")', r'\1JMGO 兼容版\2', s)
+          open(p, 'w', encoding='utf-8').write(new_s)
+          print("manifest label replaced:", n)
+          PY
+          fi
+          java -jar /tmp/apktool.jar b /tmp/jmgo_dec -o /tmp/jmgo-unsigned.apk
+          "$BT/zipalign" -p 4 /tmp/jmgo-unsigned.apk /tmp/jmgo-aligned.apk
+          "$BT/apksigner" sign --ks /tmp/jmgo.p12 --ks-type PKCS12 \
+            --ks-pass pass:"$KEY_PASS" --key-pass pass:"$KEY_PASS" \
+            --ks-key-alias "$KEY_ALIAS" \
+            --out "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" /tmp/jmgo-aligned.apk
+          ls -l "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk"
+          "$BT/apksigner" verify --print-certs "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" | head -8
+          # 确认 launcher label 已变
+          "$BT/aapt2" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || \
+          "$BT/aapt" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || \
+          echo "label check skipped (aapt unavailable)"
+
+      - name: Publish resigned Release (do not delete existing)
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: jmgo-resigned-${{ github.run_id }}
+          name: JMGO 兼容版（重签·桌面显示 JMGO 兼容版）
+          body: |
+            # JMGO 兼容版（重签改造版）
+
+            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7 `leanback-armeabi_v7a` 包基础上，
+            用 apktool 把**安装后桌面显示名**改为 **JMGO 兼容版** 后重打包，并用仓库内置 jmgo 密钥重签发布。
+
+            - 安装后在投影仪桌面上显示名：**JMGO 兼容版**
+            - ⚠️ 因已重签（非官方签名），官方 runtime 模块（Python / Node / QuickJS / MPV / BD-J / Thunder）
+              与宿主 APK 签名校验不一致，**这些扩展模块会失效**；常规直链点播播放通常仍可用。
+            - 如需网盘 / Python 爬虫 / 蓝光 BD-J 等完整功能，请使用同仓库另一个
+              「JMGO 兼容版」（官方签名·完整功能）版本。
+            - 包名仍为 `com.fongmi.android.tv`，versionName `5.8.7`，可覆盖安装。
+          files: |
+            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.7-resigned.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
