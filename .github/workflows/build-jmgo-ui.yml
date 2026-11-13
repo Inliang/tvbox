@@ -8,11 +8,10 @@ name: build-jmgo-ui
 # 官方源码对应文件：app/src/leanback/res/layout/adapter_func.xml
 # 仓库无 app 源码，故用 apktool 反编译官方 APK 后替换该 layout 资源再重打包。
 #
-# ABI 选择（workflow_dispatch 输入 abi）：
-#   armeabi_v7a（默认）→ 坚果 N1S 4K 等 32 位 ARM 盒子，沿用旧文件名。
-#   arm64_v8a          → 64 位设备，以及 MuMu 等支持 arm64-v8a 但不带
-#                        armeabi-v7a 转译的 x86 模拟器（装 32 位包会报
-#                        INSTALL_FAILED_NO_MATCHING_ABIS / MuMu 错误码 -16）。
+# 单 Release 合并发布（用户 2026-11-13 要求）：一次构建同时产出 32 位（armeabi-v7a）
+# 与 64 位（arm64-v8a）两个 APK，合并到**同一个 Release** 发布，描述把两个架构写在一起。
+# 两个产物文件名：JMGO-Compatible-5.8.7-horizontal-ui.apk（32 位，无后缀）与
+# JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk（64 位）。
 # 上游 5.8.7 同时提供 leanback-armeabi_v7a.apk 与 leanback-arm64_v8a.apk。
 #
 # 桌面显示名约定（用户 2026-11-13 确立，长期有效）：
@@ -31,25 +30,14 @@ name: build-jmgo-ui
 #   1. 官方 runtime 模块（Python / Node / QuickJS / MPV / BD-J / Thunder）签名校验失效；
 #   2. 与官方签名版签名不同，无法覆盖安装，需先卸载旧版再装（记得先记下配置地址）。
 #
-# 按用户长期规则：只创建新 Release / 新 tag，绝不删除或覆盖任何已发布版本。
+# 按用户长期规则：默认只创建新 Release / 新 tag，绝不删除或覆盖任何已发布版本。
+# 唯一例外：用户**明确点名**某几个具体 Release 要求删除时，才走删除流程（经 API 手动删，
+# 不在本 workflow 内）。本 workflow 只负责「新增」合并 Release，不含任何删除动作。
+# 合并发布的 tag 用日期形式 jmgo-ui-YYYY-MM-DD（当日重跑需手动改日期或追加后缀避免冲突）。
 # 触发：仅 workflow_dispatch。
 
 on:
   workflow_dispatch:
-    inputs:
-      build_ui:
-        description: '构建首页横条按钮改造版'
-        type: boolean
-        required: false
-        default: true
-      abi:
-        description: '目标 CPU 架构（32位 ARM 给坚果 N1S；64位给 MuMu 等模拟器）'
-        type: choice
-        required: false
-        default: 'armeabi_v7a'
-        options:
-          - armeabi_v7a
-          - arm64_v8a
 
 permissions:
   contents: write
@@ -62,8 +50,6 @@ env:
   BUILD_TOOLS: '34.0.0'
   APK_DIR: ${{ github.workspace }}/upstream-apks
   OUT_DIR: ${{ github.workspace }}/jmgo-out
-  # 32 位沿用历史文件名保持兼容；64 位单独命名，避免与既有资产混淆。
-  DELIVERABLE: ${{ inputs.abi == 'arm64_v8a' && 'JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk' || 'JMGO-Compatible-5.8.7-horizontal-ui.apk' }}
   KEY_PASS: jmgo-compat-2026
   KEY_ALIAS: jmgo
 
@@ -145,60 +131,40 @@ jobs:
           echo "RESIGN_ALIAS=$ALIAS" >> "$GITHUB_ENV"
           echo "keystore ok; alias=$ALIAS"
 
-      - name: Download official leanback 5.8.7 (selected ABI)
+      - name: Download official leanback 5.8.7 (both ABIs)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          ABI="${{ inputs.abi || 'armeabi_v7a' }}"
-          ASSET="leanback-${ABI}.apk"
-          if [[ "$ABI" == "arm64_v8a" ]]; then
-            DELIVER="JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk"
-            APP_LABEL="JMGO 兼容版 64位"
-          else
-            DELIVER="JMGO-Compatible-5.8.7-horizontal-ui.apk"
-            APP_LABEL="JMGO 兼容版"
-          fi
-          echo "target asset: $ASSET  deliverable: $DELIVER  label: $APP_LABEL"
+          mkdir -p "$APK_DIR"
           api="https://api.github.com/repos/$UPSTREAM_REPO/releases"
           auth=()
           [[ -n "${GH_TOKEN:-}" ]] && auth=(-H "Authorization: Bearer $GH_TOKEN")
           curl -fsSL --retry 3 --retry-delay 5 -H 'Accept: application/vnd.github+json' \
                "${auth[@]}" "$api/tags/$UPSTREAM_TAG" -o /tmp/meta.json
-          aid=$(ASSET="$ASSET" python3 -c 'import json,os;d=json.load(open("/tmp/meta.json"));m=[x for x in d["assets"] if x["name"]==os.environ["ASSET"]];print(m[0]["id"] if m else "")')
-          [[ -z "$aid" ]] && { echo "::error::asset $ASSET not found in upstream $UPSTREAM_TAG"; exit 1; }
-          curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
-               -H 'Accept: application/octet-stream' "${auth[@]}" \
-               "$api/assets/$aid" -o "$APK_DIR/$ASSET"
-          ls -l "$APK_DIR/$ASSET"
-          echo "SRC_APK=$APK_DIR/$ASSET" >> "$GITHUB_ENV"
-          # 双保险：即便顶层 env 表达式未生效，后续步骤也拿到正确的交付文件名
-          echo "DELIVERABLE=$DELIVER" >> "$GITHUB_ENV"
-          # 32 位与 64 位桌面名不同，由补丁脚本从环境变量读取
-          echo "APP_LABEL=$APP_LABEL" >> "$GITHUB_ENV"
+          for ABI in armeabi_v7a arm64_v8a; do
+            ASSET="leanback-${ABI}.apk"
+            aid=$(ASSET="$ASSET" python3 -c 'import json,os;d=json.load(open("/tmp/meta.json"));m=[x for x in d["assets"] if x["name"]==os.environ["ASSET"]];print(m[0]["id"] if m else "")')
+            [[ -z "$aid" ]] && { echo "::error::asset $ASSET not found in upstream $UPSTREAM_TAG"; exit 1; }
+            curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
+                 -H 'Accept: application/octet-stream' "${auth[@]}" \
+                 "$api/assets/$aid" -o "$APK_DIR/$ASSET"
+            ls -l "$APK_DIR/$ASSET"
+          done
 
-      - name: Patch home function buttons + rebuild + resign
+      - name: Patch home function buttons + rebuild + resign (both ABIs)
         run: |
           set -uo pipefail
           BT="$BUILD_TOOLS_DIR"
-          DECODED=/tmp/jmgo_dec
           mkdir -p "$OUT_DIR"
-          echo "source APK: $SRC_APK"
-          java -jar /tmp/apktool.jar d -f "$SRC_APK" -o "$DECODED" \
-            || { echo "::error::apktool decode failed"; exit 1; }
 
-          # 包名改造：官方 com.fongmi.android.tv -> com.jmgo.android.tv
-          # （脚本处理 manifest package / provider authority / smali 目录与所有引用）
-          python3 "${{ github.workspace }}/apps/jmgo/scripts/rename_package.py" \
-            --decoded-dir "$DECODED" \
-            --old "$OLD_PKG_NAME" --new "$NEW_PKG_NAME" \
-            || { echo "::error::package rename failed"; exit 1; }
-
-          # 一次性补丁脚本写到 /tmp，避免循环内嵌套 heredoc 的缩进陷阱
+          # 一次性补丁脚本写到 /tmp，由环境变量 DECODED_DIR / APP_LABEL 驱动，循环内多次调用
           cat > /tmp/patch_func.py <<'PY'
-          import glob, sys
+          import glob, sys, os, re
 
-          ROOT = '/tmp/jmgo_dec'
+          ROOT = os.environ['DECODED_DIR']
+          LABEL = os.environ.get('APP_LABEL', 'JMGO 兼容版')
+
           # 横向长方形：图标在左、文字在右，高度由 100dp 降到 56dp
           # apktool 反编译后 id 写成 @id/xxx（复用已有资源），不能写成 @+id/xxx，
           # 否则会新建同名资源 ID，代码里的 findViewById(R.id.icon) 可能对不上。
@@ -232,7 +198,7 @@ jobs:
 
           files = sorted(glob.glob(ROOT + '/res/**/adapter_func.xml', recursive=True))
           if not files:
-              print('::error::adapter_func.xml not found. layout samples:')
+              print('::error::adapter_func.xml not found under', ROOT)
               for f in sorted(glob.glob(ROOT + '/res/layout*/*.xml'))[:40]:
                   print('  ', f)
               sys.exit(1)
@@ -255,16 +221,11 @@ jobs:
               print('=== AFTER', f, '(id prefix =', id_prefix, ') ===')
               print(new)
           print('patched', len(files), 'layout file(s)')
-          PY
-          python3 /tmp/patch_func.py || { echo "::error::layout patch failed"; exit 1; }
 
           # 桌面名：32 位「JMGO 兼容版」，64 位「JMGO 兼容版 64位」
           # 用 lambda 而非替换字符串，避免标签里出现反斜杠时被当成反向引用。
-          python3 - <<'PY'
-          import re, glob, os
-          LABEL = os.environ.get('APP_LABEL', 'JMGO 兼容版')
           hits = []
-          for f in glob.glob('/tmp/jmgo_dec/res/values*/strings.xml'):
+          for f in glob.glob(ROOT + '/res/values*/strings.xml'):
               s = open(f, encoding='utf-8').read()
               new_s, n = re.subn(r'(<string name="app_name"[^>]*>)[^<]*(</string>)',
                                  lambda m: m.group(1) + LABEL + m.group(2), s)
@@ -272,20 +233,15 @@ jobs:
                   open(f, 'w', encoding='utf-8').write(new_s)
                   hits.append(f)
           print('app_name ->', LABEL, 'in', hits)
+
+          M = ROOT + '/AndroidManifest.xml'
+          if os.path.isfile(M):
+              s = open(M, encoding='utf-8').read()
+              new_s, n = re.subn(r'(android:label=")[^"]*(")',
+                                 lambda m: m.group(1) + LABEL + m.group(2), s)
+              open(M, 'w', encoding='utf-8').write(new_s)
+              print('manifest label ->', LABEL, 'count:', n)
           PY
-          M="$DECODED/AndroidManifest.xml"
-          if [[ -f "$M" ]]; then
-            python3 - "$M" <<'PY'
-          import re, sys, os
-          p = sys.argv[1]
-          LABEL = os.environ.get('APP_LABEL', 'JMGO 兼容版')
-          s = open(p, encoding='utf-8').read()
-          new_s, n = re.subn(r'(android:label=")[^"]*(")',
-                             lambda m: m.group(1) + LABEL + m.group(2), s)
-          open(p, 'w', encoding='utf-8').write(new_s)
-          print('manifest label ->', LABEL, 'count:', n)
-          PY
-          fi
 
           cat > /tmp/strip_attr.py <<'PY'
           import re, sys
@@ -295,64 +251,95 @@ jobs:
           print('removed', n, 'occurrences of', attr, 'in', p)
           open(p, 'w', encoding='utf-8').write(new_s)
           PY
-          for attempt in 1 2 3 4 5 6; do
-            if java -jar /tmp/apktool.jar b "$DECODED" -o /tmp/jmgo-unsigned.apk 2> /tmp/build_err.txt; then
-              echo "apktool build ok (attempt $attempt)"; break
+
+          # arch spec: abi|deliverable|label
+          SPECS=(
+            "armeabi_v7a|JMGO-Compatible-5.8.7-horizontal-ui.apk|JMGO 兼容版"
+            "arm64_v8a|JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk|JMGO 兼容版 64位"
+          )
+          for spec in "${SPECS[@]}"; do
+            IFS='|' read -r ABI DELIVER LABEL <<< "$spec"
+            echo "============= building $ABI -> $DELIVER ($LABEL) ============="
+            SRC="$APK_DIR/leanback-${ABI}.apk"
+            DECODED="/tmp/jmgo_dec_${ABI}"
+            rm -rf "$DECODED"; mkdir -p "$DECODED"
+            java -jar /tmp/apktool.jar d -f "$SRC" -o "$DECODED" \
+              || { echo "::error::apktool decode failed for $ABI"; exit 1; }
+
+            # 包名改造：官方 com.fongmi.android.tv -> com.jmgo.android.tv
+            # （脚本处理 manifest package / provider authority / smali 目录与所有引用）
+            python3 "${{ github.workspace }}/apps/jmgo/scripts/rename_package.py" \
+              --decoded-dir "$DECODED" \
+              --old "$OLD_PKG_NAME" --new "$NEW_PKG_NAME" \
+              || { echo "::error::package rename failed for $ABI"; exit 1; }
+
+            APP_LABEL="$LABEL" DECODED_DIR="$DECODED" python3 /tmp/patch_func.py \
+              || { echo "::error::layout/label patch failed for $ABI"; exit 1; }
+
+            for attempt in 1 2 3 4 5 6; do
+              if java -jar /tmp/apktool.jar b "$DECODED" -o /tmp/jmgo-unsigned.apk 2> /tmp/build_err.txt; then
+                echo "apktool build ok (attempt $attempt)"; break
+              fi
+              line=$(grep -E 'attribute android:[A-Za-z_]+ not found' /tmp/build_err.txt | head -1 || true)
+              if [[ -z "$line" ]]; then
+                echo "::error::apktool build failed for $ABI:"; cat /tmp/build_err.txt; exit 1
+              fi
+              attr=$(printf '%s\n' "$line" | sed -E 's/.*attribute android:([A-Za-z_]+) not found.*/\1/')
+              file=$(printf '%s\n' "$line" | sed -E 's#.*(/tmp/jmgo_dec_[^:]+):[0-9]+:.*#\1#')
+              echo "attempt $attempt: stripping android:$attr from $file"
+              python3 /tmp/strip_attr.py "$file" "$attr"
+            done
+            [[ -f /tmp/jmgo-unsigned.apk ]] || { echo "::error::apktool build never succeeded for $ABI"; exit 1; }
+
+            "$BT/zipalign" -p 4 /tmp/jmgo-unsigned.apk /tmp/jmgo-aligned.apk
+            SIGN_ARGS=(--ks /tmp/jmgo.p12 --ks-type PKCS12
+                       --ks-pass pass:"$RESIGN_PASS" --key-pass pass:"$RESIGN_PASS")
+            [[ -n "$RESIGN_ALIAS" ]] && SIGN_ARGS+=(--ks-key-alias "$RESIGN_ALIAS")
+            "$BT/apksigner" sign "${SIGN_ARGS[@]}" \
+              --out "$OUT_DIR/$DELIVER" /tmp/jmgo-aligned.apk
+            ls -l "$OUT_DIR/$DELIVER"
+            "$BT/apksigner" verify --print-certs "$OUT_DIR/$DELIVER" | head -8
+
+            # 确认打出来的包确实是所选 ABI（防止误把 32 位包当 64 位发出去）
+            echo "=== packaged native ABIs ($ABI) ==="
+            python3 -c 'import sys,zipfile,re;z=zipfile.ZipFile(sys.argv[1]);print(sorted({m.group(1) for n in z.namelist() if (m:=re.match(r"lib/([^/]+)/",n))}))' "$OUT_DIR/$DELIVER"
+
+            # 回读编译后的二进制 XML，确认横向布局真的进了 APK
+            echo "=== compiled adapter_func.xml attributes ($ABI) ==="
+            "$BT/aapt2" dump xmltree "$OUT_DIR/$DELIVER" \
+              --file res/layout/adapter_func.xml 2>/dev/null \
+              | grep -E 'orientation|layout_width|layout_height|gravity' | head -12 \
+              || echo "aapt2 xmltree check skipped"
+            if [[ -x "$BT/aapt2" ]]; then
+              "$BT/aapt2" dump badging "$OUT_DIR/$DELIVER" 2>/dev/null \
+                | grep -i "application-label" || true
+              # 确认重签包的新包名已生效（漏改则与官方包撞名，装机会 -7）
+              PKG=$("$BT/aapt2" dump badging "$OUT_DIR/$DELIVER" 2>/dev/null \
+                | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
+              echo "built package ($ABI): ${PKG:-<unknown>}"
+              [[ "$PKG" == "$NEW_PKG_NAME" ]] \
+                || { echo "::error::expected package $NEW_PKG_NAME but got $PKG"; exit 1; }
+            else
+              echo "::warning::aapt2 缺失，跳过包名断言（改名逻辑未经校验）"
             fi
-            line=$(grep -E 'attribute android:[A-Za-z_]+ not found' /tmp/build_err.txt | head -1 || true)
-            if [[ -z "$line" ]]; then
-              echo "::error::apktool build failed:"; cat /tmp/build_err.txt; exit 1
-            fi
-            attr=$(printf '%s\n' "$line" | sed -E 's/.*attribute android:([A-Za-z_]+) not found.*/\1/')
-            file=$(printf '%s\n' "$line" | sed -E 's#.*(/tmp/jmgo_dec/[^:]+):[0-9]+:.*#\1#')
-            echo "attempt $attempt: stripping android:$attr from $file"
-            python3 /tmp/strip_attr.py "$file" "$attr"
           done
-          [[ -f /tmp/jmgo-unsigned.apk ]] || { echo "::error::apktool build never succeeded"; exit 1; }
 
-          "$BT/zipalign" -p 4 /tmp/jmgo-unsigned.apk /tmp/jmgo-aligned.apk
-          SIGN_ARGS=(--ks /tmp/jmgo.p12 --ks-type PKCS12
-                     --ks-pass pass:"$RESIGN_PASS" --key-pass pass:"$RESIGN_PASS")
-          [[ -n "$RESIGN_ALIAS" ]] && SIGN_ARGS+=(--ks-key-alias "$RESIGN_ALIAS")
-          "$BT/apksigner" sign "${SIGN_ARGS[@]}" \
-            --out "$OUT_DIR/$DELIVERABLE" /tmp/jmgo-aligned.apk
-          ls -l "$OUT_DIR/$DELIVERABLE"
-          "$BT/apksigner" verify --print-certs "$OUT_DIR/$DELIVERABLE" | head -8
+      - name: Prepare date-based release tag
+        if: github.event_name == 'workflow_dispatch'
+        id: reltag
+        run: echo "tag=jmgo-ui-$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
 
-          # 确认打出来的包确实是所选 ABI（防止误把 32 位包当 64 位发出去）
-          echo "=== packaged native ABIs ==="
-          python3 -c 'import sys,zipfile,re;z=zipfile.ZipFile(sys.argv[1]);print(sorted({m.group(1) for n in z.namelist() if (m:=re.match(r"lib/([^/]+)/",n))}))' "$OUT_DIR/$DELIVERABLE"
-
-          # 回读编译后的二进制 XML，确认横向布局真的进了 APK
-          echo "=== compiled adapter_func.xml attributes ==="
-          "$BT/aapt2" dump xmltree "$OUT_DIR/$DELIVERABLE" \
-            --file res/layout/adapter_func.xml 2>/dev/null \
-            | grep -E 'orientation|layout_width|layout_height|gravity' | head -12 \
-            || echo "aapt2 xmltree check skipped"
-          if [[ -x "$BT/aapt2" ]]; then
-            "$BT/aapt2" dump badging "$OUT_DIR/$DELIVERABLE" 2>/dev/null \
-              | grep -i "application-label" || true
-            # 确认重签包的新包名已生效（漏改则与官方包撞名，装机会 -7）
-            PKG=$("$BT/aapt2" dump badging "$OUT_DIR/$DELIVERABLE" 2>/dev/null \
-              | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
-            echo "built package: ${PKG:-<unknown>}"
-            [[ "$PKG" == "$NEW_PKG_NAME" ]] \
-              || { echo "::error::expected package $NEW_PKG_NAME but got $PKG"; exit 1; }
-          else
-            echo "::warning::aapt2 缺失，跳过包名断言（改名逻辑未经校验）"
-          fi
-
-      - name: Publish UI Release (new tag only, keep all existing)
+      - name: Publish combined UI Release (32+64, new tag only, keep all existing)
         if: github.event_name == 'workflow_dispatch'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: jmgo-ui-${{ github.run_id }}
-          name: ${{ inputs.abi == 'arm64_v8a' && 'JMGO 兼容版（首页横条按钮·64位）' || 'JMGO 兼容版（首页横条按钮·32位）' }}
+          tag_name: ${{ steps.reltag.outputs.tag }}
+          name: JMGO 兼容版（首页横条按钮·32位+64位）
+          fail_on_unmatched_files: true
           body: |
-            # JMGO 兼容版 · 首页横条按钮版
+            # JMGO 兼容版 · 首页横条按钮版（32 位 + 64 位合并发布）
 
-            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7
-            `leanback-${{ inputs.abi || 'armeabi_v7a' }}` 包基础上，
+            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7 基础上，
             把首页 **历史 / 直播 / 搜索 / 推送 / 收藏 / 设置** 这 6 个功能按钮从
             `100dp × 100dp` 正方形（图标在上、文字在下）改成
             **`120dp × 56dp` 横向长方形**（图标在左、文字在右），
@@ -361,12 +348,14 @@ jobs:
             桌面显示名按架构区分：**32 位 = `JMGO 兼容版`**，**64 位 = `JMGO 兼容版 64位`**，
             两个架构同时装在同一台设备上也能一眼区分。
 
-            ## CPU 架构：${{ inputs.abi || 'armeabi_v7a' }}
+            ## 本 Release 同时包含两个架构
 
-            - `armeabi_v7a`（32 位 ARM）：给坚果 N1S 4K 等 32 位盒子用，文件名不带后缀。
-            - `arm64_v8a`（64 位 ARM）：给 **64 位电视盒子 / 投影仪**，以及 **MuMu 等只支持
-              `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器**用，
-              文件名带 `-arm64` 后缀。64 位同为首页横条按钮的完整电视版，并非仅模拟器可用。
+            | 架构 | 文件名 | 适用设备 | 桌面显示名 |
+            | --- | --- | --- | --- |
+            | `armeabi_v7a`（32 位 ARM） | `JMGO-Compatible-5.8.7-horizontal-ui.apk` | 坚果 N1S 4K 等 32 位盒子 | JMGO 兼容版 |
+            | `arm64_v8a`（64 位 ARM） | `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 64 位电视盒子 / 投影仪；MuMu 等只支持 `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器 | JMGO 兼容版 64位 |
+
+            - 64 位同为首页横条按钮的完整电视版，**并非仅模拟器可用**。
             - 在 x86 模拟器上装 32 位 ARM 包会报 `INSTALL_FAILED_NO_MATCHING_ABIS`
               （MuMu 界面显示「错误码 -16」），**不是安装包损坏**，换本页 64 位版即可。
 
@@ -388,6 +377,7 @@ jobs:
             `com.fongmi.android.tv` 及任何其它 TVBox 包名都**不同，可直接共存、互不覆盖**；
             versionName 仍为 `5.8.7`。
           files: |
-            ${{ github.workspace }}/jmgo-out/${{ env.DELIVERABLE }}
+            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.7-horizontal-ui.apk
+            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
