@@ -1,12 +1,19 @@
 name: build-jmgo-ui
 
-# UI 改造通道：在官方 FongMi/Release 5.8.7 的 leanback-armeabi_v7a 包基础上，
+# UI 改造通道：在官方 FongMi/Release 5.8.7 的 leanback 包基础上，
 # 把首页「历史 / 直播 / 搜索 / 推送 / 收藏 / 设置」6 个功能按钮从
 # 100dp x 100dp 的正方形（图标在上、文字在下）改成横向长方形
 # （图标在左、文字在右、高度 56dp），减少占用的垂直空间。
 #
 # 官方源码对应文件：app/src/leanback/res/layout/adapter_func.xml
 # 仓库无 app 源码，故用 apktool 反编译官方 APK 后替换该 layout 资源再重打包。
+#
+# ABI 选择（workflow_dispatch 输入 abi）：
+#   armeabi_v7a（默认）→ 坚果 N1S 4K 等 32 位 ARM 盒子，沿用旧文件名。
+#   arm64_v8a          → 64 位设备，以及 MuMu 等支持 arm64-v8a 但不带
+#                        armeabi-v7a 转译的 x86 模拟器（装 32 位包会报
+#                        INSTALL_FAILED_NO_MATCHING_ABIS / MuMu 错误码 -16）。
+# 上游 5.8.7 同时提供 leanback-armeabi_v7a.apk 与 leanback-arm64_v8a.apk。
 #
 # ⚠️ 重打包必然重签（非官方签名）：
 #   1. 官方 runtime 模块（Python / Node / QuickJS / MPV / BD-J / Thunder）签名校验失效；
@@ -23,6 +30,14 @@ on:
         type: boolean
         required: false
         default: true
+      abi:
+        description: '目标 CPU 架构（32位 ARM 给坚果 N1S；64位给 MuMu 等模拟器）'
+        type: choice
+        required: false
+        default: 'armeabi_v7a'
+        options:
+          - armeabi_v7a
+          - arm64_v8a
 
 permissions:
   contents: write
@@ -34,7 +49,8 @@ env:
   BUILD_TOOLS: '34.0.0'
   APK_DIR: ${{ github.workspace }}/upstream-apks
   OUT_DIR: ${{ github.workspace }}/jmgo-out
-  DELIVERABLE: JMGO-Compatible-5.8.7-horizontal-ui.apk
+  # 32 位沿用历史文件名保持兼容；64 位单独命名，避免与既有资产混淆。
+  DELIVERABLE: ${{ inputs.abi == 'arm64_v8a' && 'JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk' || 'JMGO-Compatible-5.8.7-horizontal-ui.apk' }}
   KEY_PASS: jmgo-compat-2026
   KEY_ALIAS: jmgo
 
@@ -116,21 +132,33 @@ jobs:
           echo "RESIGN_ALIAS=$ALIAS" >> "$GITHUB_ENV"
           echo "keystore ok; alias=$ALIAS"
 
-      - name: Download official leanback-armeabi_v7a 5.8.7
+      - name: Download official leanback 5.8.7 (selected ABI)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          ABI="${{ inputs.abi || 'armeabi_v7a' }}"
+          ASSET="leanback-${ABI}.apk"
+          if [[ "$ABI" == "arm64_v8a" ]]; then
+            DELIVER="JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk"
+          else
+            DELIVER="JMGO-Compatible-5.8.7-horizontal-ui.apk"
+          fi
+          echo "target asset: $ASSET  deliverable: $DELIVER"
           api="https://api.github.com/repos/$UPSTREAM_REPO/releases"
           auth=()
           [[ -n "${GH_TOKEN:-}" ]] && auth=(-H "Authorization: Bearer $GH_TOKEN")
           curl -fsSL --retry 3 --retry-delay 5 -H 'Accept: application/vnd.github+json' \
                "${auth[@]}" "$api/tags/$UPSTREAM_TAG" -o /tmp/meta.json
-          aid=$(python3 -c "import json;d=json.load(open('/tmp/meta.json'));print([x for x in d['assets'] if x['name']=='leanback-armeabi_v7a.apk'][0]['id'])")
+          aid=$(ASSET="$ASSET" python3 -c 'import json,os;d=json.load(open("/tmp/meta.json"));m=[x for x in d["assets"] if x["name"]==os.environ["ASSET"]];print(m[0]["id"] if m else "")')
+          [[ -z "$aid" ]] && { echo "::error::asset $ASSET not found in upstream $UPSTREAM_TAG"; exit 1; }
           curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
                -H 'Accept: application/octet-stream' "${auth[@]}" \
-               "$api/assets/$aid" -o "$APK_DIR/leanback-armeabi_v7a.apk"
-          ls -l "$APK_DIR/leanback-armeabi_v7a.apk"
+               "$api/assets/$aid" -o "$APK_DIR/$ASSET"
+          ls -l "$APK_DIR/$ASSET"
+          echo "SRC_APK=$APK_DIR/$ASSET" >> "$GITHUB_ENV"
+          # 双保险：即便顶层 env 表达式未生效，后续步骤也拿到正确的交付文件名
+          echo "DELIVERABLE=$DELIVER" >> "$GITHUB_ENV"
 
       - name: Patch home function buttons + rebuild + resign
         run: |
@@ -138,7 +166,8 @@ jobs:
           BT="$BUILD_TOOLS_DIR"
           DECODED=/tmp/jmgo_dec
           mkdir -p "$OUT_DIR"
-          java -jar /tmp/apktool.jar d -f "$APK_DIR/leanback-armeabi_v7a.apk" -o "$DECODED" \
+          echo "source APK: $SRC_APK"
+          java -jar /tmp/apktool.jar d -f "$SRC_APK" -o "$DECODED" \
             || { echo "::error::apktool decode failed"; exit 1; }
 
           # 一次性补丁脚本写到 /tmp，避免循环内嵌套 heredoc 的缩进陷阱
@@ -262,6 +291,10 @@ jobs:
           ls -l "$OUT_DIR/$DELIVERABLE"
           "$BT/apksigner" verify --print-certs "$OUT_DIR/$DELIVERABLE" | head -8
 
+          # 确认打出来的包确实是所选 ABI（防止误把 32 位包当 64 位发出去）
+          echo "=== packaged native ABIs ==="
+          python3 -c 'import sys,zipfile,re;z=zipfile.ZipFile(sys.argv[1]);print(sorted({m.group(1) for n in z.namelist() if (m:=re.match(r"lib/([^/]+)/",n))}))' "$OUT_DIR/$DELIVERABLE"
+
           # 回读编译后的二进制 XML，确认横向布局真的进了 APK
           echo "=== compiled adapter_func.xml attributes ==="
           "$BT/aapt2" dump xmltree "$OUT_DIR/$DELIVERABLE" \
@@ -278,20 +311,31 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: jmgo-ui-${{ github.run_id }}
-          name: JMGO 兼容版（首页横条按钮·省空间）
+          name: ${{ inputs.abi == 'arm64_v8a' && 'JMGO 兼容版（首页横条按钮·64位·模拟器可用）' || 'JMGO 兼容版（首页横条按钮·省空间）' }}
           body: |
             # JMGO 兼容版 · 首页横条按钮版
 
-            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7 `leanback-armeabi_v7a` 包基础上，
+            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7
+            `leanback-${{ inputs.abi || 'armeabi_v7a' }}` 包基础上，
             把首页 **历史 / 直播 / 搜索 / 推送 / 收藏 / 设置** 这 6 个功能按钮从
             `100dp × 100dp` 正方形（图标在上、文字在下）改成
             **`120dp × 56dp` 横向长方形**（图标在左、文字在右），
             垂直占用减少约 44%，给下方海报墙腾出空间。桌面显示名仍为 **JMGO 兼容版**。
 
+            ## CPU 架构：${{ inputs.abi || 'armeabi_v7a' }}
+
+            - `armeabi_v7a`（32 位 ARM）：给坚果 N1S 4K 等 32 位盒子用，文件名不带后缀。
+            - `arm64_v8a`（64 位 ARM）：给 64 位设备，以及 **MuMu 等只支持
+              `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器**用，
+              文件名带 `-arm64` 后缀。
+            - 在 x86 模拟器上装 32 位 ARM 包会报 `INSTALL_FAILED_NO_MATCHING_ABIS`
+              （MuMu 界面显示「错误码 -16」），**不是安装包损坏**，换本页 64 位版即可。
+
             ## 安装前必读
 
             - ⚠️ **签名与官方签名版不同，无法覆盖安装**：请先卸载旧版再安装，
               卸载前记下你的「配置地址」，装好后重新导入一次（本地播放记录 / 收藏会清空）。
+              模拟器里若已装过其它 `com.fongmi.android.tv`（如 5.6.3），同样必须先卸载。
             - ⚠️ 因已重签（非官方签名），官方 runtime 模块（Python / Node / QuickJS /
               MPV / BD-J / Thunder）与宿主 APK 签名校验不一致，**这些扩展模块会失效**；
               常规直链点播与直播播放不受影响。需要网盘 / Python 爬虫 / 蓝光 BD-J 等完整功能，
@@ -299,7 +343,7 @@ jobs:
 
             ## 版本关系
 
-            这是一个**全新 Release / 全新 tag**，此前已发布的三个版本全部保留、未删除、未覆盖，
+            这是一个**全新 Release / 全新 tag**，此前已发布的所有版本全部保留、未删除、未覆盖，
             需要回退随时可以下载旧版。包名仍为 `com.fongmi.android.tv`，versionName `5.8.7`。
           files: |
             ${{ github.workspace }}/jmgo-out/${{ env.DELIVERABLE }}
