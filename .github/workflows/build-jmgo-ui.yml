@@ -31,7 +31,8 @@ name: build-jmgo-ui
 # 按用户长期规则：默认只创建新 Release / 新 tag，绝不删除或覆盖任何已发布版本。
 # 唯一例外：用户**明确点名**某几个具体 Release 要求删除时，才走删除流程（经 API 手动删，
 # 不在本 workflow 内）。本 workflow 只负责「新增」合并 Release，不含任何删除动作。
-# 合并发布的 tag 用日期形式 jmgo-ui-YYYY-MM-DD（当日重跑需手动改日期或追加后缀避免冲突）。
+# 合并发布的 tag 用「YYYYMMDD + 当日序号」纯数字（用户 2026-11-13 确立）：
+# 例 2026-11-13 第 1 版 = 20261113001，第 2 版 = 20261113002；同日重跑自动顺延序号，永不冲突。
 # 触发：仅 workflow_dispatch。
 
 on:
@@ -324,20 +325,22 @@ jobs:
             fi
           done
 
-      - name: Prepare date-based release tag
+      - name: Prepare date-based release tag (YYYYMMDD + 当日序号)
         if: github.event_name == 'workflow_dispatch'
         id: reltag
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -uo pipefail
-          base="jmgo-ui-$(date +%Y-%m-%d)"
-          tag="$base"
-          n=2
+          # 命名规则（用户 2026-11-13 确立）：YYYYMMDD + 当日第几版（3 位补零）
+          # 例：2026-11-13 第 1 版 = 20261113001，第 2 版 = 20261113002 ……
+          base=$(date +%Y%m%d)
+          n=1
           while curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-                "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$tag" >/dev/null 2>&1; do
-            tag="${base}-${n}"; n=$((n+1))
+                "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/${base}$(printf '%03d' "$n")" >/dev/null 2>&1; do
+            n=$((n+1))
           done
+          tag="${base}$(printf '%03d' "$n")"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "release tag: $tag"
 
