@@ -137,6 +137,7 @@ jobs:
           set -uo pipefail
           BT="$BUILD_TOOLS_DIR"
           DECODED=/tmp/jmgo_dec
+          mkdir -p "$OUT_DIR"   # apksigner --out 不会自动建目录，缺了会 FileNotFoundException
           java -jar /tmp/apktool.jar d -f "$APK_DIR/leanback-armeabi_v7a.apk" -o "$DECODED" || { echo "::error::apktool decode failed"; exit 1; }
           # 1) 把所有 strings.xml 里的 app_name 改为「JMGO 兼容版」（UTF-8 写回）。
           python3 - <<'PY'
