@@ -25,7 +25,8 @@ permissions:
 env:
   UPSTREAM_REPO: FongMi/Release
   UPSTREAM_TAG: '5.8.7'
-  PKG_NAME: 'com.fongmi.android.tv'
+  OLD_PKG_NAME: 'com.fongmi.android.tv'
+  NEW_PKG_NAME: 'com.jmgo.android.tv'
   BUILD_TOOLS: '34.0.0'
   APK_DIR: ${{ github.workspace }}/upstream-apks
   OUT_DIR: ${{ github.workspace }}/jmgo-out
@@ -139,6 +140,12 @@ jobs:
           DECODED=/tmp/jmgo_dec
           mkdir -p "$OUT_DIR"   # apksigner --out 不会自动建目录，缺了会 FileNotFoundException
           java -jar /tmp/apktool.jar d -f "$APK_DIR/leanback-armeabi_v7a.apk" -o "$DECODED" || { echo "::error::apktool decode failed"; exit 1; }
+          # 0) 包名改造：官方 com.fongmi.android.tv -> com.jmgo.android.tv
+          #    （脚本处理 manifest package / provider authority / smali 目录与所有引用）
+          python3 "${{ github.workspace }}/apps/jmgo/scripts/rename_package.py" \
+            --decoded-dir "$DECODED" \
+            --old "$OLD_PKG_NAME" --new "$NEW_PKG_NAME" \
+            || { echo "::error::package rename failed"; exit 1; }
           # 1) 把所有 strings.xml 里的 app_name 改为「JMGO 兼容版」（UTF-8 写回）。
           python3 - <<'PY'
           import re, glob
@@ -198,14 +205,20 @@ jobs:
             --out "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" /tmp/jmgo-aligned.apk
           ls -l "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk"
           "$BT/apksigner" verify --print-certs "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" | head -8
-          # 6) 确认 launcher label 已变
+          # 6) 确认 launcher label 与包名均已变
+          TARGET="$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk"
           if [[ -x "$BT/aapt2" ]]; then
-            "$BT/aapt2" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || echo "label not found via aapt2"
+            "$BT/aapt2" dump badging "$TARGET" 2>/dev/null | grep -i "application-label" || echo "label not found via aapt2"
+            PKG=$("$BT/aapt2" dump badging "$TARGET" 2>/dev/null | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
           elif [[ -x "$BT/aapt" ]]; then
-            "$BT/aapt" dump badging "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" 2>/dev/null | grep -i "application-label" || echo "label not found via aapt"
+            "$BT/aapt" dump badging "$TARGET" 2>/dev/null | grep -i "application-label" || echo "label not found via aapt"
+            PKG=$("$BT/aapt" dump badging "$TARGET" 2>/dev/null | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
           else
-            echo "label check skipped (aapt unavailable)"
+            echo "label check skipped (aapt unavailable)"; PKG=""
           fi
+          echo "built package: ${PKG:-<unknown>}"
+          [[ "$PKG" == "$NEW_PKG_NAME" ]] \
+            || { echo "::error::expected package $NEW_PKG_NAME but got $PKG"; exit 1; }
 
       - name: Publish resigned Release (do not delete existing)
         if: github.event_name == 'workflow_dispatch'
@@ -224,7 +237,7 @@ jobs:
               与宿主 APK 签名校验不一致，**这些扩展模块会失效**；常规直链点播播放通常仍可用。
             - 如需网盘 / Python 爬虫 / 蓝光 BD-J 等完整功能，请使用同仓库另一个
               「JMGO 兼容版」（官方签名·完整功能）版本。
-            - 包名仍为 `com.fongmi.android.tv`，versionName `5.8.7`，可覆盖安装。
+            - 包名已改为 `com.jmgo.android.tv`（与原官方 `com.fongmi.android.tv` 及任何其它 TVBox 包名均不同，可直接共存、互不覆盖），versionName `5.8.7`。
           files: |
             ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.7-resigned.apk
         env:

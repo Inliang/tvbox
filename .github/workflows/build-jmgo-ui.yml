@@ -21,6 +21,12 @@ name: build-jmgo-ui
 # 两个架构的包可能同时装在同一台设备/模拟器上，桌面名必须能一眼区分。
 # 改的是 res/values*/strings.xml 的 app_name 与 AndroidManifest.xml 的 android:label。
 #
+# 包名改造（用户 2026-11-13 要求，长期有效）：把官方 com.fongmi.android.tv
+# 改成 com.jmgo.android.tv（见 apps/jmgo/scripts/rename_package.py）。好处是重签版
+# 永远不与任何官方 com.fongmi.android.tv 安装包（如 5.6.3）撞包名，
+# 根治 INSTALL_FAILED_UPDATE_INCOMPATIBLE（MuMu 错误码 -7）。官方签名版
+# build-jmgo.yml 不受影响，仍保持 com.fongmi.android.tv。
+#
 # ⚠️ 重打包必然重签（非官方签名）：
 #   1. 官方 runtime 模块（Python / Node / QuickJS / MPV / BD-J / Thunder）签名校验失效；
 #   2. 与官方签名版签名不同，无法覆盖安装，需先卸载旧版再装（记得先记下配置地址）。
@@ -51,7 +57,8 @@ permissions:
 env:
   UPSTREAM_REPO: FongMi/Release
   UPSTREAM_TAG: '5.8.7'
-  PKG_NAME: 'com.fongmi.android.tv'
+  OLD_PKG_NAME: 'com.fongmi.android.tv'
+  NEW_PKG_NAME: 'com.jmgo.android.tv'
   BUILD_TOOLS: '34.0.0'
   APK_DIR: ${{ github.workspace }}/upstream-apks
   OUT_DIR: ${{ github.workspace }}/jmgo-out
@@ -179,6 +186,13 @@ jobs:
           echo "source APK: $SRC_APK"
           java -jar /tmp/apktool.jar d -f "$SRC_APK" -o "$DECODED" \
             || { echo "::error::apktool decode failed"; exit 1; }
+
+          # 包名改造：官方 com.fongmi.android.tv -> com.jmgo.android.tv
+          # （脚本处理 manifest package / provider authority / smali 目录与所有引用）
+          python3 "${{ github.workspace }}/apps/jmgo/scripts/rename_package.py" \
+            --decoded-dir "$DECODED" \
+            --old "$OLD_PKG_NAME" --new "$NEW_PKG_NAME" \
+            || { echo "::error::package rename failed"; exit 1; }
 
           # 一次性补丁脚本写到 /tmp，避免循环内嵌套 heredoc 的缩进陷阱
           cat > /tmp/patch_func.py <<'PY'
@@ -318,6 +332,14 @@ jobs:
           if [[ -x "$BT/aapt2" ]]; then
             "$BT/aapt2" dump badging "$OUT_DIR/$DELIVERABLE" 2>/dev/null \
               | grep -i "application-label" || true
+            # 确认重签包的新包名已生效（漏改则与官方包撞名，装机会 -7）
+            PKG=$("$BT/aapt2" dump badging "$OUT_DIR/$DELIVERABLE" 2>/dev/null \
+              | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
+            echo "built package: ${PKG:-<unknown>}"
+            [[ "$PKG" == "$NEW_PKG_NAME" ]] \
+              || { echo "::error::expected package $NEW_PKG_NAME but got $PKG"; exit 1; }
+          else
+            echo "::warning::aapt2 缺失，跳过包名断言（改名逻辑未经校验）"
           fi
 
       - name: Publish UI Release (new tag only, keep all existing)
@@ -350,9 +372,10 @@ jobs:
 
             ## 安装前必读
 
-            - ⚠️ **签名与官方签名版不同，无法覆盖安装**：请先卸载旧版再安装，
-              卸载前记下你的「配置地址」，装好后重新导入一次（本地播放记录 / 收藏会清空）。
-              模拟器里若已装过其它 `com.fongmi.android.tv`（如 5.6.3），同样必须先卸载。
+            - ⚠️ **新包名 `com.jmgo.android.tv` 与原官方 `com.fongmi.android.tv`、其它 TVBox 包名
+              都不同，可直接共存、互不覆盖**。但**若你上一版装过旧的同名重签版（当时还是
+              `com.fongmi.android.tv`）**，需先卸载它再装本版；卸载前记下你的「配置地址」，
+              装好后重新导入一次（本地播放记录 / 收藏会清空）。
             - ⚠️ 因已重签（非官方签名），官方 runtime 模块（Python / Node / QuickJS /
               MPV / BD-J / Thunder）与宿主 APK 签名校验不一致，**这些扩展模块会失效**；
               常规直链点播与直播播放不受影响。需要网盘 / Python 爬虫 / 蓝光 BD-J 等完整功能，
@@ -361,7 +384,9 @@ jobs:
             ## 版本关系
 
             这是一个**全新 Release / 全新 tag**，此前已发布的所有版本全部保留、未删除、未覆盖，
-            需要回退随时可以下载旧版。包名仍为 `com.fongmi.android.tv`，versionName `5.8.7`。
+            需要回退随时可以下载旧版。包名已改为 **`com.jmgo.android.tv`**，与原官方
+            `com.fongmi.android.tv` 及任何其它 TVBox 包名都**不同，可直接共存、互不覆盖**；
+            versionName 仍为 `5.8.7`。
           files: |
             ${{ github.workspace }}/jmgo-out/${{ env.DELIVERABLE }}
         env:

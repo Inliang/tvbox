@@ -19,9 +19,9 @@
 | 版本 | 文件 | 说明 |
 | --- | --- | --- |
 | **JMGO 兼容版**（主推·官方签名） | `JMGO-Compatible-5.8.7.apk` | 官方原包，字节与签名均未改，runtime 模块完整，可直接覆盖安装 |
-| JMGO 兼容版（重签·桌面显示名） | `JMGO-Compatible-5.8.7-resigned.apk` | 仅改桌面显示名；重签后 runtime 模块失效 |
-| **JMGO 兼容版（首页横条按钮·省空间）** | `JMGO-Compatible-5.8.7-horizontal-ui.apk` | 32 位 ARM，给坚果 N1S；首页 6 个功能按钮由正方形改横向长方形，详见下节；重签，runtime 模块失效 |
-| JMGO 兼容版（首页横条按钮·64位·模拟器可用） | `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 同样布局、改为 `arm64_v8a`，给 MuMu 等不带 32 位 ARM 转译的模拟器；重签，runtime 模块失效 |
+| JMGO 兼容版（重签·桌面显示名） | `JMGO-Compatible-5.8.7-resigned.apk` | 仅改桌面显示名；包名 `com.jmgo.android.tv`；重签后 runtime 模块失效 |
+| **JMGO 兼容版（首页横条按钮·省空间）** | `JMGO-Compatible-5.8.7-horizontal-ui.apk` | 32 位 ARM，给坚果 N1S；首页 6 个功能按钮由正方形改横向长方形，详见下节；包名 `com.jmgo.android.tv`；重签，runtime 模块失效 |
+| JMGO 兼容版（首页横条按钮·64位·模拟器可用） | `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 同样布局、改为 `arm64_v8a`，给 MuMu 等不带 32 位 ARM 转译的模拟器；包名 `com.jmgo.android.tv`；重签，runtime 模块失效 |
 | JMGO 兼容版 5.8.7 官方包聚合 | 8 个资产 | 最早基线，含 4 个架构官方包与校验文件 |
 
 ## 首页横条按钮版 · 改动与安装注意
@@ -29,14 +29,15 @@
 首页「历史 / 直播 / 搜索 / 推送 / 收藏 / 设置」这 6 个功能按钮，官方包用的是
 `res/layout/adapter_func.xml`：**`100dp × 100dp` 正方形、`orientation="vertical"`（图标在上、文字在下）**。
 本版改成 **`120dp × 56dp` 横向长方形、`orientation="horizontal"`（图标在左、文字在右）**，
-垂直占用减少约 44%，给下方海报墙腾出空间。桌面显示名仍是 **JMGO 兼容版**。
+垂直占用减少约 44%，给下方海报墙腾出空间。桌面显示名仍是 **JMGO 兼容版**，
+包名已改为 **`com.jmgo.android.tv`**（与原官方 `com.fongmi.android.tv` 及任何其它 TVBox 包名不同，可直接共存）。
 
 - ⚠️ **与官方签名版签名不同，不能覆盖安装**：请先卸载旧版再安装。
   卸载前记下你的「配置地址」，装好后重新导入一次；本地收藏 / 播放记录会被清空。
 - ⚠️ 重签后官方 runtime 模块（Python / Node / QuickJS / MPV / BD-J / Thunder）
   签名校验不一致会失效；常规直链点播与直播播放不受影响。需要网盘 / Python 爬虫 / 蓝光 BD-J
   等完整功能，请使用主推的**官方签名版**。
-- 包名 `com.fongmi.android.tv`，versionName `5.8.7`；布局改动已用 `aapt2 dump xmltree`
+- 包名 **`com.jmgo.android.tv`**，versionName `5.8.7`；布局改动已用 `aapt2 dump xmltree`
   从编译后的 APK 回读确认（`orientation=horizontal`、`120dp × 56dp`）。
 
 ### 在 MuMu 等 x86 模拟器里安装
@@ -47,13 +48,15 @@
 **不是安装包损坏，重新下载没用**。这类环境请用 64 位版
 `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk`。
 
-安装前还必须卸载模拟器里已有的 `com.fongmi.android.tv`：重签版与官方或其它版本
-签名不同，无法覆盖安装，否则会报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`。
-卸载会清空收藏与播放记录，**先记下配置地址**：
+新的重签改造版包名已改为 **`com.jmgo.android.tv`**，与原官方 `com.fongmi.android.tv`
+及任何其它 TVBox 包名都**不同，可直接共存、互不覆盖**，不再需要为装它去卸载官方版。
+但**如果你上一版装过旧的同名重签版（当时还是 `com.fongmi.android.tv`）**，需先卸载那个旧包，
+否则会因签名不同而报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`。卸载会清空收藏与播放记录，
+**先记下配置地址**：
 
 ```bash
 adb connect 127.0.0.1:16384          # MuMu 12 默认 ADB 端口
-adb uninstall com.fongmi.android.tv
+adb uninstall com.fongmi.android.tv   # 仅当上一版是旧的重签版（包名仍为 com.fongmi.android.tv）时才需要
 adb install JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk
 ```
 
@@ -77,7 +80,7 @@ adb install JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk
   因此主推 **`leanback` 版 `armeabi-v7a`**；`arm64_v8a` 包在你的设备上无法安装。
   版本一览里的「64 位·模拟器可用」版是给 MuMu 等模拟器做预览用的，**别装到 N1S 上**。
 - `leanback` 是电视 / 遥控大屏版，适合投影仪；`mobile` 是手机触屏版，不发布。
-- 包名 `com.fongmi.android.tv`，versionName `5.8.7`。
+- 包名：主推**官方签名版**为 `com.fongmi.android.tv`；改造/重签版（横条按钮版、重签版）已改为 `com.jmgo.android.tv`，详见上方版本一览。versionName 均为 `5.8.7`。
 
 ## 兼容性诚实说明
 
@@ -96,7 +99,9 @@ adb install JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk
 ## 回滚
 
 - 每次构建生成独立 Release 标签（`jmgo-<run id>` / `jmgo-resigned-<run id>` / `jmgo-ui-<run id>`），
-  历史版本全部保留，可随时取回上一版。注意只有**官方签名版**之间能覆盖安装，重签版需先卸载。
+  历史版本全部保留，可随时取回上一版。官方签名版（包名 `com.fongmi.android.tv`）与重签改造版
+  （包名 `com.jmgo.android.tv`）包名不同、可直接共存；同一包名下的重签版之间可用 `adb install -r`
+  升级（同把 jmgo 密钥），与官方版因签名不同仍需先卸载官方版。
 - 上游固定在 FongMi/Release tag `5.8.7`，文件内容不可变；即便本仓库出问题，也能从官方源取回同一批包。
 
 ## 仍闪退怎么办（取证反馈）
