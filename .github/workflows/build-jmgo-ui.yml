@@ -15,6 +15,12 @@ name: build-jmgo-ui
 #                        INSTALL_FAILED_NO_MATCHING_ABIS / MuMu 错误码 -16）。
 # 上游 5.8.7 同时提供 leanback-armeabi_v7a.apk 与 leanback-arm64_v8a.apk。
 #
+# 桌面显示名约定（用户 2026-11-13 确立，长期有效）：
+#   armeabi_v7a → 「JMGO 兼容版」
+#   arm64_v8a   → 「JMGO 兼容版 64位」
+# 两个架构的包可能同时装在同一台设备/模拟器上，桌面名必须能一眼区分。
+# 改的是 res/values*/strings.xml 的 app_name 与 AndroidManifest.xml 的 android:label。
+#
 # ⚠️ 重打包必然重签（非官方签名）：
 #   1. 官方 runtime 模块（Python / Node / QuickJS / MPV / BD-J / Thunder）签名校验失效；
 #   2. 与官方签名版签名不同，无法覆盖安装，需先卸载旧版再装（记得先记下配置地址）。
@@ -141,10 +147,12 @@ jobs:
           ASSET="leanback-${ABI}.apk"
           if [[ "$ABI" == "arm64_v8a" ]]; then
             DELIVER="JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk"
+            APP_LABEL="JMGO 兼容版 64位"
           else
             DELIVER="JMGO-Compatible-5.8.7-horizontal-ui.apk"
+            APP_LABEL="JMGO 兼容版"
           fi
-          echo "target asset: $ASSET  deliverable: $DELIVER"
+          echo "target asset: $ASSET  deliverable: $DELIVER  label: $APP_LABEL"
           api="https://api.github.com/repos/$UPSTREAM_REPO/releases"
           auth=()
           [[ -n "${GH_TOKEN:-}" ]] && auth=(-H "Authorization: Bearer $GH_TOKEN")
@@ -159,6 +167,8 @@ jobs:
           echo "SRC_APK=$APK_DIR/$ASSET" >> "$GITHUB_ENV"
           # 双保险：即便顶层 env 表达式未生效，后续步骤也拿到正确的交付文件名
           echo "DELIVERABLE=$DELIVER" >> "$GITHUB_ENV"
+          # 32 位与 64 位桌面名不同，由补丁脚本从环境变量读取
+          echo "APP_LABEL=$APP_LABEL" >> "$GITHUB_ENV"
 
       - name: Patch home function buttons + rebuild + resign
         run: |
@@ -234,28 +244,32 @@ jobs:
           PY
           python3 /tmp/patch_func.py || { echo "::error::layout patch failed"; exit 1; }
 
-          # 桌面名沿用「JMGO 兼容版」，与既有版本保持一致
+          # 桌面名：32 位「JMGO 兼容版」，64 位「JMGO 兼容版 64位」
+          # 用 lambda 而非替换字符串，避免标签里出现反斜杠时被当成反向引用。
           python3 - <<'PY'
-          import re, glob
+          import re, glob, os
+          LABEL = os.environ.get('APP_LABEL', 'JMGO 兼容版')
           hits = []
           for f in glob.glob('/tmp/jmgo_dec/res/values*/strings.xml'):
               s = open(f, encoding='utf-8').read()
               new_s, n = re.subn(r'(<string name="app_name"[^>]*>)[^<]*(</string>)',
-                                 r'\1JMGO 兼容版\2', s)
+                                 lambda m: m.group(1) + LABEL + m.group(2), s)
               if n:
                   open(f, 'w', encoding='utf-8').write(new_s)
                   hits.append(f)
-          print('changed app_name in:', hits)
+          print('app_name ->', LABEL, 'in', hits)
           PY
           M="$DECODED/AndroidManifest.xml"
           if [[ -f "$M" ]]; then
             python3 - "$M" <<'PY'
-          import re, sys
+          import re, sys, os
           p = sys.argv[1]
+          LABEL = os.environ.get('APP_LABEL', 'JMGO 兼容版')
           s = open(p, encoding='utf-8').read()
-          new_s, n = re.subn(r'(android:label=")[^"]*(")', r'\1JMGO 兼容版\2', s)
+          new_s, n = re.subn(r'(android:label=")[^"]*(")',
+                             lambda m: m.group(1) + LABEL + m.group(2), s)
           open(p, 'w', encoding='utf-8').write(new_s)
-          print('manifest label replaced:', n)
+          print('manifest label ->', LABEL, 'count:', n)
           PY
           fi
 
@@ -320,7 +334,10 @@ jobs:
             把首页 **历史 / 直播 / 搜索 / 推送 / 收藏 / 设置** 这 6 个功能按钮从
             `100dp × 100dp` 正方形（图标在上、文字在下）改成
             **`120dp × 56dp` 横向长方形**（图标在左、文字在右），
-            垂直占用减少约 44%，给下方海报墙腾出空间。桌面显示名仍为 **JMGO 兼容版**。
+            垂直占用减少约 44%，给下方海报墙腾出空间。
+
+            桌面显示名按架构区分：**32 位 = `JMGO 兼容版`**，**64 位 = `JMGO 兼容版 64位`**，
+            两个架构同时装在同一台设备上也能一眼区分。
 
             ## CPU 架构：${{ inputs.abi || 'armeabi_v7a' }}
 
