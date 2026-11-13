@@ -291,10 +291,12 @@ jobs:
             done
             [[ -f /tmp/jmgo-unsigned.apk ]] || { echo "::error::apktool build never succeeded for $ABI"; exit 1; }
 
-            "$BT/zipalign" -p 4 /tmp/jmgo-unsigned.apk /tmp/jmgo-aligned.apk
+            rm -f /tmp/jmgo-aligned.apk
+            "$BT/zipalign" -f -p 4 /tmp/jmgo-unsigned.apk /tmp/jmgo-aligned.apk
             SIGN_ARGS=(--ks /tmp/jmgo.p12 --ks-type PKCS12
                        --ks-pass pass:"$RESIGN_PASS" --key-pass pass:"$RESIGN_PASS")
             [[ -n "$RESIGN_ALIAS" ]] && SIGN_ARGS+=(--ks-key-alias "$RESIGN_ALIAS")
+            rm -f "$OUT_DIR/$DELIVER"
             "$BT/apksigner" sign "${SIGN_ARGS[@]}" \
               --out "$OUT_DIR/$DELIVER" /tmp/jmgo-aligned.apk
             ls -l "$OUT_DIR/$DELIVER"
