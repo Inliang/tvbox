@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-13T00:47:31+00:00",
-  "total": 583,
+  "generatedAt": "2026-11-13T10:18:12+08:00",
+  "total": 582,
   "mirrorHosts": [
     "gh-proxy.com",
     "gh-proxy.net",
@@ -1602,23 +1602,6 @@
       "api": "csp_Kugou",
       "searchable": 1,
       "snippet": "{\"key\":\"酷狗_2\",\"name\":\"酷狗\",\"type\":3,\"api\":\"csp_Kugou\",\"searchable\":1}",
-      "probe_url": null,
-      "probe_kind": "no_ext",
-      "probe_status": "none",
-      "tier": "C",
-      "segment": 1,
-      "recommend": true,
-      "includedIn": "main"
-    },
-    {
-      "id": "s_314295d6e8",
-      "name": "🍉┃瓜子┃影视",
-      "configId": "github-inliang",
-      "type": 3,
-      "typeLabel": "type3 爬虫",
-      "api": "csp_Gz360",
-      "searchable": null,
-      "snippet": "{\"key\":\"csp_Gz360\",\"name\":\"🍉┃瓜子┃影视\",\"type\":3,\"api\":\"csp_Gz360\",\"playerType\":2}",
       "probe_url": null,
       "probe_kind": "no_ext",
       "probe_status": "none",
@@ -10031,7 +10014,7 @@
       "includedIn": "full"
     }
   ],
-  "contentHash": "306794bed9d3",
+  "contentHash": "daf1572e90de",
   "schema": 3,
-  "sourceContentHash": "3dc85acbdb06d8f3"
+  "sourceContentHash": "5c67e245b63db3f3"
 }
