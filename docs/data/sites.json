@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-23T12:21:49+08:00",
+  "generatedAt": "2026-11-13T00:47:31+00:00",
   "total": 583,
   "mirrorHosts": [
     "gh-proxy.com",
@@ -146,7 +146,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": "full"
     },
     {
       "id": "s_ecbe9cf2a0",
@@ -10031,7 +10031,7 @@
       "includedIn": "full"
     }
   ],
-  "contentHash": "ccf28616dde3",
+  "contentHash": "306794bed9d3",
   "schema": 3,
   "sourceContentHash": "3dc85acbdb06d8f3"
 }
