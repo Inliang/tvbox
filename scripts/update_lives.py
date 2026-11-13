@@ -10,9 +10,17 @@
 用法：
   python scripts/update_lives.py                  拉上游、探测死链、重建全部播放列表
   python scripts/update_lives.py --all-only       不联网，由仓库内成品重建总表
+  python scripts/update_lives.py --with-speed     载入测速缓存 + 高质量候选池，剔除旧分组里
+                                                 实测判死的线路、按流畅度重排，并重建
+                                                 live-all / live-fast / live-4k
   python scripts/update_lives.py --refresh-scenery  重测风景慢直播线路并重建总表
   python scripts/update_lives.py --refresh-logo     重测台标并重建总表
-可重复运行：无上游的本地源会在首次运行时生成 .bak 原始备份，之后始终从备份读取。
+
+卡顿与「可达」是两件事：HTTP 200 只说明连得上，播放列表过期（分片 404）照样一直转圈。
+`scripts/probe_live_speed.py` 会实测 TTFB 与分片下载吞吐，结果缓存在
+`data/live_speed.json`（本机网络快照，不入库）。`--with-speed` 用它把快线路排到每个频道
+的第一条，并单独产出「流畅优选」列表。可重复运行：无上游的本地源会在首次运行时生成
+.bak 原始备份，之后始终从备份读取。
 """
 import collections
 import concurrent.futures as cf
@@ -76,10 +84,60 @@ SOURCES = [
     },
 ]
 
+# 高质量「候选池」：只参与线路探测与总表合并，不生成独立播放列表、不新增 lives 分组。
+# 选它们的理由：Guovin/iptv-api 每天两次自动测速刷新（秒播级）；suxuang 带完整 4K 分组；
+# YanG-1989 是移动/咪咕系直连；zwc456baby 是存活率较高的精简表。
+# AKTV 官方源（aktv.top / aktv.space / aktv_stream1.m16tv.cfd）已全线停服，故不接入。
+EXTRA_UPSTREAMS = [
+    f"{RAW}/Guovin/iptv-api/gd/output/ipv4/result.m3u",
+    f"{RAW}/suxuang/myIPTV/main/ipv4.m3u",
+    f"{RAW}/YanG-1989/m3u/main/Gather.m3u",
+    f"{RAW}/zwc456baby/iptv_alive/master/live.m3u",
+]
+
+SPEED_FILE = ROOT / "data" / "live_speed.json"
+SPEED = {}                 # url -> 流畅度评分；未载入测速缓存时为空
+FAST_MIN_SCORE = 40        # 「流畅优选」收录阈值
+FAST_MAX_LINES = 2         # 每个频道在优选表里最多留几条线路
+
+
+def load_speed():
+    """载入 probe_live_speed.py 的实测评分；缺失时静默回退到原有排序规则。"""
+    global SPEED
+    if not SPEED_FILE.exists():
+        print("[测速] 未找到 data/live_speed.json，线路排序回退到原有规则")
+        return
+    try:
+        payload = json.loads(SPEED_FILE.read_text(encoding="utf-8"))
+        SPEED = {u: float(v.get("score", 0))
+                 for u, v in payload.get("results", {}).items()}
+        hit = sum(1 for s in SPEED.values() if s >= FAST_MIN_SCORE)
+        print(f"[测速] 载入 {len(SPEED)} 条线路评分，其中 {hit} 条达到流畅阈值")
+    except Exception as e:
+        print(f"[警告] 读取测速结果失败：{e}")
+
+
+def speed_of(url):
+    """未知或明确不可达的线路给 0，绝不抢占已实测快线路的首位。"""
+    return SPEED.get(url, 0.0)
+
+
+def speed_allow(url):
+    """测速库里明确判死（score=0）的线路不采用；没测过的线路不冤枉。"""
+    return SPEED.get(url, 1.0) > 0
+
 
 def fetch(url):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     return urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "ignore")
+
+
+# 个别上游用 Unicode 数学粗体写画质（𝟜𝕂 / 𝟠𝕂 / 𝟙），不归一化会漏判 4K 频道
+FANCY_DIGIT = str.maketrans({
+    "𝟘": "0", "𝟙": "1", "𝟚": "2", "𝟛": "3", "𝟜": "4",
+    "𝟝": "5", "𝟞": "6", "𝟟": "7", "𝟠": "8", "𝟡": "9",
+    "𝕂": "K", "𝕜": "k",
+})
 
 
 def parse_m3u(text):
@@ -90,7 +148,10 @@ def parse_m3u(text):
         if not line:
             continue
         if line.startswith("#EXTINF"):
-            cur = line
+            # 上游偶尔把两个 EXTINF 头拼在同一行，去掉重复前缀，
+            # 否则回写后播放列表里会出现「#EXTINF:-1 #EXTINF:-1,频道名」
+            line = re.sub(r"^#EXTINF:-?\d+\s+(?=#EXTINF:)", "", line)
+            cur = line.translate(FANCY_DIGIT)
         elif line.startswith("#"):
             continue
         elif cur is not None:
@@ -161,6 +222,26 @@ def collect(src):
     return target, header, uniq
 
 
+def collect_extra():
+    """拉取高质量候选池，返回去重后的 [(extinf, url)]；不写任何独立播放列表。"""
+    channels, ok = [], 0
+    for u in EXTRA_UPSTREAMS:
+        try:
+            got = parse_m3u(fetch(u))
+            channels.extend(got)
+            ok += 1
+            print(f"[候选池] {u.rsplit('/', 1)[-1]:28s} {len(got):4d} 条")
+        except Exception as e:
+            print(f"[失败] 候选池 {u.rsplit('/', 1)[-1]}: {type(e).__name__} {e}")
+    print(f"[候选池] 上游 {ok}/{len(EXTRA_UPSTREAMS)} 可用")
+    seen, uniq = set(), []
+    for item in channels:
+        if item not in seen:
+            seen.add(item)
+            uniq.append(item)
+    return uniq
+
+
 def probe_many(urls, rounds=ROUNDS, workers=None):
     """多轮探测取并集：任一轮可达即保留，降低网络抖动造成的误杀。"""
     workers = workers or WORKERS
@@ -193,22 +274,43 @@ def main():
         except Exception as e:
             print(f"[失败] {src['label']}: {type(e).__name__} {e}")
 
+    # 高质量候选池只参与合并，不产出独立播放列表 / lives 分组
+    try:
+        extra = collect_extra()
+        data.append(({"label": "高质量候选池", "write": False}, None, None, extra))
+        print(f"[候选池] 去重后 {len(extra):4d} 条线路进入总表")
+    except Exception as e:
+        print(f"[失败] 候选池：{type(e).__name__} {e}")
+
     all_urls = [u for _, _, _, chs in data for _, u in chs]
     print(f"\n开始探测 {len(set(all_urls))} 个唯一流地址 ...")
     results = probe_many(all_urls)
     print(f"探测完成：可达 {sum(results.values())} / {len(results)}\n")
 
     # 4K/8K 精选：从所有源里挑出标注超清的频道，单独多轮复测，只留实测可达的
-    uhd = [(inf, u) for _, _, _, chs in data for inf, u in chs
-           if re.search(r"4K|8K|UHD|2160", inf, re.I)]
+    uhd = []
+    for _, _, _, chs in data:
+        for inf, u in chs:
+            picked = uhd_pick(inf, u)
+            if picked:
+                uhd.append(picked)
     uhd_urls = [u for _, u in uhd]
     print(f"4K/8K 频道候选 {len(uhd)} 条，单独复测 ...")
     uhd_res = probe_many(uhd_urls, rounds=3)
     seen, uhd_kept = set(), []
-    for inf, u in uhd:
-        if uhd_res.get(u) and (inf, u) not in seen:
-            seen.add((inf, u))
-            uhd_kept.append((inf, u))
+    # 快的排前面：4K 码率高，慢线路根本缓冲不动，第一条必须是实测最快的。
+    # 只收实测达到流畅阈值的线路，并按（频道名, URL）去重，避免同一条流
+    # 因上游 EXTINF 属性不同被重复写进精选表。
+    for inf, u in sorted(uhd, key=lambda p: -speed_of(p[1])):
+        if not (uhd_res.get(u) and speed_allow(u)):
+            continue
+        if SPEED and speed_of(u) < FAST_MIN_SCORE:
+            continue
+        key = (inf.rsplit(",", 1)[-1].strip(), u)
+        if key in seen:
+            continue
+        seen.add(key)
+        uhd_kept.append((inf, u))
     data.append((
         {"label": "4K8K超清精选（实测可达）"},
         LIB / "live-4k.m3u",
@@ -221,15 +323,16 @@ def main():
     written = []
     for src, target, header, channels in data:
         kept = [(inf, u) for inf, u in channels if results.get(u, True)]
-        lines = [header]
-        for inf, u in kept:
-            lines.append(inf)
-            lines.append(u)
-        target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        if src.get("write", True) and target is not None:
+            lines = [header]
+            for inf, u in kept:
+                lines.append(inf)
+                lines.append(u)
+            target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            print(f"[写出] {str(target.relative_to(ROOT)):28s} "
+                  f"{len(channels):4d} -> {len(kept):4d} 条"
+                  f"（剔除 {len(channels) - len(kept)} 死链）")
         written.append((target, kept))
-        print(f"[写出] {str(target.relative_to(ROOT)):28s} "
-              f"{len(channels):4d} -> {len(kept):4d} 条"
-              f"（剔除 {len(channels) - len(kept)} 死链）")
 
     build_all(written)
     print("\n完成。播放列表已是自包含 m3u，不再依赖 #EXT-X-SUB-URL / gh.aptv.app 代理。")
@@ -257,6 +360,23 @@ ALIAS = {
 }
 # 上游会把构建时间戳也写成一条「频道」
 DATE_RE = re.compile(r"^[\d\s\-:./]+$")
+
+
+def uhd_pick(inf, url):
+    """4K 精选只收「频道名明确标 4K/8K/UHD」的真实直播频道。
+
+    上游常把 4K 写在 tvg-logo / URL 里（`cctv4k.m3u8` 其实是 CCTV-4），
+    也会在 4K 分组里塞普通频道（河北卫视、黑龙江卫视）、点播占位（春晚 4K）。
+    只认频道名可避免虚标；顺手统一 `4k -> 4K`，否则「苏州4k」「苏州4K」
+    会被当成两个频道。
+    """
+    name = inf.rsplit(",", 1)[-1].strip()
+    if any(k in name for k in SKIP_NAME) or re.search(r"^\d{4}|更新时间|支持作者", name):
+        return None
+    if not UHD_RE.search(name):
+        return None
+    fixed = re.sub(r"([48])[kK]", lambda m: m.group(1) + "K", name)
+    return (inf.rpartition(",")[0] + "," + fixed, url)
 
 
 def normalize_name(name):
@@ -573,20 +693,23 @@ def build_all(written):
     scenery = load_scenery()
     for ch in scenery:
         buckets[ch["name"]] = {"group": "风景慢直播", "urls": list(ch["urls"])}
-    # 收尾：上游标注越一致越靠前，其次 https 优先（Android 9+ 默认禁明文）
+    # 收尾：实测流畅度优先 —— TVBox 默认播第一条线路，慢源排第一就会一直转圈；
+    # 其次上游标注一致度，最后 https 优先（Android 9+ 默认禁明文）。
     for name, item in buckets.items():
         item["urls"].sort(key=lambda u: (
+            -speed_of(u),
             -votes.get(u, {}).get(name, 0),
             0 if u.startswith("https://") else 1,
         ))
         del item["urls"][MAX_LINES:]
 
-    lines = [f'#EXTM3U x-tvg-url="{EPG}"']
-    total = logo_count = 0
-    for name, item in sorted(
+    ordered = sorted(
         ((n, v) for n, v in buckets.items()),
         key=lambda pair: channel_sort_key((pair[0], pair[1]["group"])),
-    ):
+    )
+    lines = [f'#EXTM3U x-tvg-url="{EPG}"']
+    total = logo_count = 0
+    for name, item in ordered:
         group = item["group"]
         # 只为台标库里确实存在的频道写 tvg-logo，其余交给 lives 的 logo 模板兜底
         logo = ""
@@ -610,6 +733,31 @@ def build_all(written):
     print(f"[台标] {logo_count}/{len(buckets)} 个频道写入 tvg-logo")
     if dropped:
         print(f"[清洗] {dict(dropped)}")
+
+    # 「流畅优选」：每个频道只留实测最快的 1~2 条线路；没有快线路的频道保留
+    # 得分最高的 1 条，保证频道数不减少（部分精简版 TVBox 只读 lives[0]）。
+    fast_lines = [f'#EXTM3U x-tvg-url="{EPG}"']
+    fast_total = fast_good = 0
+    for name, item in ordered:
+        group = item["group"]
+        urls = [u for u in item["urls"]
+                if speed_of(u) >= FAST_MIN_SCORE][:FAST_MAX_LINES]
+        if not urls:
+            urls = item["urls"][:1]
+        else:
+            fast_good += 1
+        logo = ""
+        if name in logo_names:
+            logo = f' tvg-logo="{LOGO_BASE}{urllib.parse.quote(name, safe="")}.png"'
+        for url in urls:
+            fast_lines.append(f'#EXTINF:-1 tvg-id="{name}" tvg-name="{name}" '
+                              f'group-title="{group}"{logo},{name}')
+            fast_lines.append(url)
+            fast_total += 1
+    (LIB / "live-fast.m3u").write_text(
+        "\n".join(fast_lines) + "\n", encoding="utf-8")
+    print(f"[优选] lib/live-fast.m3u {fast_total} 条 / {len(buckets)} 个频道，"
+          f"{fast_good} 个频道有实测快线路")
     return total
 
 
@@ -628,7 +776,126 @@ def rebuild_all():
     print("完成。若需重新探测上游死链，请不带参数运行本脚本。")
 
 
+def write_hmt():
+    """从总表挑出实测最快的港澳台频道，作为已停服 AKTV 的同类替代。
+
+    AKTV 曾是港台频道质量最好的源（aktv.top / aktv.space / m16tv.cfd 镜像
+    现已全部停服）。这里不冒用 AKTV 之名，只把同类频道按实测速度单独成表。
+    """
+    src = LIB / "live-all.m3u"
+    if not src.exists():
+        return
+    buckets, cur = {}, None
+    for line in src.read_text(encoding="utf-8", errors="ignore").splitlines():
+        if line.startswith("#EXTINF"):
+            cur = line
+        elif line.startswith("http") and cur:
+            if 'group-title="港澳台频道"' in cur:
+                name = cur.rsplit(",", 1)[-1].strip()
+                buckets.setdefault(name, []).append((cur, line))
+            cur = None
+    lines = [f'#EXTM3U x-tvg-url="{EPG}"']
+    total = 0
+    for name, items in buckets.items():
+        items.sort(key=lambda p: -speed_of(p[1]))
+        picked = [p for p in items
+                  if speed_of(p[1]) >= FAST_MIN_SCORE][:2]
+        if not picked:
+            picked = items[:1]
+        for inf, u in picked:
+            lines.append(inf)
+            lines.append(u)
+            total += 1
+    (LIB / "live-hmt.m3u").write_text(
+        "\n".join(lines) + "\n", encoding="utf-8")
+    print(f"[港台] lib/live-hmt.m3u {total} 条 / {len(buckets)} 个频道"
+          f"（AKTV 已停服，改由实测快线路替代）")
+
+
+def merge_candidates():
+    """载入测速缓存 + 高质量候选池，只重建总表 / 优选表 / 4K 表。
+
+    旧分组只剔除「测速明确判死」的线路（不删除分组、不改频道名），git 历史
+    可随时回退；新线路作为加成进入总表，并按实测流畅度把快线路顶到每个
+    频道的第一条。这是修复「卡顿」的主入口。
+    """
+    print(f"直播线路优化  {datetime.now():%Y-%m-%d %H:%M:%S}")
+    load_speed()
+
+    extra = collect_extra()
+    # 缓存里有的线路直接采用实测结论，只有新出现的线路才联网复核：
+    # 避免在受限网络下把代理返回的 403 误当成「可达」。
+    unknown = [u for _, u in extra if u not in SPEED]
+    verdict = probe_many(unknown) if unknown else {}
+
+    def usable(u):
+        return SPEED[u] > 0 if u in SPEED else verdict.get(u, False)
+
+    extra_kept = [(inf, u) for inf, u in extra if usable(u)]
+    print(f"[候选池] {len(extra)} -> 实测可用 {len(extra_kept)} 条\n")
+
+    written = []
+    for name in ALL_INPUTS:
+        path = LIB / name
+        if not path.exists():
+            print(f"[跳过] 缺少 {name}")
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        chs = parse_m3u(text)
+        # 旧列表是按「HTTP 可达」判定的，里面仍有本次测速明确判死的线路。
+        # 不回写的话，用户切回旧分组照样卡；回写后 git 历史仍可随时回退。
+        kept_chs = [item for item in chs if speed_allow(item[1])]
+        rebuilt = ("\n".join([make_header(text)] +
+                             [x for pair in kept_chs for x in pair]) + "\n")
+        # 内容有变化才写（剔除死链、修掉重复 EXTINF 头都算），保证可重复运行
+        if name != "live-4k.m3u" and rebuilt != text:
+            path.write_text(rebuilt, encoding="utf-8")
+        written.append((path, kept_chs))
+        print(f"[读取] {name:26s} {len(chs):4d} -> {len(kept_chs):4d} 条"
+              f"（剔除测速判死 {len(chs) - len(kept_chs)}）")
+
+    uhd = []
+    for _, chs in written:
+        for inf, u in chs:
+            picked = uhd_pick(inf, u)
+            if picked:
+                uhd.append(picked)
+    for inf, u in extra_kept:
+        picked = uhd_pick(inf, u)
+        if picked:
+            uhd.append(picked)
+    uhd_unknown = [u for _, u in uhd if u not in SPEED]
+    uhd_verdict = probe_many(uhd_unknown, rounds=3) if uhd_unknown else {}
+    seen, uhd_kept = set(), []
+    for inf, u in sorted(uhd, key=lambda p: -speed_of(p[1])):
+        ok = SPEED[u] > 0 if u in SPEED else uhd_verdict.get(u, False)
+        if not ok or (SPEED and speed_of(u) < FAST_MIN_SCORE):
+            continue
+        key = (inf.rsplit(",", 1)[-1].strip(), u)
+        if key in seen:
+            continue
+        seen.add(key)
+        uhd_kept.append((inf, u))
+    uhd_path = LIB / "live-4k.m3u"
+    uhd_path.write_text(
+        "\n".join([f'#EXTM3U x-tvg-url="{EPG}"'] +
+                  [x for pair in uhd_kept for x in pair]) + "\n",
+        encoding="utf-8")
+    print(f"[4K] 候选 {len(uhd)} -> 实测保留 {len(uhd_kept)} 条（按流畅度排序）")
+
+    # 用新的 4K 表替换旧项，再追加候选池线路
+    written = [(p, chs) for p, chs in written if p != uhd_path]
+    written.append((uhd_path, uhd_kept))
+    written.append((None, extra_kept))
+    build_all(written)
+    write_hmt()
+    print("\n完成。旧分组只剔除实测判死线路（git 历史可回退），"
+          "未删除任何分组或频道名。")
+
+
 if __name__ == "__main__":
+    if "--with-speed" in sys.argv:
+        sys.exit(merge_candidates())
     if "--refresh-scenery" in sys.argv:
         refresh_scenery()
         sys.exit(rebuild_all())

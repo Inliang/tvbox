@@ -12,6 +12,8 @@ data/raw/
 data/backup/
 data/probe_cache.json
 data/candidates.json
+# 直播线路测速是本机网络快照，过期快、换网络就失真，不入库
+data/live_speed*.json
 
 # 系统
 .DS_Store

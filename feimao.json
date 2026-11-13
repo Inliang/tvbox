@@ -577,6 +577,14 @@
   ],
   "lives": [
     {
+      "name": "流畅优选·测速",
+      "type": 0,
+      "url": "./lib/live-fast.m3u",
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/?ch={name}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
       "name": "Kimentanm",
       "type": 0,
       "url": "./lib/iptv.m3u",
