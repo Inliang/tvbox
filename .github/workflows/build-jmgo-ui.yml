@@ -347,7 +347,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: jmgo-ui-${{ github.run_id }}
-          name: ${{ inputs.abi == 'arm64_v8a' && 'JMGO 兼容版（首页横条按钮·64位·模拟器可用）' || 'JMGO 兼容版（首页横条按钮·省空间）' }}
+          name: ${{ inputs.abi == 'arm64_v8a' && 'JMGO 兼容版（首页横条按钮·64位）' || 'JMGO 兼容版（首页横条按钮·32位）' }}
           body: |
             # JMGO 兼容版 · 首页横条按钮版
 
@@ -364,9 +364,9 @@ jobs:
             ## CPU 架构：${{ inputs.abi || 'armeabi_v7a' }}
 
             - `armeabi_v7a`（32 位 ARM）：给坚果 N1S 4K 等 32 位盒子用，文件名不带后缀。
-            - `arm64_v8a`（64 位 ARM）：给 64 位设备，以及 **MuMu 等只支持
+            - `arm64_v8a`（64 位 ARM）：给 **64 位电视盒子 / 投影仪**，以及 **MuMu 等只支持
               `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器**用，
-              文件名带 `-arm64` 后缀。
+              文件名带 `-arm64` 后缀。64 位同为首页横条按钮的完整电视版，并非仅模拟器可用。
             - 在 x86 模拟器上装 32 位 ARM 包会报 `INSTALL_FAILED_NO_MATCHING_ABIS`
               （MuMu 界面显示「错误码 -16」），**不是安装包损坏**，换本页 64 位版即可。
 
