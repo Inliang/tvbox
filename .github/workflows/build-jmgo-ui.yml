@@ -1,0 +1,303 @@
+name: build-jmgo-ui
+
+# UI 改造通道：在官方 FongMi/Release 5.8.7 的 leanback-armeabi_v7a 包基础上，
+# 把首页「历史 / 直播 / 搜索 / 推送 / 收藏 / 设置」6 个功能按钮从
+# 100dp x 100dp 的正方形（图标在上、文字在下）改成横向长方形
+# （图标在左、文字在右、高度 56dp），减少占用的垂直空间。
+#
+# 官方源码对应文件：app/src/leanback/res/layout/adapter_func.xml
+# 仓库无 app 源码，故用 apktool 反编译官方 APK 后替换该 layout 资源再重打包。
+#
+# ⚠️ 重打包必然重签（非官方签名）：
+#   1. 官方 runtime 模块（Python / Node / QuickJS / MPV / BD-J / Thunder）签名校验失效；
+#   2. 与官方签名版签名不同，无法覆盖安装，需先卸载旧版再装（记得先记下配置地址）。
+#
+# 按用户长期规则：只创建新 Release / 新 tag，绝不删除或覆盖任何已发布版本。
+# 触发：仅 workflow_dispatch。
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_ui:
+        description: '构建首页横条按钮改造版'
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_REPO: FongMi/Release
+  UPSTREAM_TAG: '5.8.7'
+  PKG_NAME: 'com.fongmi.android.tv'
+  BUILD_TOOLS: '34.0.0'
+  APK_DIR: ${{ github.workspace }}/upstream-apks
+  OUT_DIR: ${{ github.workspace }}/jmgo-out
+  DELIVERABLE: JMGO-Compatible-5.8.7-horizontal-ui.apk
+  KEY_PASS: jmgo-compat-2026
+  KEY_ALIAS: jmgo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout tvbox repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Prepare Android build-tools + apktool
+        run: |
+          set -euo pipefail
+          if [[ -z "${ANDROID_HOME:-}" && -z "${ANDROID_SDK_ROOT:-}" ]]; then
+            for c in "$HOME/Android/Sdk" "/usr/local/lib/android/sdk" "/opt/android-sdk"; do
+              if [[ -d "$c" ]]; then ANDROID_HOME="$c"; break; fi
+            done
+          fi
+          ANDROID_HOME="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/android-sdk}}"
+          export ANDROID_HOME ANDROID_SDK_ROOT="$ANDROID_HOME"
+          mkdir -p "$ANDROID_HOME"
+          BT="$ANDROID_HOME/build-tools/$BUILD_TOOLS"
+          if [[ ! -x "$BT/apksigner" ]]; then
+            SDKM=""
+            for c in "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+                     "$ANDROID_HOME/cmdline-tools/bin/sdkmanager" \
+                     "$ANDROID_HOME/tools/bin/sdkmanager"; do
+              [[ -x "$c" ]] && SDKM="$c" && break
+            done
+            [[ -z "$SDKM" ]] && {
+              curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-9862592_latest.zip -o /tmp/cmdtools.zip
+              mkdir -p "$ANDROID_HOME/cmdline-tools"
+              unzip -q -o /tmp/cmdtools.zip -d "$ANDROID_HOME/cmdline-tools"
+              mv "$ANDROID_HOME/cmdline-tools/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+              SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+            }
+            "$SDKM" --install "build-tools;$BUILD_TOOLS" "platform-tools"
+          fi
+          test -x "$BT/apksigner"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "BUILD_TOOLS_DIR=$BT" >> "$GITHUB_ENV"
+          curl -fsSL --retry 3 --retry-delay 5 \
+            https://github.com/iBotPeaches/Apktool/releases/download/v3.0.3/apktool_3.0.3.jar \
+            -o /tmp/apktool.jar
+          unzip -l /tmp/apktool.jar >/dev/null 2>&1 || { echo "apktool jar corrupt"; exit 1; }
+          echo "build-tools ready: $BT"
+
+      - name: Decode jmgo keystore
+        run: |
+          set -euo pipefail
+          mkdir -p "$APK_DIR" "$OUT_DIR"
+          base64 -d "apps/jmgo/keystore/jmgo.p12.b64" > /tmp/jmgo.p12
+          test -s /tmp/jmgo.p12
+
+      - name: Resolve keystore credentials
+        run: |
+          set -euo pipefail
+          P12=/tmp/jmgo.p12
+          PASS=""
+          for c in "$KEY_PASS" "jmgo-compat-2026"; do
+            [ -z "$c" ] && continue
+            if keytool -list -keystore "$P12" -storetype PKCS12 -storepass "$c" >/tmp/ks.txt 2>/dev/null; then
+              PASS="$c"; break
+            fi
+          done
+          [ -z "$PASS" ] && { echo "::error::no valid keystore password"; exit 1; }
+          ALIAS=$(grep -E 'PrivateKeyEntry' /tmp/ks.txt | head -1 | sed -E 's/^([^,[:space:]]+),.*/\1/' | tr -d ' ')
+          [ -z "$ALIAS" ] && ALIAS=jmgo
+          echo "RESIGN_PASS=$PASS" >> "$GITHUB_ENV"
+          echo "RESIGN_ALIAS=$ALIAS" >> "$GITHUB_ENV"
+          echo "keystore ok; alias=$ALIAS"
+
+      - name: Download official leanback-armeabi_v7a 5.8.7
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/$UPSTREAM_REPO/releases"
+          auth=()
+          [[ -n "${GH_TOKEN:-}" ]] && auth=(-H "Authorization: Bearer $GH_TOKEN")
+          curl -fsSL --retry 3 --retry-delay 5 -H 'Accept: application/vnd.github+json' \
+               "${auth[@]}" "$api/tags/$UPSTREAM_TAG" -o /tmp/meta.json
+          aid=$(python3 -c "import json;d=json.load(open('/tmp/meta.json'));print([x for x in d['assets'] if x['name']=='leanback-armeabi_v7a.apk'][0]['id'])")
+          curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
+               -H 'Accept: application/octet-stream' "${auth[@]}" \
+               "$api/assets/$aid" -o "$APK_DIR/leanback-armeabi_v7a.apk"
+          ls -l "$APK_DIR/leanback-armeabi_v7a.apk"
+
+      - name: Patch home function buttons + rebuild + resign
+        run: |
+          set -uo pipefail
+          BT="$BUILD_TOOLS_DIR"
+          DECODED=/tmp/jmgo_dec
+          mkdir -p "$OUT_DIR"
+          java -jar /tmp/apktool.jar d -f "$APK_DIR/leanback-armeabi_v7a.apk" -o "$DECODED" \
+            || { echo "::error::apktool decode failed"; exit 1; }
+
+          # 一次性补丁脚本写到 /tmp，避免循环内嵌套 heredoc 的缩进陷阱
+          cat > /tmp/patch_func.py <<'PY'
+          import glob, sys
+
+          ROOT = '/tmp/jmgo_dec'
+          # 横向长方形：图标在左、文字在右，高度由 100dp 降到 56dp
+          NEW = '''<?xml version="1.0" encoding="utf-8"?>
+          <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="120dp"
+              android:layout_height="56dp"
+              android:background="@drawable/selector_item"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:paddingStart="12dp"
+              android:paddingEnd="12dp">
+
+              <androidx.appcompat.widget.AppCompatImageView
+                  android:id="@+id/icon"
+                  android:layout_width="28dp"
+                  android:layout_height="28dp"
+                  android:layout_marginEnd="10dp"
+                  tools:src="@drawable/ic_home_vod" />
+
+              <com.google.android.material.textview.MaterialTextView
+                  android:id="@+id/text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@color/white"
+                  android:textSize="18sp"
+                  tools:text="點播" />
+
+          </androidx.appcompat.widget.LinearLayoutCompat>
+          '''
+
+          files = sorted(glob.glob(ROOT + '/res/**/adapter_func.xml', recursive=True))
+          if not files:
+              print('::error::adapter_func.xml not found. layout samples:')
+              for f in sorted(glob.glob(ROOT + '/res/layout*/*.xml'))[:40]:
+                  print('  ', f)
+              sys.exit(1)
+          for f in files:
+              old = open(f, encoding='utf-8').read()
+              # 前置校验：确认是我们认识的那一版布局，结构不同就中止，不发布坏包
+              for token in ('@+id/icon', '@+id/text', 'selector_item'):
+                  if token not in old:
+                      print('::error::unexpected adapter_func.xml in', f, 'missing', token)
+                      print(old[:1500])
+                      sys.exit(1)
+              print('=== BEFORE', f, '===')
+              print(old[:1500])
+              open(f, 'w', encoding='utf-8').write(NEW)
+              print('=== AFTER', f, '===')
+              print(NEW)
+          print('patched', len(files), 'layout file(s)')
+          PY
+          python3 /tmp/patch_func.py || { echo "::error::layout patch failed"; exit 1; }
+
+          # 桌面名沿用「JMGO 兼容版」，与既有版本保持一致
+          python3 - <<'PY'
+          import re, glob
+          hits = []
+          for f in glob.glob('/tmp/jmgo_dec/res/values*/strings.xml'):
+              s = open(f, encoding='utf-8').read()
+              new_s, n = re.subn(r'(<string name="app_name"[^>]*>)[^<]*(</string>)',
+                                 r'\1JMGO 兼容版\2', s)
+              if n:
+                  open(f, 'w', encoding='utf-8').write(new_s)
+                  hits.append(f)
+          print('changed app_name in:', hits)
+          PY
+          M="$DECODED/AndroidManifest.xml"
+          if [[ -f "$M" ]]; then
+            python3 - "$M" <<'PY'
+          import re, sys
+          p = sys.argv[1]
+          s = open(p, encoding='utf-8').read()
+          new_s, n = re.subn(r'(android:label=")[^"]*(")', r'\1JMGO 兼容版\2', s)
+          open(p, 'w', encoding='utf-8').write(new_s)
+          print('manifest label replaced:', n)
+          PY
+          fi
+
+          cat > /tmp/strip_attr.py <<'PY'
+          import re, sys
+          p, attr = sys.argv[1], sys.argv[2]
+          s = open(p, encoding='utf-8').read()
+          new_s, n = re.subn(r'\s+android:' + re.escape(attr) + r'="[^"]*"', '', s)
+          print('removed', n, 'occurrences of', attr, 'in', p)
+          open(p, 'w', encoding='utf-8').write(new_s)
+          PY
+          for attempt in 1 2 3 4 5 6; do
+            if java -jar /tmp/apktool.jar b "$DECODED" -o /tmp/jmgo-unsigned.apk 2> /tmp/build_err.txt; then
+              echo "apktool build ok (attempt $attempt)"; break
+            fi
+            line=$(grep -E 'attribute android:[A-Za-z_]+ not found' /tmp/build_err.txt | head -1 || true)
+            if [[ -z "$line" ]]; then
+              echo "::error::apktool build failed:"; cat /tmp/build_err.txt; exit 1
+            fi
+            attr=$(printf '%s\n' "$line" | sed -E 's/.*attribute android:([A-Za-z_]+) not found.*/\1/')
+            file=$(printf '%s\n' "$line" | sed -E 's#.*(/tmp/jmgo_dec/[^:]+):[0-9]+:.*#\1#')
+            echo "attempt $attempt: stripping android:$attr from $file"
+            python3 /tmp/strip_attr.py "$file" "$attr"
+          done
+          [[ -f /tmp/jmgo-unsigned.apk ]] || { echo "::error::apktool build never succeeded"; exit 1; }
+
+          "$BT/zipalign" -p 4 /tmp/jmgo-unsigned.apk /tmp/jmgo-aligned.apk
+          SIGN_ARGS=(--ks /tmp/jmgo.p12 --ks-type PKCS12
+                     --ks-pass pass:"$RESIGN_PASS" --key-pass pass:"$RESIGN_PASS")
+          [[ -n "$RESIGN_ALIAS" ]] && SIGN_ARGS+=(--ks-key-alias "$RESIGN_ALIAS")
+          "$BT/apksigner" sign "${SIGN_ARGS[@]}" \
+            --out "$OUT_DIR/$DELIVERABLE" /tmp/jmgo-aligned.apk
+          ls -l "$OUT_DIR/$DELIVERABLE"
+          "$BT/apksigner" verify --print-certs "$OUT_DIR/$DELIVERABLE" | head -8
+
+          # 回读编译后的二进制 XML，确认横向布局真的进了 APK
+          echo "=== compiled adapter_func.xml attributes ==="
+          "$BT/aapt2" dump xmltree "$OUT_DIR/$DELIVERABLE" \
+            --file res/layout/adapter_func.xml 2>/dev/null \
+            | grep -E 'orientation|layout_width|layout_height|gravity' | head -12 \
+            || echo "aapt2 xmltree check skipped"
+          if [[ -x "$BT/aapt2" ]]; then
+            "$BT/aapt2" dump badging "$OUT_DIR/$DELIVERABLE" 2>/dev/null \
+              | grep -i "application-label" || true
+          fi
+
+      - name: Publish UI Release (new tag only, keep all existing)
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: jmgo-ui-${{ github.run_id }}
+          name: JMGO 兼容版（首页横条按钮·省空间）
+          body: |
+            # JMGO 兼容版 · 首页横条按钮版
+
+            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7 `leanback-armeabi_v7a` 包基础上，
+            把首页 **历史 / 直播 / 搜索 / 推送 / 收藏 / 设置** 这 6 个功能按钮从
+            `100dp × 100dp` 正方形（图标在上、文字在下）改成
+            **`120dp × 56dp` 横向长方形**（图标在左、文字在右），
+            垂直占用减少约 44%，给下方海报墙腾出空间。桌面显示名仍为 **JMGO 兼容版**。
+
+            ## 安装前必读
+
+            - ⚠️ **签名与官方签名版不同，无法覆盖安装**：请先卸载旧版再安装，
+              卸载前记下你的「配置地址」，装好后重新导入一次（本地播放记录 / 收藏会清空）。
+            - ⚠️ 因已重签（非官方签名），官方 runtime 模块（Python / Node / QuickJS /
+              MPV / BD-J / Thunder）与宿主 APK 签名校验不一致，**这些扩展模块会失效**；
+              常规直链点播与直播播放不受影响。需要网盘 / Python 爬虫 / 蓝光 BD-J 等完整功能，
+              请使用同仓库的「JMGO 兼容版」（官方签名版）。
+
+            ## 版本关系
+
+            这是一个**全新 Release / 全新 tag**，此前已发布的三个版本全部保留、未删除、未覆盖，
+            需要回退随时可以下载旧版。包名仍为 `com.fongmi.android.tv`，versionName `5.8.7`。
+          files: |
+            ${{ github.workspace }}/jmgo-out/${{ env.DELIVERABLE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
