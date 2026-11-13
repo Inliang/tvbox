@@ -147,33 +147,32 @@ jobs:
 
           ROOT = '/tmp/jmgo_dec'
           # 横向长方形：图标在左、文字在右，高度由 100dp 降到 56dp
-          NEW = '''<?xml version="1.0" encoding="utf-8"?>
+          # apktool 反编译后 id 写成 @id/xxx（复用已有资源），不能写成 @+id/xxx，
+          # 否则会新建同名资源 ID，代码里的 findViewById(R.id.icon) 可能对不上。
+          NEW_TPL = '''<?xml version="1.0" encoding="utf-8"?>
           <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="120dp"
-              android:layout_height="56dp"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
               android:background="@drawable/selector_item"
               android:focusable="true"
               android:focusableInTouchMode="true"
-              android:gravity="center_vertical"
-              android:orientation="horizontal"
+              android:layout_width="120dp"
+              android:layout_height="56dp"
               android:paddingStart="12dp"
               android:paddingEnd="12dp">
 
               <androidx.appcompat.widget.AppCompatImageView
-                  android:id="@+id/icon"
+                  android:id="@@IDPREFIX@@icon"
                   android:layout_width="28dp"
                   android:layout_height="28dp"
-                  android:layout_marginEnd="10dp"
-                  tools:src="@drawable/ic_home_vod" />
+                  android:layout_marginEnd="10dp" />
 
               <com.google.android.material.textview.MaterialTextView
-                  android:id="@+id/text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textColor="@color/white"
                   android:textSize="18sp"
-                  tools:text="點播" />
+                  android:textColor="@color/white"
+                  android:id="@@IDPREFIX@@text"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content" />
 
           </androidx.appcompat.widget.LinearLayoutCompat>
           '''
@@ -186,17 +185,22 @@ jobs:
               sys.exit(1)
           for f in files:
               old = open(f, encoding='utf-8').read()
-              # 前置校验：确认是我们认识的那一版布局，结构不同就中止，不发布坏包
-              for token in ('@+id/icon', '@+id/text', 'selector_item'):
+              # 前置校验：确认是我们认识的那一版布局，结构不同就中止，不发布坏包。
+              # id 形式兼容 @+id/ 与 @id/ 两种（源码 vs apktool 反编译产物）。
+              for token in ('id/icon', 'id/text', 'selector_item'):
                   if token not in old:
                       print('::error::unexpected adapter_func.xml in', f, 'missing', token)
                       print(old[:1500])
                       sys.exit(1)
+              id_prefix = '@+id/' if '@+id/icon' in old else '@id/'
+              new = NEW_TPL.replace('@@IDPREFIX@@', id_prefix)
+              assert 'orientation="horizontal"' in new
+              assert 'layout_height="56dp"' in new
               print('=== BEFORE', f, '===')
               print(old[:1500])
-              open(f, 'w', encoding='utf-8').write(NEW)
-              print('=== AFTER', f, '===')
-              print(NEW)
+              open(f, 'w', encoding='utf-8').write(new)
+              print('=== AFTER', f, '(id prefix =', id_prefix, ') ===')
+              print(new)
           print('patched', len(files), 'layout file(s)')
           PY
           python3 /tmp/patch_func.py || { echo "::error::layout patch failed"; exit 1; }
