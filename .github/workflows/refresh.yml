@@ -6,6 +6,13 @@ name: refresh
 # 原因：全量重抓遇到网络抖动会把已有可用源冲掉，而用户要的「检测」是
 # 「看它们还活着没有」，不是「换一批源」。要更新源集合请手动跑 fetch_sources.py。
 #
+# ⚠️ 本流程刻意不调用 scripts/build_candidates.py：该脚本按 data/sources.json
+# 的 rawFile 读取 data/raw/*.json 原始快照，而 data/raw/ 被 .gitignore 排除、
+# 从未入库（采集中间物），CI checkout 拿不到，曾导致每次运行 6 秒即
+# FileNotFoundError 失败。本流程直接以已入库的 data/exports/*.json 为上游：
+# inject_origin_probe.py 注入镜像探测结果 -> build.py 重建 docs/data 与页面。
+# 要更新候选集合，请在本地按 fetch_sources.py -> build_candidates.py 手动跑完再提交。
+#
 # 提交门槛是 contentHash（build.py 计算时已剔除 generatedAt/checkedAt/probeMs/builtAt
 # 这些每次必变的量）。内容没变就不提交，避免每 6 小时刷一条空提交。
 # contentHash 的语义见 build.py 内 VOLATILE 常量处的注释，不要另搞一套判断。
@@ -47,7 +54,6 @@ jobs:
 
       - name: 重新探测并构建
         run: |
-          python scripts/build_candidates.py
           python scripts/inject_origin_probe.py
           python scripts/build.py
 
