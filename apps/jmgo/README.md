@@ -20,7 +20,8 @@
 | --- | --- | --- |
 | **JMGO 兼容版**（主推·官方签名） | `JMGO-Compatible-5.8.7.apk` | 官方原包，字节与签名均未改，runtime 模块完整，可直接覆盖安装 |
 | JMGO 兼容版（重签·桌面显示名） | `JMGO-Compatible-5.8.7-resigned.apk` | 仅改桌面显示名；重签后 runtime 模块失效 |
-| **JMGO 兼容版（首页横条按钮·省空间）** | `JMGO-Compatible-5.8.7-horizontal-ui.apk` | 首页 6 个功能按钮由正方形改横向长方形，详见下节；重签，runtime 模块失效 |
+| **JMGO 兼容版（首页横条按钮·省空间）** | `JMGO-Compatible-5.8.7-horizontal-ui.apk` | 32 位 ARM，给坚果 N1S；首页 6 个功能按钮由正方形改横向长方形，详见下节；重签，runtime 模块失效 |
+| JMGO 兼容版（首页横条按钮·64位·模拟器可用） | `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 同样布局、改为 `arm64_v8a`，给 MuMu 等不带 32 位 ARM 转译的模拟器；重签，runtime 模块失效 |
 | JMGO 兼容版 5.8.7 官方包聚合 | 8 个资产 | 最早基线，含 4 个架构官方包与校验文件 |
 
 ## 首页横条按钮版 · 改动与安装注意
@@ -38,6 +39,27 @@
 - 包名 `com.fongmi.android.tv`，versionName `5.8.7`；布局改动已用 `aapt2 dump xmltree`
   从编译后的 APK 回读确认（`orientation=horizontal`、`120dp × 56dp`）。
 
+### 在 MuMu 等 x86 模拟器里安装
+
+32 位 ARM 包（`JMGO-Compatible-5.8.7-horizontal-ui.apk`）在只支持
+`x86_64 / arm64-v8a / x86`、不带 `armeabi-v7a` 转译的模拟器上会报
+`INSTALL_FAILED_NO_MATCHING_ABIS`（MuMu 界面显示「**错误码 -16**」），
+**不是安装包损坏，重新下载没用**。这类环境请用 64 位版
+`JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk`。
+
+安装前还必须卸载模拟器里已有的 `com.fongmi.android.tv`：重签版与官方或其它版本
+签名不同，无法覆盖安装，否则会报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`。
+卸载会清空收藏与播放记录，**先记下配置地址**：
+
+```bash
+adb connect 127.0.0.1:16384          # MuMu 12 默认 ADB 端口
+adb uninstall com.fongmi.android.tv
+adb install JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk
+```
+
+> 64 位版只用于模拟器 / 64 位设备；坚果 N1S 4K 是纯 32 位用户空间，
+> 仍然必须用不带 `-arm64` 后缀的 32 位包。
+
 ## 下载与安装
 
 1. 打开本仓库 **Releases**，下载名为 **`JMGO-Compatible-5.8.7.apk`** 的文件（即官方 `leanback-armeabi_v7a` 包，仅改名）。
@@ -52,7 +74,8 @@
 ## 这是哪个包 / 为什么是这一个
 
 - 你的设备是**纯 32 位用户空间**（`ro.product.cpu.abilist=armeabi-v7a,armeabi`，无 64 位），
-  因此只发 **`leanback` 版 `armeabi-v7a`**；`arm64_v8a` 两个包在你的设备上无法安装。
+  因此主推 **`leanback` 版 `armeabi-v7a`**；`arm64_v8a` 包在你的设备上无法安装。
+  版本一览里的「64 位·模拟器可用」版是给 MuMu 等模拟器做预览用的，**别装到 N1S 上**。
 - `leanback` 是电视 / 遥控大屏版，适合投影仪；`mobile` 是手机触屏版，不发布。
 - 包名 `com.fongmi.android.tv`，versionName `5.8.7`。
 
