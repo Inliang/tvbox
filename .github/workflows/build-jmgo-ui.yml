@@ -14,10 +14,8 @@ name: build-jmgo-ui
 # JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk（64 位）。
 # 上游 5.8.7 同时提供 leanback-armeabi_v7a.apk 与 leanback-arm64_v8a.apk。
 #
-# 桌面显示名约定（用户 2026-11-13 确立，长期有效）：
-#   armeabi_v7a → 「JMGO 兼容版」
-#   arm64_v8a   → 「JMGO 兼容版 64位」
-# 两个架构的包可能同时装在同一台设备/模拟器上，桌面名必须能一眼区分。
+# 桌面显示名约定（用户 2026-11-13 确立后当日又调整）：两架构桌面名**统一为「JMGO 兼容版」**，
+# 不再按 32/64 区分（两个架构包名同为 com.jmgo.android.tv，同一设备只会装其一，无需靠桌面名区分）。
 # 改的是 res/values*/strings.xml 的 app_name 与 AndroidManifest.xml 的 android:label。
 #
 # 包名改造（用户 2026-11-13 要求，长期有效）：把官方 com.fongmi.android.tv
@@ -255,7 +253,7 @@ jobs:
           # arch spec: abi|deliverable|label
           SPECS=(
             "armeabi_v7a|JMGO-Compatible-5.8.7-horizontal-ui.apk|JMGO 兼容版"
-            "arm64_v8a|JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk|JMGO 兼容版 64位"
+            "arm64_v8a|JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk|JMGO 兼容版"
           )
           for spec in "${SPECS[@]}"; do
             IFS='|' read -r ABI DELIVER LABEL <<< "$spec"
@@ -329,14 +327,26 @@ jobs:
       - name: Prepare date-based release tag
         if: github.event_name == 'workflow_dispatch'
         id: reltag
-        run: echo "tag=jmgo-ui-$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -uo pipefail
+          base="jmgo-ui-$(date +%Y-%m-%d)"
+          tag="$base"
+          n=2
+          while curl -fsS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/tags/$tag" >/dev/null 2>&1; do
+            tag="${base}-${n}"; n=$((n+1))
+          done
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "release tag: $tag"
 
       - name: Publish combined UI Release (32+64, new tag only, keep all existing)
         if: github.event_name == 'workflow_dispatch'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.reltag.outputs.tag }}
-          name: JMGO 兼容版（首页横条按钮·32位+64位）
+          name: JMGO 兼容版（首页横条按钮）
           fail_on_unmatched_files: true
           body: |
             # JMGO 兼容版 · 首页横条按钮版（32 位 + 64 位合并发布）
@@ -355,7 +365,7 @@ jobs:
             | 架构 | 文件名 | 适用设备 | 桌面显示名 |
             | --- | --- | --- | --- |
             | `armeabi_v7a`（32 位 ARM） | `JMGO-Compatible-5.8.7-horizontal-ui.apk` | 坚果 N1S 4K 等 32 位盒子 | JMGO 兼容版 |
-            | `arm64_v8a`（64 位 ARM） | `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 64 位电视盒子 / 投影仪；MuMu 等只支持 `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器 | JMGO 兼容版 64位 |
+            | `arm64_v8a`（64 位 ARM） | `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 64 位电视盒子 / 投影仪；MuMu 等只支持 `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器 | JMGO 兼容版 |
 
             - 64 位同为首页横条按钮的完整电视版，**并非仅模拟器可用**。
             - 在 x86 模拟器上装 32 位 ARM 包会报 `INSTALL_FAILED_NO_MATCHING_ABIS`

@@ -20,8 +20,7 @@
 | --- | --- | --- |
 | **JMGO 兼容版**（主推·官方签名） | `JMGO-Compatible-5.8.7.apk` | 官方原包，字节与签名均未改，runtime 模块完整，可直接覆盖安装 |
 | JMGO 兼容版（重签·桌面显示名） | `JMGO-Compatible-5.8.7-resigned.apk` | 仅改桌面显示名；包名 `com.jmgo.android.tv`；重签后 runtime 模块失效 |
-| **JMGO 兼容版（首页横条按钮·32位）** | `JMGO-Compatible-5.8.7-horizontal-ui.apk` | 32 位 ARM，给坚果 N1S 等 32 位盒子；首页 6 个功能按钮由正方形改横向长方形，详见下节；包名 `com.jmgo.android.tv`；重签，runtime 模块失效 |
-| JMGO 兼容版（首页横条按钮·64位） | `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 同样布局、改为 `arm64_v8a`，给 64 位电视盒子/投影仪及 MuMu 等不带 32 位 ARM 转译的模拟器；包名 `com.jmgo.android.tv`；重签，runtime 模块失效 |
+| **JMGO 兼容版（首页横条按钮）** | `JMGO-Compatible-5.8.7-horizontal-ui.apk` + `JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk` | 32 位 ARM（坚果 N1S 等 32 位盒子）与 64 位 ARM（电视盒子/投影仪及 MuMu 等不带 32 位 ARM 转译的模拟器）**合一发布**；首页 6 个功能按钮由正方形改横向长方形，详见下节；包名 `com.jmgo.android.tv`；重签，runtime 模块失效；**桌面显示名统一为「JMGO 兼容版」**（32/64 不区分） |
 | JMGO 兼容版 5.8.7 官方包聚合 | 8 个资产 | 最早基线，含 4 个架构官方包与校验文件 |
 
 ## 首页横条按钮版 · 改动与安装注意
@@ -78,7 +77,7 @@ adb install JMGO-Compatible-5.8.7-horizontal-ui-arm64.apk
 
 - 你的设备是**纯 32 位用户空间**（`ro.product.cpu.abilist=armeabi-v7a,armeabi`，无 64 位），
   因此主推 **`leanback` 版 `armeabi-v7a`**；`arm64_v8a` 包在你的设备上无法安装。
-  版本一览里的「64 位·模拟器可用」版是给 MuMu 等模拟器做预览用的，**别装到 N1S 上**。
+  版本一览里的「首页横条按钮」版同时含 32/64 位两个 APK（文件名以 `-arm64` 区分），64 位那份是给 MuMu 等模拟器做预览用的，**别装到 N1S 上**。
 - `leanback` 是电视 / 遥控大屏版，适合投影仪；`mobile` 是手机触屏版，不发布。
 - 包名：主推**官方签名版**为 `com.fongmi.android.tv`；改造/重签版（横条按钮版、重签版）已改为 `com.jmgo.android.tv`，详见上方版本一览。versionName 均为 `5.8.7`。
 
