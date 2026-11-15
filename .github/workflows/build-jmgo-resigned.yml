@@ -1,6 +1,6 @@
 name: build-jmgo-resigned
 
-# 增强通道：在官方 FongMi/Release 5.8.7 的 leanback-armeabi_v7a 包基础上，
+# 增强通道：在官方 FongMi/Release 5.8.8 的 leanback-armeabi_v7a 包基础上，
 # 用 apktool 把安装后桌面显示名（launcher label）改为「JMGO 兼容版」后重打包，
 # 并用仓库内置 jmgo 密钥重签，发布为一个独立 Release。
 # 既有的官方签名版 Release（JMGO 兼容版）保持不动、不删除。
@@ -24,7 +24,7 @@ permissions:
 
 env:
   UPSTREAM_REPO: FongMi/Release
-  UPSTREAM_TAG: '5.8.7'
+  UPSTREAM_TAG: '5.8.8'
   OLD_PKG_NAME: 'com.fongmi.android.tv'
   NEW_PKG_NAME: 'com.jmgo.android.tv'
   BUILD_TOOLS: '34.0.0'
@@ -96,7 +96,7 @@ jobs:
           test -s /tmp/jmgo.p12
           echo "keystore decoded"
 
-      - name: Download official leanback-armeabi_v7a 5.8.7
+      - name: Download official leanback-armeabi_v7a 5.8.8
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -202,11 +202,11 @@ jobs:
                      --ks-pass pass:"$RESIGN_PASS" --key-pass pass:"$RESIGN_PASS")
           [[ -n "$RESIGN_ALIAS" ]] && SIGN_ARGS+=(--ks-key-alias "$RESIGN_ALIAS")
           "$BT/apksigner" sign "${SIGN_ARGS[@]}" \
-            --out "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" /tmp/jmgo-aligned.apk
-          ls -l "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk"
-          "$BT/apksigner" verify --print-certs "$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk" | head -8
+            --out "$OUT_DIR/JMGO-Compatible-5.8.8-resigned.apk" /tmp/jmgo-aligned.apk
+          ls -l "$OUT_DIR/JMGO-Compatible-5.8.8-resigned.apk"
+          "$BT/apksigner" verify --print-certs "$OUT_DIR/JMGO-Compatible-5.8.8-resigned.apk" | head -8
           # 6) 确认 launcher label 与包名均已变
-          TARGET="$OUT_DIR/JMGO-Compatible-5.8.7-resigned.apk"
+          TARGET="$OUT_DIR/JMGO-Compatible-5.8.8-resigned.apk"
           if [[ -x "$BT/aapt2" ]]; then
             "$BT/aapt2" dump badging "$TARGET" 2>/dev/null | grep -i "application-label" || echo "label not found via aapt2"
             PKG=$("$BT/aapt2" dump badging "$TARGET" 2>/dev/null | sed -n "s/^package: name='\([^']*\)'.*/\1/p" | head -1)
@@ -229,7 +229,7 @@ jobs:
           body: |
             # JMGO 兼容版（重签改造版）
 
-            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7 `leanback-armeabi_v7a` 包基础上，
+            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.8 `leanback-armeabi_v7a` 包基础上，
             用 apktool 把**安装后桌面显示名**改为 **JMGO 兼容版** 后重打包，并用仓库内置 jmgo 密钥重签发布。
 
             - 安装后在投影仪桌面上显示名：**JMGO 兼容版**
@@ -237,8 +237,8 @@ jobs:
               与宿主 APK 签名校验不一致，**这些扩展模块会失效**；常规直链点播播放通常仍可用。
             - 如需网盘 / Python 爬虫 / 蓝光 BD-J 等完整功能，请使用同仓库另一个
               「JMGO 兼容版」（官方签名·完整功能）版本。
-            - 包名已改为 `com.jmgo.android.tv`（与原官方 `com.fongmi.android.tv` 及任何其它 TVBox 包名均不同，可直接共存、互不覆盖），versionName `5.8.7`。
+            - 包名已改为 `com.jmgo.android.tv`（与原官方 `com.fongmi.android.tv` 及任何其它 TVBox 包名均不同，可直接共存、互不覆盖），versionName `5.8.8`。
           files: |
-            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.7-resigned.apk
+            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.8-resigned.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

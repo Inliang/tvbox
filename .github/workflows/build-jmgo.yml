@@ -1,6 +1,6 @@
 name: build-jmgo
 
-# 聚合官方 FongMi/Release 5.8.7 的 4 个已编译完整包，逐包机械校验后，
+# 聚合官方 FongMi/Release 5.8.8 的 4 个已编译完整包，逐包机械校验后，
 # 仅发布「JMGO 兼容版」单一可用 APK（leanback / armeabi-v7a 32 位版）。
 # 本工作流不产出源码编译产物：上游 FongMi/TV 依赖从未开源的私有 media3 类，
 # 源码重建路线已证伪。产物沿用官方原签名，未做任何二进制改造。
@@ -28,14 +28,14 @@ concurrency:
 
 env:
   UPSTREAM_REPO: FongMi/Release
-  UPSTREAM_TAG: '5.8.7'
-  SOURCE_URL_PREFIX: 'https://github.com/FongMi/Release/releases/download/5.8.7/'
+  UPSTREAM_TAG: '5.8.8'
+  SOURCE_URL_PREFIX: 'https://github.com/FongMi/Release/releases/download/5.8.8/'
   PKG_NAME: 'com.fongmi.android.tv'
   BUILD_TOOLS: '34.0.0'
   APK_DIR: ${{ github.workspace }}/upstream-apks
   OUT_DIR: ${{ github.workspace }}/jmgo-out
   VERIFY_SCRIPT: apps/jmgo/scripts/verify-upstream.py
-  DELIVERABLE: JMGO-Compatible-5.8.7.apk
+  DELIVERABLE: JMGO-Compatible-5.8.8.apk
 
 jobs:
   build:
@@ -115,7 +115,7 @@ jobs:
           echo "BUILD_TOOLS_DIR=$BT" >> "$GITHUB_ENV"
           echo "build-tools ready: $BT"
 
-      - name: Download 4 official 5.8.7 assets
+      - name: Download 4 official 5.8.8 assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -128,7 +128,7 @@ jobs:
           # github.com/.../releases/download/ 通道在 CI 连续下载多个大文件时会 504：
           # 首次运行第 1 个包成功、第 2 个包起 4 次重试全 504。改用 GitHub API 的
           # release assets endpoint（302 到 release-assets.githubusercontent.com），
-          # 仍固定 tag 5.8.7 与 4 个固定文件名，禁止回退其它版本；原下载页保留作回退。
+          # 仍固定 tag 5.8.8 与 4 个固定文件名，禁止回退其它版本；原下载页保留作回退。
           auth=()
           if [[ -n "${GH_TOKEN:-}" ]]; then auth=(-H "Authorization: Bearer $GH_TOKEN"); fi
           if ! curl -fsSL --retry 3 --retry-delay 5 -H 'Accept: application/vnd.github+json' \
@@ -142,14 +142,14 @@ jobs:
           python3 - "$meta" > "$tsv" <<'PY'
           import json, sys
           expected = {
-              "leanback-arm64_v8a.apk": 51412139,
-              "leanback-armeabi_v7a.apk": 44768123,
-              "mobile-arm64_v8a.apk": 51326563,
-              "mobile-armeabi_v7a.apk": 44682547,
+              "leanback-arm64_v8a.apk": 57691393,
+              "leanback-armeabi_v7a.apk": 48933843,
+              "mobile-arm64_v8a.apk": 57604877,
+              "mobile-armeabi_v7a.apk": 48847327,
           }
           data = json.load(open(sys.argv[1], encoding="utf-8"))
-          if data.get("tag_name") != "5.8.7":
-              sys.exit("tag_name 不是 5.8.7: %r" % (data.get("tag_name"),))
+          if data.get("tag_name") != "5.8.8":
+              sys.exit("tag_name 不是 5.8.8: %r" % (data.get("tag_name"),))
           assets = {a["name"]: a for a in data.get("assets", [])}
           rows = []
           for name, size in expected.items():
@@ -219,7 +219,7 @@ jobs:
             --run-id "$GITHUB_RUN_ID" \
             --commit-sha "$GITHUB_SHA"
           ( cd "$OUT_DIR" && sha256sum -c SHA256SUMS.txt )
-          # 仅保留能用的 1 个：leanback / armeabi-v7a（32 位），改名为 JMGO-Compatible-5.8.7.apk 发布。
+          # 仅保留能用的 1 个：leanback / armeabi-v7a（32 位），改名为 JMGO-Compatible-5.8.8.apk 发布。
           # 只用 ASCII 文件名，规避 CI 非 UTF-8 locale 对中文文件名的截断；APK 字节与官方原签名不变。
           cp -f "$OUT_DIR/tvbox-jmgo-leanback-armeabi_v7a-$UPSTREAM_TAG-$SHORT_SHA.apk" \
                 "$OUT_DIR/$DELIVERABLE"
@@ -259,13 +259,13 @@ jobs:
 
             适配 **坚果 N1S 4K 高亮版 / K310 / Android 11 / MT9667 / 32 位系统** 的 TVBox 兼容客户端。
 
-            - 基于 [FongMi/TV](https://github.com/FongMi/TV) 5.8.7 官方发布包，**未修改任何字节、沿用官方原签名**
+            - 基于 [FongMi/TV](https://github.com/FongMi/TV) 5.8.8 官方发布包，**未修改任何字节、沿用官方原签名**
             - 仅包含 `leanback` 版 `armeabi-v7a`（32 位）安装包，已在本机（坚果 N1S）实测可装、可覆盖升级、较稳定
-            - 包名 `com.fongmi.android.tv`，versionName 5.8.7，可 `adb install -r` 覆盖现装官方包，数据保留
+            - 包名 `com.fongmi.android.tv`，versionName 5.8.8，可 `adb install -r` 覆盖现装官方包，数据保留
             - 兼容性说明：本版**不承诺**修复「切换播放源偶发退回首页」的历史问题，仅做官方包聚合与适配分发
 
-            > 来源：https://github.com/FongMi/Release/releases/download/5.8.7/
-            > 文件名 `JMGO-Compatible-5.8.7.apk`（即官方 `leanback-armeabi_v7a` 包，仅改名，未改动字节与原签名）
+            > 来源：https://github.com/FongMi/Release/releases/download/5.8.8/
+            > 文件名 `JMGO-Compatible-5.8.8.apk`（即官方 `leanback-armeabi_v7a` 包，仅改名，未改动字节与原签名）
           files: |
             ${{ github.workspace }}/jmgo-out/${{ env.DELIVERABLE }}
         env:

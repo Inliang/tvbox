@@ -5,14 +5,14 @@
 > 状态：已确认（用户 2026-11-07 完成三文档确认与三项决策；2026-11-08 用户拍板路线变更）
 > 作用：团队内部规格契约。范围外的功能一律不做。
 
-> **方向变更声明（v0.2，效力高于下文一切历史条款）**：2026-11-08 核实 —— `FongMi/TV` 5.8.7 的 `app` 引用 52 个未开源的私有 `androidx.media3.*` 类，`FongMi/media` 全历史 26625 个 commit、另一分支、Google Maven、jitpack、`FongMi/Release` 的 `module` 目录均无对应 AAR，上游 `.gitignore` 的 `lib-*.aar` 证明私有定制 AAR 从未入库，**clean clone 源码重建不可行**。用户拍板改走「官方包兼容化」路线：**主通道 = 官方 `FongMi/Release` 5.8.7 四包基线 + 校验聚合 + 零改造原样发布；实验通道 = 可选二进制兼容层（默认关闭）**。因此下文中所有 `assembleLeanbackRelease` / Gradle / NDK / CMake / clone + 打补丁 / P001~P008 / 双基线兜底 等源码编译表述，**均为 v0.1 历史记录、已废止、不再作为现行约束**；第 13 节总监裁决同理，涉及源码编译的条款以本节与第 13 节第 17 条为准。完整技术裁定见 `docs/TECH-VERDICT.md`。明确不做：不承诺修好闪退。
+> **方向变更声明（v0.2，效力高于下文一切历史条款）**：2026-11-08 核实 —— `FongMi/TV` 5.8.8 的 `app` 引用 52 个未开源的私有 `androidx.media3.*` 类，`FongMi/media` 全历史 26625 个 commit、另一分支、Google Maven、jitpack、`FongMi/Release` 的 `module` 目录均无对应 AAR，上游 `.gitignore` 的 `lib-*.aar` 证明私有定制 AAR 从未入库，**clean clone 源码重建不可行**。用户拍板改走「官方包兼容化」路线：**主通道 = 官方 `FongMi/Release` 5.8.8 四包基线 + 校验聚合 + 零改造原样发布；实验通道 = 可选二进制兼容层（默认关闭）**。因此下文中所有 `assembleLeanbackRelease` / Gradle / NDK / CMake / clone + 打补丁 / P001~P008 / 双基线兜底 等源码编译表述，**均为 v0.1 历史记录、已废止、不再作为现行约束**；第 13 节总监裁决同理，涉及源码编译的条款以本节与第 13 节第 17 条为准。完整技术裁定见 `docs/TECH-VERDICT.md`。明确不做：不承诺修好闪退。
 
 ---
 
 ## 1. 产品定义
 
-- **一句话**：为坚果 N1S 4K 高亮版聚合分发官方 FongMi（蜂蜜版）5.8.7 的四包基线，校验后原样交付可覆盖安装的 APK；可选二进制兼容层默认关闭。
-- **目标用户**：本机主，当前装官方 FongMi 5.8.7 leanback 32 位包（40MB 以上，包名 `com.fongmi.android.tv`），现象是「用一会儿随机闪退」。
+- **一句话**：为坚果 N1S 4K 高亮版聚合分发官方 FongMi（蜂蜜版）5.8.8 的四包基线，校验后原样交付可覆盖安装的 APK；可选二进制兼容层默认关闭。
+- **目标用户**：本机主，当前装官方 FongMi 5.8.8 leanback 32 位包（40MB 以上，包名 `com.fongmi.android.tv`），现象是「用一会儿随机闪退」。
 - **核心问题**：3GB RAM 定制 Android 11 环境下，上游爬虫资源释放/生命周期缺陷、独立 runtime 模块依赖 GitHub 可达性、32/64 位包与 runtime 模块潜在不匹配，三者叠加。**根因尚未实机取证**（ACCEPTANCE 第 5 节标 no-go / 未评级）。
 - **不是**：再造一个 TVBox 分支，也不是宣称已修好闪退。用户要的是「一口气看完整部片不闪退」，本路线只保证「官方包必定可用、可覆盖安装、可核验、可如实实验」，稳定性结论交给 Phase 4 实机取证。
 
@@ -20,7 +20,7 @@
 
 | 优先级 | 功能 | 验收摘要 |
 | --- | --- | --- |
-| P0 | F1 按设备出正确架构产物 | 主通道聚合官方 `FongMi/Release` 5.8.7 的 4 个原包（leanback/mobile × arm64_v8a/armeabi_v7a），每个独立校验、独立标注 ABI 与 flavor，字节一致、零改造 |
+| P0 | F1 按设备出正确架构产物 | 主通道聚合官方 `FongMi/Release` 5.8.8 的 4 个原包（leanback/mobile × arm64_v8a/armeabi_v7a），每个独立校验、独立标注 ABI 与 flavor，字节一致、零改造 |
 | P0 | F3 push 即校验聚合 + 发布 | Actions 成功 -> 4 个官方原包 + `SHA256SUMS.txt` + `build-info.json` + 发布说明；附 sha256 / run id / 来源 tag / ABI / 官方证书指纹 |
 | P0 | 保持官方原签名 | 主通道不重签、零改造，用户可直接覆盖安装当前官方包、零迁移、零配置丢失；runtime 模块同签名链路完整 |
 | P0 | runtime 模块可用性如实告知 | 官方 4 包行为与官方一致，按官方机制按需拉取 runtime 模块；不承诺离线可用、不改 catalog，缺失行为以官方包实际表现与 Phase 4 取证为准 |
@@ -56,8 +56,8 @@
 
 | 层 | 技术 / 值 | 依据 |
 | --- | --- | --- |
-| 主通道基线 | 官方 `FongMi/Release` tag `5.8.7` 的 4 个完整 APK（leanback/mobile × arm64_v8a/armeabi_v7a） | team-lead 核实；下载前缀 `https://github.com/FongMi/Release/releases/download/5.8.7/` |
-| 基线字节数 | leanback-arm64_v8a 51412139 / leanback-armeabi_v7a 44768123 / mobile-arm64_v8a 51326563 / mobile-armeabi_v7a 44682547（字节） | team-lead 核实；聚合时逐包校验 |
+| 主通道基线 | 官方 `FongMi/Release` tag `5.8.8` 的 4 个完整 APK（leanback/mobile × arm64_v8a/armeabi_v7a） | team-lead 核实；下载前缀 `https://github.com/FongMi/Release/releases/download/5.8.8/` |
+| 基线字节数 | leanback-arm64_v8a 57691393 / leanback-armeabi_v7a 48933843 / mobile-arm64_v8a 57604877 / mobile-armeabi_v7a 48847327（字节） | team-lead 核实；聚合时逐包校验 |
 | 主通道签名 | **保持官方原签名**，不重签、零改造；`keystore/jmgo.p12.b64` 仅实验通道重签用 | `docs/TECH-VERDICT.md` 裁定二 |
 | 聚合 / 校验工具 | `apksigner verify --print-certs`、`aapt dump badging`、`sha256sum`、GitHub Actions artifact/release | 沿用原 `collect-apk.sh` 的校验结构（该脚本已删除），实现为 `scripts/verify-upstream.py`，输入为官方 4 包 |
 | 实验通道工具 | apktool 3.0.3（2026-07-20，JDK 17+ / aapt2 only / 稳定版仅到 API 36.1，API 37 支持尚未发版） | `docs/TECH-VERDICT.md` 裁定一；`https://apktool.org/docs/unreleased/` |
@@ -69,15 +69,15 @@
 
 ## 5. 构建产物契约（替代 API 端点清单，v0.2）
 
-主通道产物 = 「官方 4 包 + 校验聚合清单」，全部来自 `FongMi/Release` tag `5.8.7`。**APK 二进制字节、内容与官方原包完全一致，不重签、零改造**；仅在分发层用 `shutil.copyfile` 复制并重命名为带 `tvbox-jmgo-` 前缀、版本与 commit 短哈希的可溯源文件名。Android 覆盖安装判定依据是「包名 + 签名」，与文件名无关，故 `adb install -r` 覆盖安装能力不受影响。逐包 `assetName`（官方原名）与 `sourceUrl` 写入 `upstream-verify.json` / `build-info.json`，配合 `signingMode=upstream-original` 与官方证书指纹机械校验完成溯源：
+主通道产物 = 「官方 4 包 + 校验聚合清单」，全部来自 `FongMi/Release` tag `5.8.8`。**APK 二进制字节、内容与官方原包完全一致，不重签、零改造**；仅在分发层用 `shutil.copyfile` 复制并重命名为带 `tvbox-jmgo-` 前缀、版本与 commit 短哈希的可溯源文件名。Android 覆盖安装判定依据是「包名 + 签名」，与文件名无关，故 `adb install -r` 覆盖安装能力不受影响。逐包 `assetName`（官方原名）与 `sourceUrl` 写入 `upstream-verify.json` / `build-info.json`，配合 `signingMode=upstream-original` 与官方证书指纹机械校验完成溯源：
 
 | 产物 | 命名 | 校验 |
 | --- | --- | --- |
-| APK (leanback 64) | `tvbox-jmgo-leanback-arm64_v8a-5.8.7-<短哈希>.apk`（源 asset `leanback-arm64_v8a.apk`，51412139 B） | 字节数 + sha256 + `apksigner verify --print-certs` + `aapt dump badging` |
-| APK (leanback 32) | `tvbox-jmgo-leanback-armeabi_v7a-5.8.7-<短哈希>.apk`（源 asset `leanback-armeabi_v7a.apk`，44768123 B） | 同上 |
-| APK (mobile 64) | `tvbox-jmgo-mobile-arm64_v8a-5.8.7-<短哈希>.apk`（源 asset `mobile-arm64_v8a.apk`，51326563 B） | 同上 |
-| APK (mobile 32) | `tvbox-jmgo-mobile-armeabi_v7a-5.8.7-<短哈希>.apk`（源 asset `mobile-armeabi_v7a.apk`，44682547 B） | 同上 |
-| 构建信息 | `build-info.json` | 来源 tag `5.8.7` / run id / 本仓库 commit sha / 4 包各自 sha256 + 字节数 + ABI + flavor + 下载 URL + 官方证书指纹 / 聚合时间戳 |
+| APK (leanback 64) | `tvbox-jmgo-leanback-arm64_v8a-5.8.8-<短哈希>.apk`（源 asset `leanback-arm64_v8a.apk`，57691393 B） | 字节数 + sha256 + `apksigner verify --print-certs` + `aapt dump badging` |
+| APK (leanback 32) | `tvbox-jmgo-leanback-armeabi_v7a-5.8.8-<短哈希>.apk`（源 asset `leanback-armeabi_v7a.apk`，48933843 B） | 同上 |
+| APK (mobile 64) | `tvbox-jmgo-mobile-arm64_v8a-5.8.8-<短哈希>.apk`（源 asset `mobile-arm64_v8a.apk`，57604877 B） | 同上 |
+| APK (mobile 32) | `tvbox-jmgo-mobile-armeabi_v7a-5.8.8-<短哈希>.apk`（源 asset `mobile-armeabi_v7a.apk`，48847327 B） | 同上 |
+| 构建信息 | `build-info.json` | 来源 tag `5.8.8` / run id / 本仓库 commit sha / 4 包各自 sha256 + 字节数 + ABI + flavor + 下载 URL + 官方证书指纹 / 聚合时间戳 |
 | 校验和 | `SHA256SUMS.txt` | 与 4 个 Artifact 一一对应；**不**纳入官方 `module` 资产 digest（主通道不改 runtime 链路） |
 | 发布说明 | `README`/Release notes | 4 包清单 + 保持官方签名可覆盖安装 + 不承诺修好闪退 + ABI 选择须实机 `getprop` / AC-32 四包对照试装与 AC-31 中性三组对照（工程推断，非结论） |
 | 实验通道状态 | `experimental-status.json` | 仅实验通道**真正接入后**才产出，四值 `succeeded`/`failed`/`skipped`/`no-artifact`；空产物如实标注，不得静默假装成功。**本轮实验通道为占位、默认关闭，不产出该文件**；主通道由 `build-info.json` 的 `compatPatchStatus: not-applied` 如实标注 |
@@ -151,11 +151,11 @@ apps/jmgo/README.md                   # 用户向说明（已对齐官方包聚�
 | 坑 | 证据 | 处置 |
 | --- | --- | --- |
 | **私有 media3 AAR 未开源，源码重建不可行** | 151 个 `androidx.media3.*` 引用中 52 个无源码；`FongMi/media` 全历史 26625 commit / 另一分支 / Google Maven / jitpack / `module` 目录均无 AAR；上游 `.gitignore` 有 `lib-*.aar` | **方向变更根因**：改走官方包兼容化；详见 `docs/TECH-VERDICT.md` 第 0.1 节 |
-| **apktool 3.0.3 稳定版仅支持到 API 36.1，API 37 支持尚未发版** | `https://apktool.org/docs/unreleased/`(#4214/#4223) | 5.8.7 是 compileSdk 37，实验通道反编译/回编译可行性标 `[需 CI 验证]`（裁定一 V1） |
+| **apktool 3.0.3 稳定版仅支持到 API 36.1，API 37 支持尚未发版** | `https://apktool.org/docs/unreleased/`(#4214/#4223) | 5.8.8 是 compileSdk 37，实验通道反编译/回编译可行性标 `[需 CI 验证]`（裁定一 V1） |
 | **改包必然改变签名；重签破坏 runtime 模块同签名校验** | `RuntimeModule.verifyPackage` 逐字；v2/v3 覆盖整包字节 | 主通道保持官方原签名、零改造；jmgo 重签仅实验通道（裁定二） |
 | 上游已开 `largeHeap=true` + `hardwareAccelerated=true` | `app/src/main/AndroidManifest.xml` @ `4512b4c` 逐字 | 加 largeHeap 是 no-op 且属防假修复；关硬件加速会致播放器黑屏，均不做（裁定三） |
 | FongMi 5.8.6+ 拆分 Python / Node.js / QuickJS / MPV / Thunder 独立模块，`catalog.json` 默认指向 GitHub Release | 架构师核实 Release Note | v0.1「注入可达镜像，升 P0」已废止；主通道不改 catalog，行为随官方包，列为 Phase 4 观察项 |
-| 上游 5.8.5 / 5.8.6 / 5.8.7 连续修「代理网址闪退 / 爬虫资源释放 / 爬虫生命周期」 | `FongMi/Release/releases` | 用户已装 5.8.7 仍闪退，说明问题未完全覆盖；F2 源码级「生命周期收敛」已废止，交给实机取证 |
+| 上游 5.8.5 / 5.8.6 / 5.8.7 / 5.8.8 连续修「代理网址闪退 / 爬虫资源释放 / 爬虫生命周期」 | `FongMi/Release/releases` | 用户已装 5.8.8 仍闪退，说明问题未完全覆盖；F2 源码级「生命周期收敛」已废止，交给实机取证 |
 | runner 预装缺 NDK 28.2.13676358 / CMake 3.22.1 | 架构师核实 | v0.1「workflow 显式 sdkmanager 安装」已废止（主通道不编译）；仅历史 |
 | `yebook/TV` 依赖 jcenter 与明文 http maven 仓库，已失效 | 架构师核实 | 不采用该基线（结论不变） |
 | `FongMi/TV` 无 APK 构建 workflow（只有 `pages.yml`） | GitHub API 复核 | v0.1「自建编译 workflow」已废止；现改为校验聚合 workflow |
@@ -164,13 +164,13 @@ apps/jmgo/README.md                   # 用户向说明（已对齐官方包聚�
 | `FongMi/Release` 的 `module` Release 六类运行时模块均同时提供两个 ABI，catalog.json 带 sha256 `84f89736...` | 架构师核实 | digest 不再进主通道校验清单（主通道不改 runtime 链路）；重签场景下模块会失效，见裁定二 |
 | `yebook/TV` 的 `applicationId` 是 `com.fongmi.android.tv`（FongMi 系旧 fork）；`com.github.tvbox.osc` 属于 `q215613905/TVBoxOSC` | 架构师核实 | PRD 竞品表须修正，两条产品线不可混写（结论不变） |
 | QA 引用的「上游 README 建议优先 32 位变体」并非 FongMi 官方内容（官方 README 全文无 ABI 建议，出自第三方聚合站） | 架构师核实 | 验收文档不得写成上游官方建议（结论不变） |
-| 「蜂蜜版」混指两条代码基线（FongMi/TV 与 TVBoxOSC 系） | PM 竞品调研 | 已由用户「40MB 官方 FongMi 5.8.7」锁定为 FongMi/TV（结论不变） |
+| 「蜂蜜版」混指两条代码基线（FongMi/TV 与 TVBoxOSC 系） | PM 竞品调研 | 已由用户「40MB 官方 FongMi 5.8.8」锁定为 FongMi/TV（结论不变） |
 | 上游 `mobile` 与 `leanback` 包名相同，同设备只能装一个 | 社区资料 | v0.1「只出 leanback」改为「4 包齐发但发布说明提示同包名只能装一个」，由用户按设备选 leanback 包 |
 
 ## 11. 端到端验证步骤（v0.2）
 
 1. push 到 `main` 或 `workflow_dispatch` -> Actions 触发 `.github/workflows/build-jmgo.yml`。
-2. 主通道：下载 `FongMi/Release` tag `5.8.7` 的 4 个官方原包；逐包校验字节数（51412139 / 44768123 / 51326563 / 44682547）与 sha256；`apksigner verify --print-certs` 确认官方签名方案与证书指纹；`aapt dump badging` 确认 `com.fongmi.android.tv` / `native-code` / `versionName` / `targetSdkVersion` / `LEANBACK_LAUNCHER`。
+2. 主通道：下载 `FongMi/Release` tag `5.8.8` 的 4 个官方原包；逐包校验字节数（57691393 / 48933843 / 57604877 / 48847327）与 sha256；`apksigner verify --print-certs` 确认官方签名方案与证书指纹；`aapt dump badging` 确认 `com.fongmi.android.tv` / `native-code` / `versionName` / `targetSdkVersion` / `LEANBACK_LAUNCHER`。
 3. 下载失败、字节数不符、sha256 不符、签名不符、4 包缺任一 -> **主通道构建失败**（唯一正确信号，不允许静默降级或补包冒充）。
 4. 校验通过 -> 原样聚合 4 包 + `SHA256SUMS.txt` + `build-info.json` + 发布说明 -> Artifact / Release；发布说明含「保持官方原签名、可覆盖安装、4 包按设备选、不承诺修好闪退」。
 5. 实验通道（默认关闭）：仅当显式开关开启时执行 apktool 改造 + jmgo 重签 + 装机自检；失败 `continue-on-error`，写 `experimental-status.json`（四值），不阻断主通道、不影响 Release、空产物如实标注。
@@ -183,8 +183,8 @@ apps/jmgo/README.md                   # 用户向说明（已对齐官方包聚�
 
 | 决策 | 结果 |
 | --- | --- |
-| 上游基线 | **v0.2 改**：官方 `FongMi/Release` tag `5.8.7` 四包基线 + 校验聚合（用户 2026-11-08 拍板）。v0.1 的「先 A（`FongMi/TV` 5.8.7）后 B（`q215613905/TVBoxOS`）、A 连续两次 CI 跑不通切 B」已废止——A 因私有 AAR 不可重建，B 亦不采用 |
-| 直装对照 | 不需要；用户确认当前装的就是 5.8.7 |
+| 上游基线 | **v0.2 改**：官方 `FongMi/Release` tag `5.8.8` 四包基线 + 校验聚合（用户 2026-11-08 拍板）。v0.1 的「先 A（`FongMi/TV` 5.8.8）后 B（`q215613905/TVBoxOS`）、A 连续两次 CI 跑不通切 B」已废止——A 因私有 AAR 不可重建，B 亦不采用 |
+| 直装对照 | 不需要；用户确认当前装的就是 5.8.8 |
 | 当前包来源 | 40MB 以上官方蜂蜜影视，`FongMi/TV` 系 |
 | 落地位置 | 当前 `tvbox` 仓库下 `apps/jmgo/` 子目录 |
 | 构建产物 | **v0.2 改**：push 即校验聚合并发布官方 4 原包（零改造、保持官方原签名），非「编译产出」 |
@@ -202,7 +202,7 @@ apps/jmgo/README.md                   # 用户向说明（已对齐官方包聚�
 6. **验收以 QA 的 AC-01~AC-31 为唯一编号体系**，PM 自造的 AC1~AC8 作废。
 7. **阈值锁定表采纳 PM 签字版**，一字不改。
 8. **F2 目标按 PM Addendum 修正**：不只降内存，还须覆盖上游爬虫资源释放/生命周期缺陷。
-9. **驳回「实机 ABI 探测作为 Phase 2 放行门禁」**：架构师 ADR-006 已自认「探测结果决定推荐哪个包，不决定 CI 产物矩阵」，探测与 workflow 落盘无因果关系，不构成阻塞。CI 恒定出双 ABI 两包；README 用「两包分别试装，能装上且稳定者即为目标包」替代推荐；`getprop` 六项取证移到 Phase 4 由 QA 执行。**不向用户索取 APK 文件名 / MD5 / getprop**，用户已明确装的是官方 5.8.7，且本阶段承诺不再打断用户。
+9. **驳回「实机 ABI 探测作为 Phase 2 放行门禁」**：架构师 ADR-006 已自认「探测结果决定推荐哪个包，不决定 CI 产物矩阵」，探测与 workflow 落盘无因果关系，不构成阻塞。CI 恒定出双 ABI 两包；README 用「两包分别试装，能装上且稳定者即为目标包」替代推荐；`getprop` 六项取证移到 Phase 4 由 QA 执行。**不向用户索取 APK 文件名 / MD5 / getprop**，用户已明确装的是官方 5.8.8，且本阶段承诺不再打断用户。
 10. **批准路线 B 落盘**：以 `build-contract.md` 作为 Phase 2 技术契约文档，不生成 `openapi.yaml`。
 11. **采纳架构决策变更的新增约束**：禁止 `ApplicationExitInfo`；Java 层播放状态持久化；产物静态校验含 LEANBACK_LAUNCHER；官方 module 资产 digest 纳入校验清单；PRD 包名纠错；QA 归因纠错。
 12. **终裁：不向用户索取任何信息**（第 4 次驳回，全队广播）。「实机 getprop / aapt dump badging / APK 文件名 / 版本号 / 闪退时机 / 留出集授权 / 当前包」等一律不作为 Phase 2 / 3 落盘门禁。理由：CI 恒定出双 ABI 两包、探测只决定推荐不决定产物矩阵；用户已给等价信息；本阶段已承诺不打断用户。所有此类 blocking 一律降级为 Phase 4 实机验收动作，由 QA 执行。
@@ -210,7 +210,7 @@ apps/jmgo/README.md                   # 用户向说明（已对齐官方包聚�
 14. **largeHeap 从严**：上游已开大堆时生效堆上限为 `dalvik.vm.heapsize`，但验收仍按 `heapgrowthlimit × 80%` 判，不因 largeHeap 放宽阈值；「加 largeHeap」不得作为修复项上报。
 15. **日志脱敏方案采纳**：全量 `logcat -b all -v threadtime` 原始文件本地受限保存、仅 QA 可访问、不上传；对外副本脱敏 URL / token / 片名，但保留时间戳、级别、TAG、堆栈结构和五类死因关键字；脱敏前后 sha256 与行数差须留痕；「借脱敏之名删日志」列为第 21 条自欺行为。构建侧日志脱敏可行性作为 Phase 3 运维评估项，不是 Phase 2 门禁。
 16. **D-01 对外口径定为兜底版**（继续有效）：「沿用现有配置可加载；若旧爬虫或模块不兼容，须给明确提示与可执行迁移路径」，不承诺「一定能沿用旧配置」。三条底线：首启不崩/不白屏/不静默退出；提示须说明不兼容类型与下一步具体操作；迁移不得要求用户自找新配置源、不得把清数据列为步骤、收藏/历史/进度不得丢失。注：v0.2 主通道零改造，「给明确提示」这类需改 Java 层的性质降级为观察项，三条底线仍作为实验通道与产品对外口径约束。
-17. **方向变更终裁（v0.2，2026-11-08，效力最高）**：私有 media3 AAR 未开源，`clean clone` 源码重建不可行，用户拍板改走「官方包兼容化」。主通道 = 官方 `FongMi/Release` 5.8.7 四包基线 + 校验聚合 + 零改造原样发布 + 保持官方原签名；实验通道 = 可选二进制兼容层（apktool 改造/重签），默认关闭、失败不阻断、产出为空如实标注。裁定一~五见 `docs/TECH-VERDICT.md`。**不承诺修好闪退**，工程推断不得写成已验证结论，ABI 推荐须实机 `getprop` / AC-31 对照。v0.1 的 assemble/Gradle/NDK/CMake/clone+补丁/P001~P008/双源码基线兜底 全部废止。此前凡与本条冲突的裁决，以本条为准。
+17. **方向变更终裁（v0.2，2026-11-08，效力最高）**：私有 media3 AAR 未开源，`clean clone` 源码重建不可行，用户拍板改走「官方包兼容化」。主通道 = 官方 `FongMi/Release` 5.8.8 四包基线 + 校验聚合 + 零改造原样发布 + 保持官方原签名；实验通道 = 可选二进制兼容层（apktool 改造/重签），默认关闭、失败不阻断、产出为空如实标注。裁定一~五见 `docs/TECH-VERDICT.md`。**不承诺修好闪退**，工程推断不得写成已验证结论，ABI 推荐须实机 `getprop` / AC-31 对照。v0.1 的 assemble/Gradle/NDK/CMake/clone+补丁/P001~P008/双源码基线兜底 全部废止。此前凡与本条冲突的裁决，以本条为准。
 
 ## 14. 变更记录
 
