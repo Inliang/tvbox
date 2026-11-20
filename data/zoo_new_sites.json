@@ -1,0 +1,86 @@
+[
+  {
+    "name": "腾腾｜视频",
+    "api": "https://file.zhangyichi.dev/uploads/695cb6347d0b1_1767683636.js",
+    "type": 3,
+    "source": "http://47.96.82.41:5188/api.json"
+  },
+  {
+    "name": "星芽｜短剧",
+    "api": "https://git.yylx.win/raw.githubusercontent.com/PizazzGY/NewTVBox/main/movie/py/XYDJ.py",
+    "type": 3,
+    "source": "http://47.96.82.41:5188/api.json"
+  },
+  {
+    "name": "剧王｜短剧",
+    "api": "https://git.yylx.win/raw.githubusercontent.com/PizazzGY/NewTVBox/main/movie/py/JWDJ.py",
+    "type": 3,
+    "source": "http://47.96.82.41:5188/api.json"
+  },
+  {
+    "name": "🦚量子┃采集",
+    "api": "https://cj.lziapi.com/api.php/provide/vod/at/xml/",
+    "type": 0,
+    "source": "https://tv.203511.xyz/0821.json"
+  },
+  {
+    "name": "🦔暴風┃采集",
+    "api": "https://bfzyapi.com/api.php/provide/vod",
+    "type": 1,
+    "source": "https://tv.203511.xyz/0821.json"
+  },
+  {
+    "name": "🍭非凡┃采集",
+    "api": "http://cj.ffzyapi.com/api.php/provide/vod/at/xml/",
+    "type": 0,
+    "source": "https://tv.203511.xyz/0821.json"
+  },
+  {
+    "name": "🦜索尼┃采集",
+    "api": "https://suoniapi.com/api.php/provide/vod",
+    "type": 1,
+    "source": "https://tv.203511.xyz/0821.json"
+  },
+  {
+    "name": "🦚360┃采集",
+    "api": "https://360zy.com/api.php/provide/vod?",
+    "type": 1,
+    "source": "https://tv.203511.xyz/0821.json"
+  },
+  {
+    "name": "🍀┃非凡┃资源",
+    "api": "http://ffzy5.tv/api.php/provide/vod",
+    "type": 1,
+    "source": "https://700sjro44343.vicp.fun/eggp/0211/tv.json"
+  },
+  {
+    "name": "低端影视(DRPY)",
+    "api": "http://home.jundie.top:666/JS/dr_py/libs/drpy.min.js",
+    "type": 3,
+    "source": "http://home.jundie.top:81/top98.json"
+  },
+  {
+    "name": "微信小程序搜【淘软件】获取最新接口",
+    "api": "http://124.223.214.31:8/api/lib/drpy2.min.js",
+    "type": 3,
+    "source": "http://124.223.214.31:8/api.json"
+  },
+  {
+    "name": "🐉┃索尼┃高清",
+    "api": "https://suoniapi.com/api.php/provide/vod/?ac=list",
+    "type": 1,
+    "source": "https://raw.liucn.cc/box/m.json"
+  },
+  {
+    "name": "🌪️暴风影音",
+    "api": "https://app.bfzyapi.com/api.php/provide/vod/",
+    "type": 1,
+    "source": "https://raw.liucn.cc/box/m.json"
+  },
+  {
+    "name": "🎹┃MTV┃合集",
+    "api": "https://mv.wogg.link/mv/vod",
+    "type": 1,
+    "source": "https://raw.liucn.cc/box/m.json"
+  }
+]

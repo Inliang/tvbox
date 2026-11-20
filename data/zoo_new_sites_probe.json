@@ -1,0 +1,151 @@
+[
+  {
+    "key": null,
+    "name": "腾腾｜视频",
+    "api": "https://file.zhangyichi.dev/uploads/695cb6347d0b1_1767683636.js",
+    "status": 521,
+    "ms": 963,
+    "alive": false,
+    "reason": "http 521"
+  },
+  {
+    "key": null,
+    "name": "星芽｜短剧",
+    "api": "https://git.yylx.win/raw.githubusercontent.com/PizazzGY/NewTVBox/main/movie/py/XYDJ.py",
+    "status": 200,
+    "ms": 1144,
+    "json": false,
+    "alive": false,
+    "head": "# coding = utf-8\r\n# !/usr/bin/python\r\n\r\n\"\"\"\r\n\"\"\"\r\n\r\nfrom Cry"
+  },
+  {
+    "key": null,
+    "name": "剧王｜短剧",
+    "api": "https://git.yylx.win/raw.githubusercontent.com/PizazzGY/NewTVBox/main/movie/py/JWDJ.py",
+    "status": 200,
+    "ms": 1124,
+    "json": false,
+    "alive": false,
+    "head": "# coding=utf-8\r\n# !/usr/bin/python\r\n\r\n\"\"\"\r\n\r\n作者 丢丢喵推荐 🚓 内容均从"
+  },
+  {
+    "key": null,
+    "name": "🦚量子┃采集",
+    "api": "https://cj.lziapi.com/api.php/provide/vod/at/xml/",
+    "status": 200,
+    "ms": 761,
+    "json": false,
+    "alive": false,
+    "head": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"5.1\"><l"
+  },
+  {
+    "key": null,
+    "name": "🦔暴風┃采集",
+    "api": "https://bfzyapi.com/api.php/provide/vod",
+    "status": 200,
+    "ms": 565,
+    "has_list": true,
+    "list_len": 20,
+    "total": 173159,
+    "alive": true,
+    "json": true
+  },
+  {
+    "key": null,
+    "name": "🍭非凡┃采集",
+    "api": "http://cj.ffzyapi.com/api.php/provide/vod/at/xml/",
+    "status": 200,
+    "ms": 839,
+    "json": false,
+    "alive": false,
+    "head": "<?xml version=\"1.0\" encoding=\"utf-8\"?><rss version=\"5.1\"><li"
+  },
+  {
+    "key": null,
+    "name": "🦜索尼┃采集",
+    "api": "https://suoniapi.com/api.php/provide/vod",
+    "status": 200,
+    "ms": 553,
+    "has_list": true,
+    "list_len": 20,
+    "total": 149384,
+    "alive": true,
+    "json": true
+  },
+  {
+    "key": null,
+    "name": "🦚360┃采集",
+    "api": "https://360zy.com/api.php/provide/vod?",
+    "status": 200,
+    "ms": 858,
+    "has_list": true,
+    "list_len": 20,
+    "total": 75441,
+    "alive": true,
+    "json": true
+  },
+  {
+    "key": null,
+    "name": "🍀┃非凡┃资源",
+    "api": "http://ffzy5.tv/api.php/provide/vod",
+    "status": 200,
+    "ms": 957,
+    "has_list": true,
+    "list_len": 20,
+    "total": 99194,
+    "alive": true,
+    "json": true
+  },
+  {
+    "key": null,
+    "name": "低端影视(DRPY)",
+    "api": "http://home.jundie.top:666/JS/dr_py/libs/drpy.min.js",
+    "status": 401,
+    "ms": 135,
+    "alive": false,
+    "reason": "http 401"
+  },
+  {
+    "key": null,
+    "name": "微信小程序搜【淘软件】获取最新接口",
+    "api": "http://124.223.214.31:8/api/lib/drpy2.min.js",
+    "status": 200,
+    "ms": 121,
+    "json": false,
+    "alive": false,
+    "head": "import cheerio from\"assets://js/lib/cheerio.min.js\";import\"a"
+  },
+  {
+    "key": null,
+    "name": "🐉┃索尼┃高清",
+    "api": "https://suoniapi.com/api.php/provide/vod/?ac=list",
+    "status": 200,
+    "ms": 491,
+    "has_list": true,
+    "list_len": 20,
+    "total": 149384,
+    "alive": true,
+    "json": true
+  },
+  {
+    "key": null,
+    "name": "🌪️暴风影音",
+    "api": "https://app.bfzyapi.com/api.php/provide/vod/",
+    "status": 200,
+    "ms": 729,
+    "has_list": true,
+    "list_len": 20,
+    "total": 173159,
+    "alive": true,
+    "json": true
+  },
+  {
+    "key": null,
+    "name": "🎹┃MTV┃合集",
+    "api": "https://mv.wogg.link/mv/vod",
+    "status": 401,
+    "ms": 4527,
+    "alive": false,
+    "reason": "http 401"
+  }
+]

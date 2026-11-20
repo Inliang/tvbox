@@ -1,0 +1,206 @@
+[
+  {
+    "url": "https://9280.kstore.vip/newwex.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 100,
+    "lives": 2,
+    "valid": true,
+    "ms": 248
+  },
+  {
+    "url": "http://home.jundie.top:81/top98.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 24,
+    "lives": 2,
+    "valid": true,
+    "ms": 202
+  },
+  {
+    "url": "https://9xi4o.tk/0725.json",
+    "valid": false,
+    "reason": "URLError:<urlopen error [SSL: UNEXPECTED_EOF_WHIL",
+    "ms": 748
+  },
+  {
+    "url": "http://xhztv.top/4k.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": false,
+    "valid": false,
+    "head": "{   \"sites\": [      {       \"key\": \"drpy",
+    "ms": 1007
+  },
+  {
+    "url": "https://700sjro44343.vicp.fun/eggp/0211/tv.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 31,
+    "lives": 3,
+    "valid": true,
+    "ms": 418
+  },
+  {
+    "url": "http://tvbox.xn--4kq62z5rby2qupq9ub.top/",
+    "status": 200,
+    "ctype": "text/html",
+    "json": false,
+    "valid": false,
+    "head": "Һã  ׿ӿڣ https://9280.kstore.vip/aiwex.js",
+    "ms": 2211
+  },
+  {
+    "url": "https://qist.wyfc.qzz.io/fty.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 49,
+    "lives": 5,
+    "valid": true,
+    "ms": 824
+  },
+  {
+    "url": "https://qist.wyfc.qzz.io/xiaosa/api.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 119,
+    "lives": 1,
+    "valid": true,
+    "ms": 855
+  },
+  {
+    "url": "https://9280.kstore.space/newwex.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 100,
+    "lives": 2,
+    "valid": true,
+    "ms": 273
+  },
+  {
+    "url": "http://fmys.top/fmys.json",
+    "valid": false,
+    "reason": "HTTPError:HTTP Error 404: Not Found",
+    "ms": 741
+  },
+  {
+    "url": "https://raw.liucn.cc/box/m.json",
+    "status": 200,
+    "ctype": "application/json; charset=utf-8",
+    "json": false,
+    "valid": false,
+    "head": "//以下内容为互联网收集，只为自用。 {   \"spider\": \"./fty.",
+    "ms": 805
+  },
+  {
+    "url": "https://tv.203511.xyz/0821.json",
+    "status": 200,
+    "ctype": "application/json; charset=utf-8",
+    "json": true,
+    "sites": 36,
+    "lives": 8,
+    "valid": true,
+    "ms": 889
+  },
+  {
+    "url": "http://124.223.214.31:8/api.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 2,
+    "lives": 1,
+    "valid": true,
+    "ms": 82
+  },
+  {
+    "url": "https://700sjro44343.vicp.fun/vip/vip/tv.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 31,
+    "lives": 3,
+    "valid": true,
+    "ms": 230
+  },
+  {
+    "url": "http://47.96.82.41:5188/api.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 90,
+    "lives": 1,
+    "valid": true,
+    "ms": 154
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/gh/liu673cn/box@main/m.json",
+    "valid": false,
+    "reason": "HTTPError:HTTP Error 400: Bad Request",
+    "ms": 602
+  },
+  {
+    "url": "https://6800.kstore.vip/fish.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 111,
+    "lives": 1,
+    "valid": true,
+    "ms": 243
+  },
+  {
+    "url": "https://9280.kstore.space/wex.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": true,
+    "sites": 100,
+    "lives": 2,
+    "valid": true,
+    "ms": 125
+  },
+  {
+    "url": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/svip.json",
+    "valid": false,
+    "reason": "HTTPError:HTTP Error 404: Not Found",
+    "ms": 947
+  },
+  {
+    "url": "https://g.33445500.xyz/https://raw.githubusercontent.com/qist/tvbox/refs/heads/master/jsm.json",
+    "valid": false,
+    "reason": "HTTPError:HTTP Error 404: Not Found",
+    "ms": 1256
+  },
+  {
+    "url": "https://g.33445500.xyz/https://raw.githubusercontent.com/qist/tvbox/refs/heads/master/xiaosa/api.json",
+    "valid": false,
+    "reason": "HTTPError:HTTP Error 404: Not Found",
+    "ms": 1157
+  },
+  {
+    "url": "https://bitbucket.org/xduo/duoapi/raw/master/xpg.json",
+    "valid": false,
+    "reason": "HTTPError:HTTP Error 404: Not Found",
+    "ms": 1199
+  },
+  {
+    "url": "https://raw.gitcode.com/jvftibcs-jbduyh/021/raw/main/18.json",
+    "valid": false,
+    "reason": "HTTPError:HTTP Error 403: Forbidden",
+    "ms": 299
+  },
+  {
+    "url": "http://550.3vcn.work/wdjyys.json",
+    "status": 200,
+    "ctype": "application/json",
+    "json": false,
+    "valid": false,
+    "head": "﻿{\r \"spider\":\"./lib/fan.txt;md5;dc29a25f",
+    "ms": 1093
+  }
+]
