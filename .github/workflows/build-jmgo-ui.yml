@@ -164,12 +164,13 @@ jobs:
           ROOT = os.environ['DECODED_DIR']
           LABEL = os.environ.get('APP_LABEL', 'JMGO 兼容版')
 
-          # 横向长方形：图标在左、文字在右，高度由 100dp 降到 56dp
+          # 横向长方形：图标在左、文字在右，高度由 100dp 降到 56dp；
+          # gravity=center 让「图标+文字」整组在按钮内水平、垂直都居中
           # apktool 反编译后 id 写成 @id/xxx（复用已有资源），不能写成 @+id/xxx，
           # 否则会新建同名资源 ID，代码里的 findViewById(R.id.icon) 可能对不上。
           NEW_TPL = '''<?xml version="1.0" encoding="utf-8"?>
           <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-              android:gravity="center_vertical"
+              android:gravity="center"
               android:orientation="horizontal"
               android:background="@drawable/selector_item"
               android:focusable="true"
@@ -352,45 +353,8 @@ jobs:
           name: JMGO兼容版
           fail_on_unmatched_files: true
           body: |
-            # JMGO 兼容版 · 首页横条按钮版（32 位 + 64 位合并发布）
-
-            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.9 基础上，
-            把首页 **历史 / 直播 / 搜索 / 推送 / 收藏 / 设置** 这 6 个功能按钮从
-            `100dp × 100dp` 正方形（图标在上、文字在下）改成
-            **`120dp × 56dp` 横向长方形**（图标在左、文字在右），
-            垂直占用减少约 44%，给下方海报墙腾出空间。
-
-            桌面显示名按架构区分：**32 位 = `JMGO 兼容版`**，**64 位 = `JMGO 兼容版 64位`**，
-            两个架构同时装在同一台设备上也能一眼区分。
-
-            ## 本 Release 同时包含两个架构
-
-            | 架构 | 文件名 | 适用设备 | 桌面显示名 |
-            | --- | --- | --- | --- |
-            | `armeabi_v7a`（32 位 ARM） | `JMGO-Compatible-5.8.9-horizontal-ui.apk` | 坚果 N1S 4K 等 32 位盒子 | JMGO 兼容版 |
-            | `arm64_v8a`（64 位 ARM） | `JMGO-Compatible-5.8.9-horizontal-ui-arm64.apk` | 64 位电视盒子 / 投影仪；MuMu 等只支持 `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器 | JMGO 兼容版 |
-
-            - 64 位同为首页横条按钮的完整电视版，**并非仅模拟器可用**。
-            - 在 x86 模拟器上装 32 位 ARM 包会报 `INSTALL_FAILED_NO_MATCHING_ABIS`
-              （MuMu 界面显示「错误码 -16」），**不是安装包损坏**，换本页 64 位版即可。
-
-            ## 安装前必读
-
-            - ⚠️ **新包名 `com.jmgo.android.tv` 与原官方 `com.fongmi.android.tv`、其它 TVBox 包名
-              都不同，可直接共存、互不覆盖**。但**若你上一版装过旧的同名重签版（当时还是
-              `com.fongmi.android.tv`）**，需先卸载它再装本版；卸载前记下你的「配置地址」，
-              装好后重新导入一次（本地播放记录 / 收藏会清空）。
-            - ⚠️ 因已重签（非官方签名），官方 runtime 模块（Python / Node / QuickJS /
-              MPV / BD-J / Thunder）与宿主 APK 签名校验不一致，**这些扩展模块会失效**；
-              常规直链点播与直播播放不受影响。需要网盘 / Python 爬虫 / 蓝光 BD-J 等完整功能，
-              请使用同仓库的「JMGO 兼容版」（官方签名版）。
-
-            ## 版本关系
-
-            这是一个**全新 Release / 全新 tag**，此前已发布的所有版本全部保留、未删除、未覆盖，
-            需要回退随时可以下载旧版。包名已改为 **`com.jmgo.android.tv`**，与原官方
-            `com.fongmi.android.tv` 及任何其它 TVBox 包名都**不同，可直接共存、互不覆盖**；
-            versionName 仍为 `5.8.9`。
+            - 修复：首页横条按钮图标与文字居中显示。
+            - 优化：32 位与 64 位在同一 Release 发布，桌面名统一「JMGO 兼容版」。
           files: |
             ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.9-horizontal-ui.apk
             ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.9-horizontal-ui-arm64.apk
