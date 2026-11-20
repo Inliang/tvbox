@@ -253,7 +253,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: jmgo-${{ github.run_id }}
-          name: JMGO 兼容版
+          name: JMGO兼容版
           body: |
             # JMGO 兼容版
 

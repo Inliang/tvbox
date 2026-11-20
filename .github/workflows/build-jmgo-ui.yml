@@ -349,7 +349,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.reltag.outputs.tag }}
-          name: JMGO 兼容版（首页横条按钮）
+          name: JMGO兼容版
           fail_on_unmatched_files: true
           body: |
             # JMGO 兼容版 · 首页横条按钮版（32 位 + 64 位合并发布）

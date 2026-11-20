@@ -225,7 +225,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: jmgo-resigned-${{ github.run_id }}
-          name: JMGO 兼容版（重签·桌面显示 JMGO 兼容版）
+          name: JMGO兼容版
           body: |
             # JMGO 兼容版（重签改造版）
 
