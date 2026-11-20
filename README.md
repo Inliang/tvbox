@@ -123,8 +123,8 @@
 
 | 客户端 | 设备类型 | 64 位（arm64-v8a） | 32 位（armeabi-v7a） |
 | --- | --- | --- | --- |
-| **OK 影视 / 影视仓**（推荐） | 电视版 | [下载 · 49 MB](https://github.com/FongMi/Release/releases/latest/download/leanback-arm64_v8a.apk) | [下载 · 42 MB](https://github.com/FongMi/Release/releases/latest/download/leanback-armeabi_v7a.apk) |
-| **OK 影视 / 影视仓**（推荐） | 手机版 / 平板版 | [下载 · 48 MB](https://github.com/FongMi/Release/releases/latest/download/mobile-arm64_v8a.apk) | [下载 · 42 MB](https://github.com/FongMi/Release/releases/latest/download/mobile-armeabi_v7a.apk) |
+| **OK 影视 / 影视仓**（推荐） | 电视版 | [下载 · 55 MB](https://github.com/FongMi/Release/releases/latest/download/leanback-arm64_v8a.apk) | [下载 · 47 MB](https://github.com/FongMi/Release/releases/latest/download/leanback-armeabi_v7a.apk) |
+| **OK 影视 / 影视仓**（推荐） | 手机版 / 平板版 | [下载 · 55 MB](https://github.com/FongMi/Release/releases/latest/download/mobile-arm64_v8a.apk) | [下载 · 47 MB](https://github.com/FongMi/Release/releases/latest/download/mobile-armeabi_v7a.apk) |
 | q215613905 编译版（Java） | 通用（电视 / 手机） | [下载 · 19 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java64.apk) | [下载 · 18 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-java32.apk) |
 | q215613905 编译版（Python） | 通用（电视 / 手机） | [下载 · 31 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python64.apk) | [下载 · 30 MB](https://github.com/j4Uq/TVBoxOSC/releases/download/20260914-1520/TVBox_q215613905_20260914-1520-python32.apk) |
 | MBox（竖屏） | 手机版 / 平板版 | [下载 · 40 MB](https://github.com/XiaoRanLiu3119/TVBoxOS-Mobile/releases/download/v1.1.1/MBox_v1.1.1_release_20240828.apk)（通用包） | 同左，无需区分 |
