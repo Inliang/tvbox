@@ -3971,7 +3971,7 @@ http://ali.hlspull.yximgs.com/live/6425965d63a08c85ca806bfcc8c75cf4.flv
 http://php.jdshipin.com/TVOD/iptv.php?id=tvbylxw
 #EXTINF:-1 tvg-id="TVB无线新闻" tvg-name="TVB无线新闻" group-title="港澳台频道",TVB无线新闻
 http://cdn9.163189.xyz/smt1.1.php?id=inews_twn
-#EXTINF:-1 tvg-id="TVB无线新闻（备用）" tvg-name="TVB无线新闻（备用）" group-title="港澳台频道",TVB无线新闻（备用）
+#EXTINF:-1 tvg-id="TVB无线新闻" tvg-name="TVB无线新闻" group-title="港澳台频道",TVB无线新闻
 http://erp.giihgtidg.com:8080/live/wxxw01.m3u8
 #EXTINF:-1 tvg-id="TVB无线星河" tvg-name="TVB无线星河" group-title="港澳台频道",TVB无线星河
 http://php.jdshipin.com:8880/smt.php?id=Xinhe
@@ -3993,7 +3993,7 @@ http://php.jdshipin.com:8880/TVOD/iptv.php?id=fct3
 http://101.35.240.114:88/live.php?id=翡翠台
 #EXTINF:-1 tvg-id="TVB翡翠台" tvg-name="TVB翡翠台" group-title="港澳台频道",TVB翡翠台
 http://cdn9.163189.xyz/smt1.1.php?id=jade_twn
-#EXTINF:-1 tvg-id="TVB翡翠台（备用）" tvg-name="TVB翡翠台（备用）" group-title="港澳台频道",TVB翡翠台（备用）
+#EXTINF:-1 tvg-id="TVB翡翠台" tvg-name="TVB翡翠台" group-title="港澳台频道",TVB翡翠台
 http://erp.giihgtidg.com:8080/live/jade01.m3u8
 #EXTINF:-1 tvg-id="VIUTV" tvg-name="VIUTV" group-title="港澳台频道",VIUTV
 http://php.jdshipin.com/TVOD/iptv.php?id=viutv

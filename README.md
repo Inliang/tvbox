@@ -203,7 +203,7 @@ python scripts/check_app_links.py  # 复验 README 里的 APK 下载直链
 
 播放列表是内联完整频道的 m3u，不依赖 APTV 私有的远程订阅扩展，也不走代理。台标探测结果缓存在 `lib/logo-names.json`，`--refresh-logo` 可重新探测。
 
-**测速层（解决卡顿）**：`probe_live_speed.py` 对每条线路拉播放列表 → 下钻 ts 分片 → 实测首字节耗时与分片吞吐，给出 0–100 的流畅度分。`update_lives.py --with-speed` 载入这份缓存，另引入 4 个高频更新的上游作候选池（Guovin/iptv-api、suxuang/myIPTV、YanG-1989/Gather、zwc456baby），把快线路顶到每个频道第一条、剔除实测判死的线路，并单独产出「流畅优选」「4K 精选」「港澳台精选」三张表。旧分组只剔除判死线路、不删分组也不改频道名，git 历史可随时回退。
+**测速层（解决卡顿）**：`probe_live_speed.py` 对每条线路拉播放列表 → 下钻 ts 分片 → 实测首字节耗时与分片吞吐，给出 0–100 的流畅度分。`update_lives.py --with-speed` 载入这份缓存，另引入 4 个高频更新的上游作候选池（Guovin/iptv-api、suxuang/myIPTV、YanG-1989/Gather、zwc456baby），把快线路顶到每个频道第一条、剔除实测判死的线路，并单独产出「流畅优选」「4K 精选」「港澳台精选」三张表。上游把同一频道的另一条线路写成「XX（备用）」时，归一化会去掉「备用」后缀并并入主频道，节目列表里只出现一个节目、线路收在「线路 1/N」里。旧分组只剔除判死线路、不删分组也不改频道名，git 历史可随时回退。
 
 两个工程坑：测速缓存 `data/live_speed.json` 是本机网络快照，已 gitignore，换网络请重跑；并发不宜超过 32，过高会被源站当成刷流而返回 403（实测 64 并发时 88% 的「可达」其实是限流误判）。
 
