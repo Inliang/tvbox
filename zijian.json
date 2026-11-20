@@ -85,16 +85,6 @@
       }
     },
     {
-      "key": "maccms_vod",
-      "name": "🐲┃自建┃沙师弟影视",
-      "type": 1,
-      "api": "https://xinliang.serv00.net/api.php/tvbox",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1
-    },
-    {
       "key": "潮流",
       "name": "🏜┃潮流┃APP",
       "type": 3,
@@ -696,30 +686,6 @@
       "group": "影视"
     },
     {
-      "key": "丨樱花资源",
-      "name": "樱花资源",
-      "type": 1,
-      "api": "https://m3u8.apiyhzy.com/api.php/provide/vod",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "timeout": 10,
-      "group": "影视"
-    },
-    {
-      "key": "丨步步高资源",
-      "name": "步步高资源",
-      "type": 1,
-      "api": "https://api.yparse.com/api/json",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "timeout": 10,
-      "group": "影视"
-    },
-    {
       "key": "丨牛牛点播",
       "name": "牛牛点播",
       "type": 1,
@@ -811,30 +777,6 @@
       "name": "虎牙资源",
       "type": 1,
       "api": "https://www.huyaapi.com/api.php/provide/vod",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "timeout": 10,
-      "group": "影视"
-    },
-    {
-      "key": "丨豆瓣资源2",
-      "name": "豆瓣资源2",
-      "type": 1,
-      "api": "https://dbzy.tv/api.php/provide/vod",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "timeout": 10,
-      "group": "影视"
-    },
-    {
-      "key": "丨豆瓣资源3",
-      "name": "豆瓣资源3",
-      "type": 1,
-      "api": "https://caiji.dbzy5.com/api.php/provide/vod/from/dbm3u8/at/josn",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1,
@@ -937,18 +879,6 @@
       "name": "非凡资源",
       "type": 1,
       "api": "https://cj.ffzyapi.com/api.php/provide/vod",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "timeout": 10,
-      "group": "影视"
-    },
-    {
-      "key": "丨飘零资源",
-      "name": "飘零资源",
-      "type": 1,
-      "api": "https://p2100.net/api.php/provide/vod",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1,
@@ -1133,15 +1063,6 @@
       "searchable": 1,
       "quickSearch": 0,
       "filterable": 1,
-      "group": "影视"
-    },
-    {
-      "key": "飘零影院",
-      "name": "🥀飘零天涯",
-      "type": 1,
-      "api": "https://p2100.net/api.php/provide/vod/",
-      "searchable": 1,
-      "quickSearch": 1,
       "group": "影视"
     },
     {

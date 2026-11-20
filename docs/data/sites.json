@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T20:52:32+00:00",
+  "generatedAt": "2026-11-20T13:23:30+08:00",
   "total": 582,
   "mirrorHosts": [
     "gh-proxy.com",
@@ -639,7 +639,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": false
     },
     {
       "id": "s_63d8bdc2a0",
@@ -656,7 +656,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": false
     },
     {
       "id": "s_f1a30b1661",
@@ -826,7 +826,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": false
     },
     {
       "id": "s_3264f2ef01",
@@ -843,7 +843,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": false
     },
     {
       "id": "s_d843a0b1c4",
@@ -1064,7 +1064,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": false
     },
     {
       "id": "s_8f372a3a58",
@@ -1234,7 +1234,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": false
     },
     {
       "id": "s_6967a08444",
@@ -1472,7 +1472,7 @@
       "tier": "A",
       "segment": 1,
       "recommend": true,
-      "includedIn": "main"
+      "includedIn": false
     },
     {
       "id": "s_6da396478e",
@@ -10014,7 +10014,7 @@
       "includedIn": "full"
     }
   ],
-  "contentHash": "044bb2e5f489",
+  "contentHash": "3fb0261b2f50",
   "schema": 3,
   "sourceContentHash": "5c67e245b63db3f3"
 }

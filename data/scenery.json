@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-07",
+  "updated": "2026-11-20",
   "note": "原「直播中国」景区摄像头 CDN（gcalic / gctxyc / gccncc / gcksc 等 /gc/ 路径）已整体停服：主列表可能返回 200，但子列表一律断连，播放器无法出流。本文件改为经分片级实测的风景/慢直播房间，每个频道配 1-4 条不同代理的备份线路（TVBox 显示为线路 1/N）。房间下播或代理调整时线路会 404，运行 python scripts/update_lives.py --refresh-scenery 可刷新。",
   "channels": [
     {
@@ -44,35 +44,11 @@
       ]
     },
     {
-      "name": "高崖子天文台",
-      "urls": [
-        "https://goodiptv.club/bilibili/22325806",
-        "https://live.ottiptv.cc/bilibili/22325806",
-        "https://live.metshop.top/bilibili/22325806"
-      ]
-    },
-    {
-      "name": "重庆雾都实景",
-      "urls": [
-        "https://goodiptv.club/bilibili/22418773",
-        "https://live.ottiptv.cc/bilibili/22418773",
-        "https://live.metshop.top/bilibili/22418773"
-      ]
-    },
-    {
       "name": "泸沽湖星空慢直播",
       "urls": [
         "https://goodiptv.club/bilibili/24896254",
         "https://live.ottiptv.cc/bilibili/24896254",
         "https://live.metshop.top/bilibili/24896254"
-      ]
-    },
-    {
-      "name": "GMR行车慢直播",
-      "urls": [
-        "https://goodiptv.club/bilibili/25942308",
-        "https://live.ottiptv.cc/bilibili/25942308",
-        "https://live.metshop.top/bilibili/25942308"
       ]
     },
     {
@@ -103,13 +79,6 @@
       "urls": [
         "https://live.ottiptv.cc/bilibili/22297925",
         "https://live.metshop.top/bilibili/22297925"
-      ]
-    },
-    {
-      "name": "青岛海景慢直播",
-      "urls": [
-        "https://live.ottiptv.cc/bilibili/22570982",
-        "https://live.metshop.top/bilibili/22570982"
       ]
     },
     {
