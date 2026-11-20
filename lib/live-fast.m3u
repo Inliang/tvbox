@@ -116,19 +116,17 @@ http://101.66.199.96:9901/tsfile/live/0012_1.m3u8?key=txiptv&playlive=0&authid=0
 #EXTINF:-1 tvg-id="CCTV12" tvg-name="CCTV12" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV12.png",CCTV12
 http://101.66.194.88:9901/tsfile/live/0012_1.m3u8?key=txiptv&playlive=0&authid=0
 #EXTINF:-1 tvg-id="CCTV13" tvg-name="CCTV13" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV13.png",CCTV13
-https://event.pull.hebtv.com/jishi/cp1.m3u8
+http://124.90.45.52:9901/tsfile/live/0013_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-id="CCTV13" tvg-name="CCTV13" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV13.png",CCTV13
-http://ali-m-l.cztv.com/channels/lantian/channel21/1080p.m3u8
-#EXTINF:-1 tvg-id="CCTV14" tvg-name="CCTV14" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV14.png",CCTV14
-https://event.pull.hebtv.com/jishi/cp2.m3u8
+http://121.19.134.149:808/tsfile/live/0013_1.m3u8?key=txiptv&playlive=1&authid=0
 #EXTINF:-1 tvg-id="CCTV14" tvg-name="CCTV14" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV14.png",CCTV14
 http://fuxin.yunjifei.top:999/tsfile/live/0014_1.m3u8?key=txiptv
 #EXTINF:-1 tvg-id="CCTV15" tvg-name="CCTV15" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV15.png",CCTV15
-http://58.56.162.102:4466/newlive/live/hls/16/live.m3u8
-#EXTINF:-1 tvg-id="CCTV15" tvg-name="CCTV15" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV15.png",CCTV15
 http://183.129.255.66:8480/hls/16/index.m3u8
 #EXTINF:-1 tvg-id="CCTV16" tvg-name="CCTV16" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV16.png",CCTV16
-http://219.147.245.238:25480/newlive/live/hls/17/live.m3u8
+http://38.75.136.137:98/gslb/dsdqpub/cctv16hd.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTV16" tvg-name="CCTV16" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV16.png",CCTV16
+http://38.75.136.137:98/gslb/dsdqbv/cctv16hd.m3u8?auth=test20251009
 #EXTINF:-1 tvg-id="CCTV17" tvg-name="CCTV17" group-title="央视频道" tvg-logo="https://epg.112114.xyz/logo/CCTV17.png",CCTV17
 http://1.24.39.180:9003/hls/61/index.m3u8
 #EXTINF:-1 tvg-id="CCTV-世界地理" tvg-name="CCTV-世界地理" group-title="央视频道",CCTV-世界地理

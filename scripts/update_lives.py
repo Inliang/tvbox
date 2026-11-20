@@ -340,7 +340,8 @@ def main():
 
     written = []
     for src, target, header, channels in data:
-        kept = [(inf, u) for inf, u in channels if results.get(u, True)]
+        kept = [(inf, u) for inf, u in channels
+                if results.get(u, True) and not known_mismatch(inf, u)]
         if src.get("write", True) and target is not None:
             lines = [header]
             for inf, u in kept:
@@ -511,8 +512,30 @@ def classify(inf, name):
 # 它根本不是这个频道的直播，放进正规频道就表现为「串台」。
 NOISE_MARK_RE = re.compile(r"春晚|更新日期|更新时间|支持作者|测试|^\d{4}[-/.]\d", re.I)
 CCTV_URL_RE = re.compile(r"cctv[-_ ]?(\d{1,2})", re.I)
+# 上游反复把省级台流标成 CCTV 频道：cztv.com 是浙江广电，hebtv.com 是河北广电。
+CCTV_PROVINCIAL_HOST_RE = re.compile(r"(?:^|\.)(?:cztv|hebtv)\.com$", re.I)
+# 这个 provider 的 newlive/live/hls/N 就是央视序列本身（N=17 → CCTV17）；
+# 上游却整体错位标成 CCTV16 等，用户截图已确认会播错台。
+NEW_LIVE_HLS_RE = re.compile(r"newlive/live/hls/(\d{1,2})/", re.I)
 LOGO_BASE = "https://epg.112114.xyz/logo/"
 LOGO_NAMES = LIB / "logo-names.json"
+
+
+def known_mismatch(inf, url):
+    """据已知错标规则判断这条线路是否明显不属于该频道。
+
+    与 votes 裁决互补：有些错标在所有上游里是一致的（大家都抄同一份错表），
+    投票永远裁不出来，只能靠域名 / 路径这类硬证据剔除。
+    """
+    name = normalize_name(inf.rsplit(",", 1)[-1].strip())
+    m = re.fullmatch(r"CCTV(\d{1,2})\+?", name)
+    if not m:
+        return False
+    host = urllib.parse.urlsplit(url).hostname or ""
+    if CCTV_PROVINCIAL_HOST_RE.search(host):
+        return True
+    h = NEW_LIVE_HLS_RE.search(url)
+    return bool(h and int(h.group(1)) != int(m.group(1)))
 
 
 def build_votes(written):
@@ -681,6 +704,9 @@ def build_all(written):
     buckets = {}
     for _, kept in written:
         for inf, url in kept:
+            if known_mismatch(inf, url):
+                dropped["已知错标流"] += 1
+                continue
             # 手机/盒子端放不了 rtmp/组播，这类地址又无法探测，直接丢弃
             if not url.startswith(("http://", "https://")):
                 continue
@@ -864,7 +890,8 @@ def merge_candidates():
         chs = parse_m3u(text)
         # 旧列表是按「HTTP 可达」判定的，里面仍有本次测速明确判死的线路。
         # 不回写的话，用户切回旧分组照样卡；回写后 git 历史仍可随时回退。
-        kept_chs = [item for item in chs if speed_allow(item[1])]
+        kept_chs = [item for item in chs
+                    if speed_allow(item[1]) and not known_mismatch(*item)]
         rebuilt = ("\n".join([make_header(text)] +
                              [x for pair in kept_chs for x in pair]) + "\n")
         # 内容有变化才写（剔除死链、修掉重复 EXTINF 头都算），保证可重复运行
