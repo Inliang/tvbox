@@ -20,8 +20,6 @@
 「全量拉上游 -> probe_live_speed 测速 -> --with-speed 重建」，CI 通过
 LIVE_PROBE_WORKERS 降低可达性探测并发，避免被上游限流误杀。
 
-同一频道只保留一条线路：上游给的备用线路不再写进任何播放列表，TVBox 不会显示「线路 1/N」。选线规则是实测流畅度优先、https 优先，最后沿用上游顺序。
-
 卡顿与「可达」是两件事：HTTP 200 只说明连得上，播放列表过期（分片 404）照样一直转圈。
 `scripts/probe_live_speed.py` 会实测 TTFB 与分片下载吞吐，结果缓存在
 `data/live_speed.json`（本机网络快照，不入库）。`--with-speed` 用它把快线路排到每个频道
@@ -118,7 +116,7 @@ EXTRA_UPSTREAMS = [
 SPEED_FILE = ROOT / "data" / "live_speed.json"
 SPEED = {}                 # url -> 流畅度评分；未载入测速缓存时为空
 FAST_MIN_SCORE = 40        # 「流畅优选」收录阈值
-FAST_MAX_LINES = 1         # 同一频道只显示一个节目，不列备用线路
+FAST_MAX_LINES = 2         # 每个频道在优选表里最多留几条线路
 
 
 def load_speed():
@@ -326,12 +324,10 @@ def main():
             continue
         if SPEED and speed_of(u) < FAST_MIN_SCORE:
             continue
-        name = normalize_name(inf.rsplit(",", 1)[-1].strip())
-        if not name:
+        key = (inf.rsplit(",", 1)[-1].strip(), u)
+        if key in seen:
             continue
-        if name in seen:
-            continue
-        seen.add(name)
+        seen.add(key)
         uhd_kept.append((inf, u))
     data.append((
         {"label": "4K8K超清精选（实测可达）"},
@@ -345,7 +341,6 @@ def main():
     written = []
     for src, target, header, channels in data:
         kept = [(inf, u) for inf, u in channels if results.get(u, True)]
-        kept = keep_best_per_channel(kept)
         if src.get("write", True) and target is not None:
             lines = [header]
             for inf, u in kept:
@@ -363,7 +358,7 @@ def main():
 
 # 部分精简版 TVBox 只加载 lives[0]，因此把全部可用频道合并成一张总表放在首位。
 # 同名频道保留多条线路（播放器显示「线路 1/N」，可手动/自动换源），但限制上限避免刷屏。
-MAX_LINES = 1  # 同一频道只保留一条线路，TVBox 不再显示「线路 1/N」
+MAX_LINES = 6
 # 点播噪声 / 上游临时频道，不进直播列表
 SKIP_NAME = ("春晚", "支持作者", "更新时间", "更新日期", "测试")
 
@@ -422,25 +417,6 @@ def normalize_name(name):
             break
         n = stripped
     return ALIAS.get(n, n) or name.strip()
-
-
-def keep_best_per_channel(channels):
-    """同一频道只留一条线路：优先实测快线路，其次 https，最后沿用上游顺序。
-
-    用户不希望 TVBox 把同一频道的多个源显示成「线路 1/N」备用列表，
-    所以分组文件写出前、总表合并前都要过这一层；频道数不会减少，
-    只是每个频道从多条线路收敛成一条。
-    """
-    best = {}
-    for inf, url in channels:
-        name = normalize_name(inf.rsplit(",", 1)[-1].strip())
-        if not name:
-            continue
-        rank = (-speed_of(url), 0 if url.startswith("https://") else 1)
-        cur = best.get(name)
-        if cur is None or rank < cur[0]:
-            best[name] = (rank, (inf, url))
-    return [item for _, item in best.values()]
 
 
 def channel_sort_key(item):
@@ -842,7 +818,7 @@ def write_hmt():
     for name, items in buckets.items():
         items.sort(key=lambda p: -speed_of(p[1]))
         picked = [p for p in items
-                  if speed_of(p[1]) >= FAST_MIN_SCORE][:1]
+                  if speed_of(p[1]) >= FAST_MIN_SCORE][:2]
         if not picked:
             picked = items[:1]
         for inf, u in picked:
@@ -888,7 +864,6 @@ def merge_candidates():
         # 旧列表是按「HTTP 可达」判定的，里面仍有本次测速明确判死的线路。
         # 不回写的话，用户切回旧分组照样卡；回写后 git 历史仍可随时回退。
         kept_chs = [item for item in chs if speed_allow(item[1])]
-        kept_chs = keep_best_per_channel(kept_chs)
         rebuilt = ("\n".join([make_header(text)] +
                              [x for pair in kept_chs for x in pair]) + "\n")
         # 内容有变化才写（剔除死链、修掉重复 EXTINF 头都算），保证可重复运行
@@ -915,12 +890,10 @@ def merge_candidates():
         ok = SPEED[u] > 0 if u in SPEED else uhd_verdict.get(u, False)
         if not ok or (SPEED and speed_of(u) < FAST_MIN_SCORE):
             continue
-        name = normalize_name(inf.rsplit(",", 1)[-1].strip())
-        if not name:
+        key = (inf.rsplit(",", 1)[-1].strip(), u)
+        if key in seen:
             continue
-        if name in seen:
-            continue
-        seen.add(name)
+        seen.add(key)
         uhd_kept.append((inf, u))
     uhd_path = LIB / "live-4k.m3u"
     uhd_path.write_text(
