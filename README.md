@@ -77,7 +77,7 @@ python scripts/build.py                                      # 重建官网数�
 
 ---
 
-<h3 align="center">⭐ Star 历史</h3>
+<h3>⭐ Star 历史</h3>
 
 <p align="center">
   <a href="https://star-history.com/#Inliang/tvbox&Timeline"><img src="https://api.star-history.com/svg?repos=Inliang/tvbox&type=Timeline" alt="Star History" width="720"></a>
