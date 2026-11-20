@@ -1,6 +1,4 @@
-# 📺 tvbox · TVBox 配置合集
-
-🎬 点播 · 📡 直播 · 🧩 站点源
+# 📺 TVBox 配置合集
 
 [![stars](https://img.shields.io/github/stars/Inliang/tvbox?style=flat-square&label=stars&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/stargazers) [![forks](https://img.shields.io/github/forks/Inliang/tvbox?style=flat-square&label=forks&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/network/members) [![issues](https://img.shields.io/badge/issues-0%20open-green?style=flat-square&labelColor=555)](https://github.com/Inliang/tvbox/issues) [![watchers](https://img.shields.io/github/watchers/Inliang/tvbox?style=flat-square&label=watchers&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/watchers) [![contributors](https://img.shields.io/github/contributors/Inliang/tvbox?style=flat-square&label=contributors&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/graphs/contributors) [![license](https://img.shields.io/github/license/Inliang/tvbox?style=flat-square&label=license&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/blob/main/LICENSE) [![views](https://img.shields.io/badge/views-1908253-blue?style=flat-square&labelColor=555)](https://github.com/Inliang/tvbox)
 
