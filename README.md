@@ -1,6 +1,7 @@
 # 📺 TVBox 配置合集
 
-[![stars](https://img.shields.io/github/stars/Inliang/tvbox?style=flat-square&label=stars&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/stargazers) [![forks](https://img.shields.io/github/forks/Inliang/tvbox?style=flat-square&label=forks&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/network/members) [![issues](https://img.shields.io/badge/issues-0%20open-green?style=flat-square&labelColor=555)](https://github.com/Inliang/tvbox/issues) [![watchers](https://img.shields.io/github/watchers/Inliang/tvbox?style=flat-square&label=watchers&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/watchers) [![contributors](https://img.shields.io/github/contributors/Inliang/tvbox?style=flat-square&label=contributors&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/graphs/contributors) [![license](https://img.shields.io/github/license/Inliang/tvbox?style=flat-square&label=license&labelColor=555&color=blue)](https://github.com/Inliang/tvbox/blob/main/LICENSE) [![views](https://img.shields.io/badge/views-1908253-blue?style=flat-square&labelColor=555)](https://github.com/Inliang/tvbox)
+[![stars](https://img.shields.io/github/stars/Inliang/tvbox?style=flat-square&label=stars&labelColor=555&color=blue&logo=github&logoColor=white)](https://github.com/Inliang/tvbox/stargazers) [![forks](https://img.shields.io/github/forks/Inliang/tvbox?style=flat-square&label=forks&labelColor=555&color=blue&logo=git&logoColor=white)](https://github.com/Inliang/tvbox/network/members) [![issues](https://img.shields.io/badge/issues-0%20open-green?style=flat-square&labelColor=555&logo=github&logoColor=white)](https://github.com/Inliang/tvbox/issues) [![watchers](https://img.shields.io/github/watchers/Inliang/tvbox?style=flat-square&label=watchers&labelColor=555&color=blue&logo=github&logoColor=white)](https://github.com/Inliang/tvbox/watchers)
+[![contributors](https://img.shields.io/github/contributors/Inliang/tvbox?style=flat-square&label=contributors&labelColor=555&color=blue&logo=github&logoColor=white)](https://github.com/Inliang/tvbox/graphs/contributors) [![license](https://img.shields.io/github/license/Inliang/tvbox?style=flat-square&label=license&labelColor=555&color=blue&logo=gnu&logoColor=white)](https://github.com/Inliang/tvbox/blob/main/LICENSE) [![views](https://img.shields.io/badge/views-1908253-blue?style=flat-square&labelColor=555&logo=googleanalytics&logoColor=white)](https://github.com/Inliang/tvbox)
 
 给 TVBox / 影视仓 / OK 影视用的配置文件。只提供配置地址，不提供影片或播放功能。
 
@@ -75,6 +76,8 @@ python scripts/build.py                                      # 重建官网数�
 本站仅收集、整理并测试公开 TVBox 配置地址，不提供、不存储、不分发任何音视频内容，也不提供播放功能。内容由第三方提供，仅供学习与技术交流。配置模板借鉴 [饭肥猫](http://肥猫.com) 等公开接口，在此致谢。如权利人认为索引地址侵犯权益，请通过 Issue 联系删除。
 
 ---
+
+<h3 align="center">⭐ Star 历史</h3>
 
 <p align="center">
   <a href="https://star-history.com/#Inliang/tvbox&Timeline"><img src="https://api.star-history.com/svg?repos=Inliang/tvbox&type=Timeline" alt="Star History" width="480"></a>
