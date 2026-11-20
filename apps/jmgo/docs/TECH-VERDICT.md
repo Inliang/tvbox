@@ -22,26 +22,26 @@
 
 ### 0.1 方向变更依据（team-lead 已核实，本裁定不重复论证）
 
-FongMi/TV 5.8.8 的 `app` 模块引用 151 个 `androidx.media3.*` 类，其中 52 个在公开仓库无源码（SubtitleTranscript 全家、SecondaryTextTrackSelector、DecoderManager、FfmpegMotionRenderersFactory、DanmakuPlayerViewController、ISO 蓝光三件套、libass 全套）；把 `FongMi/media` 的 `release` 分支历史拉全到 26625 个 commit 后 0 命中，另一分支 `release-1.11.0-fongmi` 同样没有；`FongMi/media` 无 Release、jitpack 404、`FongMi/Release` 的 `module` 目录只有 `runtime-*.apk` 无 AAR；官方 Google Maven media3 1.11.0 不含这些类且作者改过 media3 核心类（fork 版 `DefaultRenderersFactory` 有 `setDolbyVisionOutputPolicy`，stock 没有）。上游 `.gitignore` 里 `lib-*.aar` + `test.gradle` 证明整套私有定制 AAR 从未入库。
+FongMi/TV 5.8.9 的 `app` 模块引用 151 个 `androidx.media3.*` 类，其中 52 个在公开仓库无源码（SubtitleTranscript 全家、SecondaryTextTrackSelector、DecoderManager、FfmpegMotionRenderersFactory、DanmakuPlayerViewController、ISO 蓝光三件套、libass 全套）；把 `FongMi/media` 的 `release` 分支历史拉全到 26625 个 commit 后 0 命中，另一分支 `release-1.11.0-fongmi` 同样没有；`FongMi/media` 无 Release、jitpack 404、`FongMi/Release` 的 `module` 目录只有 `runtime-*.apk` 无 AAR；官方 Google Maven media3 1.11.0 不含这些类且作者改过 media3 核心类（fork 版 `DefaultRenderersFactory` 有 `setDolbyVisionOutputPolicy`，stock 没有）。上游 `.gitignore` 里 `lib-*.aar` + `test.gradle` 证明整套私有定制 AAR 从未入库。
 
 **结论 `[已验证事实]`**：clean clone 源码重建在当前公开材料下不可行。用户已拍板改走「官方包兼容化」路线，故 `assembleLeanbackRelease` / Gradle / NDK / CMake / 源码补丁（P001~P008）整条链路不再是本期构建手段。
 
 ### 0.2 基线产物（`[已验证事实]`，team-lead 核实）
 
-官方 `FongMi/Release` 5.8.8 发布 4 个完整包，下载前缀 `https://github.com/FongMi/Release/releases/download/5.8.8/`：
+官方 `FongMi/Release` 5.8.9 发布 4 个完整包，下载前缀 `https://github.com/FongMi/Release/releases/download/5.8.9/`：
 
 | 文件 | 字节数 | 通道 |
 | --- | --- | --- |
-| `leanback-arm64_v8a.apk` | 57691393 | 主通道（电视 / 64 位） |
-| `leanback-armeabi_v7a.apk` | 48933843 | 主通道（电视 / 32 位） |
-| `mobile-arm64_v8a.apk` | 57604877 | 主通道（手机 / 64 位） |
-| `mobile-armeabi_v7a.apk` | 48847327 | 主通道（手机 / 32 位） |
+| `leanback-arm64_v8a.apk` | 57759170 | 主通道（电视 / 64 位） |
+| `leanback-armeabi_v7a.apk` | 49001620 | 主通道（电视 / 32 位） |
+| `mobile-arm64_v8a.apk` | 57672761 | 主通道（手机 / 64 位） |
+| `mobile-armeabi_v7a.apk` | 48915211 | 主通道（手机 / 32 位） |
 
 仓库 `apps/jmgo/keystore/jmgo.p12.b64` 已存在（本次 `ls` 确认 3580 字节，base64 编码的 PKCS12）。apktool 当前发布版为 **3.0.3**（2026-07-20 发布）。
 
 ---
 
-## 1. 裁定一：apktool 3.0.3 对 5.8.8 做「反编译 -> 改 Manifest -> 回编译 -> 重签名」的可行性
+## 1. 裁定一：apktool 3.0.3 对 5.8.9 做「反编译 -> 改 Manifest -> 回编译 -> 重签名」的可行性
 
 ### 1.1 结论摘要
 
@@ -51,12 +51,12 @@ FongMi/TV 5.8.8 的 `app` 模块引用 151 个 `androidx.media3.*` 类，其中 
 
 | 项 | 已核实值 | 来源 |
 | --- | --- | --- |
-| 5.8.8 编译 SDK | `compileSdk 37` / `targetSdk 37` / `minSdk 24` | 上游 `gradle/libs.versions.toml`（团队 Phase 1 核实） |
+| 5.8.9 编译 SDK | `compileSdk 37` / `targetSdk 37` / `minSdk 24` | 上游 `gradle/libs.versions.toml`（团队 Phase 1 核实） |
 | apktool 稳定版 | 3.0.3，2026-07-20 发布；jar 15478013 B；要求 64 位 JDK 17+ | apktool.org 首页 CLI 样例；darknet.org.uk 评测 |
 | 3.0.3 稳定版支持上限 | API 36.1（Baklava）；3.x 砍掉 aapt1，只认 aapt2 | CSDN 版本综述；redoapk 工具链拆解 |
 | **API 37 支持状态** | `[#4214] Add support for API 37 (Cinnamon Bun) internal frameworks`、`[#4223] Add aapt/2 built against API 37` **位于 "Upcoming Release" changelog，尚未发版** | `https://apktool.org/docs/unreleased/` 逐字 |
-| 5.8.8 主 Manifest | `android:largeHeap="true"`、`android:hardwareAccelerated="true"`、`android:pageSizeCompat="enabled"`、`android:usesCleartextTraffic="true"`、`android:allowBackup="false"` | 上游 `app/src/main/AndroidManifest.xml` @ `4512b4c` 逐字 |
-| 5.8.8 leanback Manifest | `BootReceiver`（`BOOT_COMPLETED` + `QUICKBOOT_POWERON`，`priority=999`，`exported=true`）、`DLNARendererService`、`LEANBACK_LAUNCHER` 已声明 | 上游 `app/src/leanback/AndroidManifest.xml` @ `4512b4c` 逐字 |
+| 5.8.9 主 Manifest | `android:largeHeap="true"`、`android:hardwareAccelerated="true"`、`android:pageSizeCompat="enabled"`、`android:usesCleartextTraffic="true"`、`android:allowBackup="false"` | 上游 `app/src/main/AndroidManifest.xml` @ `4512b4c` 逐字 |
+| 5.8.9 leanback Manifest | `BootReceiver`（`BOOT_COMPLETED` + `QUICKBOOT_POWERON`，`priority=999`，`exported=true`）、`DLNARendererService`、`LEANBACK_LAUNCHER` 已声明 | 上游 `app/src/leanback/AndroidManifest.xml` @ `4512b4c` 逐字 |
 | native 资源 | 含 `libmpv.so` 等 native 库（runtime 模块另带 `libplayer.so` / `libnode.so` 等） | 上游 `RuntimeModule.libraries()` 逐字 |
 | `resources.arsc` 对齐要求 | targetSdk 30+ 要求 `resources.arsc` 未压缩且 4 字节对齐；`apktool b` 默认会压缩它，需 `zip -0` 修正 | tutorialpedia / Android 官方 zipalign 语义 |
 | 签名顺序 | 必须 `apktool b` -> `zip -0` 修 arsc -> `zipalign -p -f 4` -> `apksigner sign`（v2/v3）。顺序颠倒或签名后再改字节，签名即失效 | 多来源一致（sheratonhq、bugnet、tutorialpedia、renrendaima） |
@@ -68,8 +68,8 @@ FongMi/TV 5.8.8 的 `app` 模块引用 151 个 `androidx.media3.*` 类，其中 
 | --- | --- | --- | --- |
 | F1 | `Could not decode arsc` 反编译中断 | 资源表由较新 aapt2 产出，apktool 内置解析器不认新表结构；厂商/定制资源表更易触发 | `[工程推断]` 高风险：本包 compileSdk 37，而 3.0.3 稳定版 aapt2 为 API 36.1 构建，且带 `pageSizeCompat` / `feature flags` 等新结构。`[需 CI 验证]` |
 | F2 | `INSTALL_FAILED_INVALID_APK` 回编译成功但装不上 | `apktool b` 产物是裸包，无 zipalign、无签名；或 `resources.arsc` 被压缩、未 4 字节对齐；或 `extractNativeLibs=false` 时 `.so` 被压缩 / 未页对齐 | `[已验证事实]` 必然触发，除非严格按 1.2 的 `zip -0` + `zipalign -p -f 4` 流程。`[需 CI 验证]` 本包 `pageSizeCompat="enabled"` 下的对齐结果 |
-| F3 | 资源 ID 重排 / 引用丢失 | 回编译重建整个 resources.arsc，凡改动牵涉 `@string` / `@mipmap` / dataBinding 生成资源，ID 可能变；`AndroidManifest.xml` 里 `XXX not found` 是典型症状 | `[工程推断]` 中高风险：5.8.8 有 dataBinding / viewBinding 生成资源与大量 `<intent-filter>` 引用。`[需 CI 验证]` |
-| F4 | 稀疏资源 / protobuf 资源表丢失 | AAPT2 的 sparse resource table、`.pb` compact 资源表、overlay 是 AGP 新链路特性；apktool 的 arsc/axml 读写对 r/w feature flags 的支持 `[#4220]` 同样还在 upcoming | `[工程推断]` 中风险，未能确认 5.8.8 是否启用。`[需 CI 验证]` 用 `aapt2 dump resources` 比对改造前后资源表条目数与 ID |
+| F3 | 资源 ID 重排 / 引用丢失 | 回编译重建整个 resources.arsc，凡改动牵涉 `@string` / `@mipmap` / dataBinding 生成资源，ID 可能变；`AndroidManifest.xml` 里 `XXX not found` 是典型症状 | `[工程推断]` 中高风险：5.8.9 有 dataBinding / viewBinding 生成资源与大量 `<intent-filter>` 引用。`[需 CI 验证]` |
+| F4 | 稀疏资源 / protobuf 资源表丢失 | AAPT2 的 sparse resource table、`.pb` compact 资源表、overlay 是 AGP 新链路特性；apktool 的 arsc/axml 读写对 r/w feature flags 的支持 `[#4220]` 同样还在 upcoming | `[工程推断]` 中风险，未能确认 5.8.9 是否启用。`[需 CI 验证]` 用 `aapt2 dump resources` 比对改造前后资源表条目数与 ID |
 | F5 | 签名块失效导致覆盖安装失败 | v2/v3 覆盖整个 APK 字节；回编译后必须用新密钥重签，不同证书覆盖安装报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | `[已验证事实]` 必然触发，见裁定二 |
 
 补充 `[已验证事实]`：3.0.3 调 aapt2 会传 `--no-compile-sdk-metadata`，部分非官方 aapt2 不认该参数直接 usage 退出（redoapk 工具链拆解）；3.0.2 修复了路径穿越 CVE-2026-39973，故**至少用 3.0.3，不要用更旧的 jar**。
@@ -148,7 +148,7 @@ team-lead 给的两个选项里隐含一个密码学矛盾，裁定前必须澄�
 | --- | --- | --- | --- |
 | **去 BootReceiver** | `[工程推断]` 减少开机后一次自启与常驻机会，理论上略降后台进程数。但用户报障是「**播放一会儿**随机闪退」，发生在交互过程中，开机广播与其无因果关系 -> 对本报障收益极低 | `[已验证事实]` 该 receiver 在 `app/src/leanback/AndroidManifest.xml`，带 `BOOT_COMPLETED` + `QUICKBOOT_POWERON`，`priority=999`；删除组件须整体反编译回编译，触发裁定一 F1~F5。`[工程推断]` 若代码里有对该 receiver 的显式引用，删除后可能 `ClassNotFoundException` | **不做**（收益与风险不对称）。若要做，只放实验通道且必须 `tools:node="remove"` 等价的纯声明删除并做装机自检 |
 | **加 largeHeap** | `[已验证事实]` **零收益**：上游已是 `true`，无「加」的空间。`[已验证事实]` QA 已裁定「加 largeHeap 不得作为修复项上报」，且 3GB 设备上抬高大堆上限会推高 LMK 回收优先级，与「看完整部片不闪退」相悖 | `[已验证事实]` 若反而去动它（改成 false 或重复声明），要么改变已验证基线行为，要么触发资源表重建；SPEC 第 3 节、第 13 节第 2/14 条、ACCEPTANCE 第 4 节 AC-26~28 均把「加 largeHeap」列为防假修复 / 禁止项 | **不做，且明确标注为 no-op**。README 里「不增加 `android:largeHeap`（上游已开启）」这句**事实正确，予以保留** |
-| **关硬件加速**（`hardwareAccelerated="false"`） | `[工程推断]` 理论上减少 GPU 侧显存占用，但对本报障无直接证据 | `[已验证事实]` Android 官方语义：`TextureView can only be used in a hardware accelerated window. When rendered in software, TextureView will draw nothing`。媒体播放界面普遍依赖 TextureView / SurfaceView 与 MediaCodec 硬解；关闭后典型症状正是「有声音没画面 / 黑屏」，社区有多起 `hardwareAccelerated=false` 导致播放器黑屏的实测报告。5.8.8 是媒体播放应用且 `hardwareAccelerated="true"` | **严禁**。这是负收益改动，会把「随机闪退」换成「必然黑屏」，命中 QA 反作弊门的「用功能退化换绿」 |
+| **关硬件加速**（`hardwareAccelerated="false"`） | `[工程推断]` 理论上减少 GPU 侧显存占用，但对本报障无直接证据 | `[已验证事实]` Android 官方语义：`TextureView can only be used in a hardware accelerated window. When rendered in software, TextureView will draw nothing`。媒体播放界面普遍依赖 TextureView / SurfaceView 与 MediaCodec 硬解；关闭后典型症状正是「有声音没画面 / 黑屏」，社区有多起 `hardwareAccelerated=false` 导致播放器黑屏的实测报告。5.8.9 是媒体播放应用且 `hardwareAccelerated="true"` | **严禁**。这是负收益改动，会把「随机闪退」换成「必然黑屏」，命中 QA 反作弊门的「用功能退化换绿」 |
 
 ### 3.1 对 README.md 旧路线说法的核实与纠正
 
@@ -158,7 +158,7 @@ team-lead 给的两个选项里隐含一个密码学矛盾，裁定前必须澄�
 
 | README 位置 | 旧说法 | 判定 |
 | --- | --- | --- |
-| 第 4~5 行 | 「基于上游开源源码 `FongMi/TV` 固定版本，推送即由 GitHub Actions 自动编译出 APK」 | 过时，改为「基于官方 `FongMi/Release` 5.8.8 四包，推送即校验聚合并发布」 |
+| 第 4~5 行 | 「基于上游开源源码 `FongMi/TV` 固定版本，推送即由 GitHub Actions 自动编译出 APK」 | 过时，改为「基于官方 `FongMi/Release` 5.8.9 四包，推送即校验聚合并发布」 |
 | 第 16~18、24、45~46 行 | 「两个 ABI 包」「两个都构建」「`patches-applied.json` 记录补丁状态」 | 过时：主通道是 4 个官方原包，不构建、无补丁状态文件 |
 | 第 30~43 行 | P001~P008 补丁表 | 过时，整体作废；不得表述为「本期已应用」 |
 | 第 52 行 | 「不增加 `android:largeHeap`（上游已开启）」 | **事实正确，保留** |
@@ -173,10 +173,10 @@ team-lead 给的两个选项里隐含一个密码学矛盾，裁定前必须澄�
 ### 4.1 已验证事实
 
 - MT9667 为 4×A73 + 4×A53 的 64 位 SoC `[已验证事实，团队给定参数]`；用户当前装的是 32 位 leanback 包并用一会儿闪退 `[已验证事实，用户报障]`。
-- 官方 5.8.8 同时提供 `arm64_v8a` 与 `armeabi_v7a` 两个 leanback 包，字节数 57691393 / 48933843 `[已验证事实，第 0.2 节]`。
+- 官方 5.8.9 同时提供 `arm64_v8a` 与 `armeabi_v7a` 两个 leanback 包，字节数 57759170 / 49001620 `[已验证事实，第 0.2 节]`。
 - 32 位进程虚拟地址空间上限约 4GB（Linux `VMSPLIT_3G` 下用户态约 3GB）；64 位 Android 默认 39-bit VA，可达 512GB `[已验证事实，besthub / tsight 架构资料]`。
 - Meta/Oculus 官方工程博客逐字：**「Most applications crash from memory pressure because the virtual address space gets fragmented, not because of lack of physical memory」**；64 位把地址空间扩到极大，基本消除虚拟地址空间碎片导致的 OOM `[已验证事实，https://developers.meta.com/horizon/blog/the-memory-benefits-of-64-bit-how-it-works/]`。
-- 5.8.8 含 native 解码库（`libmpv.so` 等），`lib-*.aar` / runtime 模块按 ABI 分别提供 `[已验证事实，RuntimeModule.libraries() 与 module Release]`。
+- 5.8.9 含 native 解码库（`libmpv.so` 等），`lib-*.aar` / runtime 模块按 ABI 分别提供 `[已验证事实，RuntimeModule.libraries() 与 module Release]`。
 
 ### 4.2 工程推断（**不是结论**）
 
@@ -194,7 +194,7 @@ team-lead 给的两个选项里隐含一个密码学矛盾，裁定前必须澄�
 1. **系统 ABI 位数未知**。64 位 SoC 不等于 64 位 Android：需 `getprop ro.product.cpu.abilist` / `ro.product.cpu.abi` / `ro.zygote` 实机确认。若系统是 32 位，`arm64_v8a` 包直接 `INSTALL_FAILED_NO_MATCHING_ABIS`，装不上。QA / PM 在前序轮次已就此正式纠正过「由 CPU 位数推出系统位数」的错误，SPEC 第 10 节、第 13 节第 9/12 条保留该约束。
 2. **闪退根因未取证**。可能是上游爬虫 Java 未捕获异常、runtime 模块缺失/签名不匹配、解码器硬解路径崩溃、LMK 回收，这些**与 ABI 位数无关**，换 64 位包不会改善。
 3. **存在反例 `[已验证事实，PM 前序记录]`**：用户明确报过官方 arm64 包也闪退、换到 32 位包才勉强能用。这与「64 位更稳」的推断方向相反。
-4. **32 位包体积更小**（48933843 B vs 57691393 B），在 3GB RAM 设备上安装/加载开销略有差异，方向不确定。
+4. **32 位包体积更小**（49001620 B vs 57759170 B），在 3GB RAM 设备上安装/加载开销略有差异，方向不确定。
 5. **无任何本机实测数据**。ACCEPTANCE.md 第 5 节明确实机稳定性为 `no-go / 未评级`；AC-31 的中性三组对照尚未执行。
 
 ### 4.4 裁定
@@ -211,7 +211,7 @@ team-lead 给的两个选项里隐含一个密码学矛盾，裁定前必须澄�
 
 | 维度 | 主通道（Main，默认开） | 实验通道（Experimental，默认关） |
 | --- | --- | --- |
-| 输入 | `FongMi/Release` 5.8.8 的 4 个官方原包 | 主通道产物的副本 + apktool 3.0.3 改造 |
+| 输入 | `FongMi/Release` 5.8.9 的 4 个官方原包 | 主通道产物的副本 + apktool 3.0.3 改造 |
 | 动作 | 下载 -> 校验 -> 原样聚合 -> 发布 | 反编译 -> 改 Manifest -> 回编译 -> zipalign -> apksigner 重签（jmgo 密钥） -> 装机自检 |
 | 签名 | **官方原签名，零改动** | jmgo 密钥重签（触发裁定二全部代价） |
 | 产物 | 4 个官方 APK + `SHA256SUMS.txt` + `build-info.json` + 发布说明 | 二进制改造包，或**空** |
@@ -226,7 +226,7 @@ team-lead 给的两个选项里隐含一个密码学矛盾，裁定前必须澄�
 主通道校验聚合的最小字段（承接 `build-contract.md` v2.0；原 `collect-apk.sh` 的 `build-info.json` 结构已由 `scripts/verify-upstream.py` 实现，该 shell 脚本已删除）：
 
 - 每个包的：原始文件名、字节数、sha256、ABI、flavor（leanback / mobile）、下载 URL、官方 `apksigner verify --print-certs` 证书指纹。
-- 批次级：run id、commit sha（本仓库 tag 5.8.8 若需）、聚合时间戳、4 包清单、来源 tag `5.8.8`。
+- 批次级：run id、commit sha（本仓库 tag 5.8.9 若需）、聚合时间戳、4 包清单、来源 tag `5.8.9`。
 - `SHA256SUMS.txt` 与产物一一对应；**不**把官方 `module` 资产 digest 写进主通道校验（主通道不改 runtime 链路，官方包自身会按需拉取）。
 - 静态校验：`aapt dump badging` 取 `package` / `native-code` / `versionName` / `targetSdkVersion` / `launchable-activity`；`apksigner verify` 确认签名方案与证书指纹一致。
 
@@ -258,14 +258,14 @@ team-lead 给的两个选项里隐含一个密码学矛盾，裁定前必须澄�
 | 编号 | 结论 | 来源 |
 | --- | --- | --- |
 | E1 | 私有 media3 AAR 未开源 -> 源码重建不可行 | team-lead 方向变更调研（本文件第 0.1 节转述） |
-| E2 | 官方 4 包文件名 / 字节数 / 下载前缀 | team-lead 核实；`https://github.com/FongMi/Release/releases/download/5.8.8/` |
+| E2 | 官方 4 包文件名 / 字节数 / 下载前缀 | team-lead 核实；`https://github.com/FongMi/Release/releases/download/5.8.9/` |
 | E3 | apktool 3.0.3 版本 / 发布日期 / 64 位 JDK / aapt2 / CVE | `https://www.apktool.org/`；`https://www.darknet.org.uk/2026/11/apktool-decompile-edit-rebuild-android-apk/` |
 | E4 | API 37 支持在 Upcoming Release（#4214 / #4223 / #4220），稳定版仅到 36.1 | `https://apktool.org/docs/unreleased/` 逐字 |
 | E5 | 3.x 砍 aapt1 只认 aapt2；`--no-compile-sdk-metadata` 兼容问题 | `http://www.redoapk.com/Detail.aspx?id=12898` |
 | E6 | arsc 解码失败 / INVALID_APK / 签名顺序 / v1-only 拒装 | `https://www.sheratonhq.com/news/201303`；`https://www.tutorialpedia.org/blog/targeting-r-version-30-and-above-requires-the-resources-arsc-of-installed-apks-to-be-stored-uncompressed-and-aligned-on-a-4-byte-boundary` |
 | E7 | `extractNativeLibs=false` 需 `zipalign -p` 否则 native 库解压失败 | `https://stackoverflow.com/questions/63204032/` |
 | E8 | targetSdk 30+ 需 v2+；不同签名报 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`；签名后不得改字节 | Android 11 行为变更；`https://sekin.in/how-to-fix-install_parse_failed_no_certificates-when-installing-a-modified-apk`；`https://appforshare.io/blog/android-app-signing-apk-aab-sideload` |
-| E9 | 5.8.8 主 / leanback Manifest 属性（largeHeap / hardwareAccelerated / pageSizeCompat / BootReceiver / LEANBACK_LAUNCHER） | `https://raw.githubusercontent.com/FongMi/TV/4512b4c9f82534ff66acfde06ccdd68f35b074f0/app/src/main/AndroidManifest.xml` 与 `.../app/src/leanback/AndroidManifest.xml` 逐字 |
+| E9 | 5.8.9 主 / leanback Manifest 属性（largeHeap / hardwareAccelerated / pageSizeCompat / BootReceiver / LEANBACK_LAUNCHER） | `https://raw.githubusercontent.com/FongMi/TV/4512b4c9f82534ff66acfde06ccdd68f35b074f0/app/src/main/AndroidManifest.xml` 与 `.../app/src/leanback/AndroidManifest.xml` 逐字 |
 | E10 | runtime 模块与宿主同签名校验 `Invalid runtime signer` | `https://raw.githubusercontent.com/FongMi/TV/4512b4c9f82534ff66acfde06ccdd68f35b074f0/catvod/src/main/java/com/github/catvod/utils/RuntimeModule.java` 逐字 |
 | E11 | 主 APK 源码层未发现签名自校验（0 命中，不等于不存在） | GitHub code search `GET_SIGNATURES` / `antiTamper` / `signatureCheck` / `checkSignature` repo:FongMi/TV |
 | E12 | `hardwareAccelerated=false` 导致 TextureView 黑屏 / 播放器有声无画 | Android 官方 TextureView 文档语义；`https://blog.csdn.net/qq_36707431/article/details/120851722` |

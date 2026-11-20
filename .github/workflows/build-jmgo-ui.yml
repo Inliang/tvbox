@@ -1,6 +1,6 @@
 name: build-jmgo-ui
 
-# UI 改造通道：在官方 FongMi/Release 5.8.8 的 leanback 包基础上，
+# UI 改造通道：在官方 FongMi/Release 5.8.9 的 leanback 包基础上，
 # 把首页「历史 / 直播 / 搜索 / 推送 / 收藏 / 设置」6 个功能按钮从
 # 100dp x 100dp 的正方形（图标在上、文字在下）改成横向长方形
 # （图标在左、文字在右、高度 56dp），减少占用的垂直空间。
@@ -10,9 +10,9 @@ name: build-jmgo-ui
 #
 # 单 Release 合并发布（用户 2026-11-13 要求）：一次构建同时产出 32 位（armeabi-v7a）
 # 与 64 位（arm64-v8a）两个 APK，合并到**同一个 Release** 发布，描述把两个架构写在一起。
-# 两个产物文件名：JMGO-Compatible-5.8.8-horizontal-ui.apk（32 位，无后缀）与
-# JMGO-Compatible-5.8.8-horizontal-ui-arm64.apk（64 位）。
-# 上游 5.8.8 同时提供 leanback-armeabi_v7a.apk 与 leanback-arm64_v8a.apk。
+# 两个产物文件名：JMGO-Compatible-5.8.9-horizontal-ui.apk（32 位，无后缀）与
+# JMGO-Compatible-5.8.9-horizontal-ui-arm64.apk（64 位）。
+# 上游 5.8.9 同时提供 leanback-armeabi_v7a.apk 与 leanback-arm64_v8a.apk。
 #
 # 桌面显示名约定（用户 2026-11-13 确立后当日又调整）：两架构桌面名**统一为「JMGO 兼容版」**，
 # 不再按 32/64 区分（两个架构包名同为 com.jmgo.android.tv，同一设备只会装其一，无需靠桌面名区分）。
@@ -43,7 +43,7 @@ permissions:
 
 env:
   UPSTREAM_REPO: FongMi/Release
-  UPSTREAM_TAG: '5.8.8'
+  UPSTREAM_TAG: '5.8.9'
   OLD_PKG_NAME: 'com.fongmi.android.tv'
   NEW_PKG_NAME: 'com.jmgo.android.tv'
   BUILD_TOOLS: '34.0.0'
@@ -130,7 +130,7 @@ jobs:
           echo "RESIGN_ALIAS=$ALIAS" >> "$GITHUB_ENV"
           echo "keystore ok; alias=$ALIAS"
 
-      - name: Download official leanback 5.8.8 (both ABIs)
+      - name: Download official leanback 5.8.9 (both ABIs)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -253,8 +253,8 @@ jobs:
 
           # arch spec: abi|deliverable|label
           SPECS=(
-            "armeabi_v7a|JMGO-Compatible-5.8.8-horizontal-ui.apk|JMGO 兼容版"
-            "arm64_v8a|JMGO-Compatible-5.8.8-horizontal-ui-arm64.apk|JMGO 兼容版"
+            "armeabi_v7a|JMGO-Compatible-5.8.9-horizontal-ui.apk|JMGO 兼容版"
+            "arm64_v8a|JMGO-Compatible-5.8.9-horizontal-ui-arm64.apk|JMGO 兼容版"
           )
           for spec in "${SPECS[@]}"; do
             IFS='|' read -r ABI DELIVER LABEL <<< "$spec"
@@ -354,7 +354,7 @@ jobs:
           body: |
             # JMGO 兼容版 · 首页横条按钮版（32 位 + 64 位合并发布）
 
-            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.8 基础上，
+            在官方 [FongMi/TV](https://github.com/FongMi/TV) 5.8.9 基础上，
             把首页 **历史 / 直播 / 搜索 / 推送 / 收藏 / 设置** 这 6 个功能按钮从
             `100dp × 100dp` 正方形（图标在上、文字在下）改成
             **`120dp × 56dp` 横向长方形**（图标在左、文字在右），
@@ -367,8 +367,8 @@ jobs:
 
             | 架构 | 文件名 | 适用设备 | 桌面显示名 |
             | --- | --- | --- | --- |
-            | `armeabi_v7a`（32 位 ARM） | `JMGO-Compatible-5.8.8-horizontal-ui.apk` | 坚果 N1S 4K 等 32 位盒子 | JMGO 兼容版 |
-            | `arm64_v8a`（64 位 ARM） | `JMGO-Compatible-5.8.8-horizontal-ui-arm64.apk` | 64 位电视盒子 / 投影仪；MuMu 等只支持 `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器 | JMGO 兼容版 |
+            | `armeabi_v7a`（32 位 ARM） | `JMGO-Compatible-5.8.9-horizontal-ui.apk` | 坚果 N1S 4K 等 32 位盒子 | JMGO 兼容版 |
+            | `arm64_v8a`（64 位 ARM） | `JMGO-Compatible-5.8.9-horizontal-ui-arm64.apk` | 64 位电视盒子 / 投影仪；MuMu 等只支持 `x86_64 / arm64-v8a / x86`、不带 armeabi-v7a 转译的模拟器 | JMGO 兼容版 |
 
             - 64 位同为首页横条按钮的完整电视版，**并非仅模拟器可用**。
             - 在 x86 模拟器上装 32 位 ARM 包会报 `INSTALL_FAILED_NO_MATCHING_ABIS`
@@ -390,9 +390,9 @@ jobs:
             这是一个**全新 Release / 全新 tag**，此前已发布的所有版本全部保留、未删除、未覆盖，
             需要回退随时可以下载旧版。包名已改为 **`com.jmgo.android.tv`**，与原官方
             `com.fongmi.android.tv` 及任何其它 TVBox 包名都**不同，可直接共存、互不覆盖**；
-            versionName 仍为 `5.8.8`。
+            versionName 仍为 `5.8.9`。
           files: |
-            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.8-horizontal-ui.apk
-            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.8-horizontal-ui-arm64.apk
+            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.9-horizontal-ui.apk
+            ${{ github.workspace }}/jmgo-out/JMGO-Compatible-5.8.9-horizontal-ui-arm64.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

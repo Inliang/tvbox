@@ -4,7 +4,7 @@
 纯 Python 实现，便于在开发者本机复现（不依赖 Gradle / NDK / 源码树）。
 
 子命令：
-  verify       逐包校验 4 个官方 5.8.8 asset，写出 upstream-verify.json（默认）
+  verify       逐包校验 4 个官方 5.8.9 asset，写出 upstream-verify.json（默认）
   package      校验通过后统一重命名、生成 SHA256SUMS.txt 与 build-info.json
   list-assets  逐行输出 4 个官方 asset 文件名
   self-test    用伪造包证明「任一断言失败即非零退出」
@@ -12,7 +12,7 @@
 设计约束：
   - 任一断言失败 -> 写出含失败明细的 upstream-verify.json、stderr 打印
     "FAIL <assetName>: <reason>"、非零退出。绝不静默继续。
-  - 只认固定 tag 5.8.8 的 4 个固定文件名，禁止 fallback 到其它版本。
+  - 只认固定 tag 5.8.9 的 4 个固定文件名，禁止 fallback 到其它版本。
   - 不实现任何二进制改造，compatPatchStatus 恒为 "not-applied"。
 """
 
@@ -30,10 +30,10 @@ import sys
 import zipfile
 
 UPSTREAM_REPO = "FongMi/Release"
-UPSTREAM_TAG = "5.8.8"
-SOURCE_URL_PREFIX = "https://github.com/FongMi/Release/releases/download/5.8.8/"
+UPSTREAM_TAG = "5.8.9"
+SOURCE_URL_PREFIX = "https://github.com/FongMi/Release/releases/download/5.8.9/"
 EXPECTED_PACKAGE = "com.fongmi.android.tv"
-EXPECTED_VERSION_NAME = "5.8.8"
+EXPECTED_VERSION_NAME = "5.8.9"
 MIN_SIZE_BYTES = 30 * 1024 * 1024
 BUILD_TOOLS_VERSION = "34.0.0"
 
@@ -41,10 +41,10 @@ BUILD_TOOLS_VERSION = "34.0.0"
 # 精确大小来自已核实事实，用于「零偏差」核验：大小不符即判定下错版本或
 # 官方 asset 被替换，直接终止，不静默放过。
 ASSETS = [
-    ("leanback", "arm64_v8a",   "arm64-v8a",   57691393),
-    ("leanback", "armeabi_v7a", "armeabi-v7a", 48933843),
-    ("mobile",   "arm64_v8a",   "arm64-v8a",   57604877),
-    ("mobile",   "armeabi_v7a", "armeabi-v7a", 48847327),
+    ("leanback", "arm64_v8a",   "arm64-v8a",   57759170),
+    ("leanback", "armeabi_v7a", "armeabi-v7a", 49001620),
+    ("mobile",   "arm64_v8a",   "arm64-v8a",   57672761),
+    ("mobile",   "armeabi_v7a", "armeabi-v7a", 48915211),
 ]
 
 

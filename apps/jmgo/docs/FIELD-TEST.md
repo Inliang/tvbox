@@ -2,7 +2,7 @@
 
 > 文件：`apps/jmgo/docs/FIELD-TEST.md`
 > 适用设备：坚果 N1S 4K 高亮版（国行 J31-8K2），Android 11，无 Root，无网口，走 Wi-Fi ADB
-> 适用产物：本仓库发布的 4 个官方 5.8.8 包（leanback / mobile，各有 64 位与 32 位）
+> 适用产物：本仓库发布的 4 个官方 5.8.9 包（leanback / mobile，各有 64 位与 32 位）
 > 面向读者：本机使用者，不需要开发经验
 
 ## 这份文档能做什么，不能做什么
@@ -240,24 +240,24 @@ dir
 
 ### 3.1 四个包与试装顺序
 
-本仓库每次发布 4 个包，文件名形如 `tvbox-jmgo-{flavor}-{abi}-5.8.8-{短哈希}.apk`。**顺序固定，不要跳着试**，因为这是一组对照实验，顺序本身就是记录的一部分：
+本仓库每次发布 4 个包，文件名形如 `tvbox-jmgo-{flavor}-{abi}-5.8.9-{短哈希}.apk`。**顺序固定，不要跳着试**，因为这是一组对照实验，顺序本身就是记录的一部分：
 
 | 轮次 | 包名（示例文件名，短哈希以你实际下载的为准） |
 | --- | --- |
-| 第 1 轮 | `tvbox-jmgo-leanback-arm64_v8a-5.8.8-abc1234.apk`（电视版 / 64 位） |
-| 第 2 轮 | `tvbox-jmgo-leanback-armeabi_v7a-5.8.8-abc1234.apk`（电视版 / 32 位） |
-| 第 3 轮 | `tvbox-jmgo-mobile-arm64_v8a-5.8.8-abc1234.apk`（手机版 / 64 位） |
-| 第 4 轮 | `tvbox-jmgo-mobile-armeabi_v7a-5.8.8-abc1234.apk`（手机版 / 32 位） |
+| 第 1 轮 | `tvbox-jmgo-leanback-arm64_v8a-5.8.9-abc1234.apk`（电视版 / 64 位） |
+| 第 2 轮 | `tvbox-jmgo-leanback-armeabi_v7a-5.8.9-abc1234.apk`（电视版 / 32 位） |
+| 第 3 轮 | `tvbox-jmgo-mobile-arm64_v8a-5.8.9-abc1234.apk`（手机版 / 64 位） |
+| 第 4 轮 | `tvbox-jmgo-mobile-armeabi_v7a-5.8.9-abc1234.apk`（手机版 / 32 位） |
 
 > 「leanback」是遥控器操作的电视版，「mobile」是触控版。两者都试，是为了判断闪退跟界面形态有没有关系。
 > 「arm64_v8a」是 64 位包，「armeabi_v7a」是 32 位包。**目前不预设哪一个是对的**，第 1.5 节查到的 `ro.product.cpu.abilist` 只是参考，最终以实机对照结果为准。
 
 ### 3.2 关于覆盖安装（重要）
 
-这 4 个包使用**官方原签名**，与你现在装的官方 5.8.8 32 位包同签名，因此可以直接覆盖安装：
+这 4 个包使用**官方原签名**，与你现在装的官方 5.8.9 32 位包同签名，因此可以直接覆盖安装：
 
 ```
-adb install -r tvbox-jmgo-leanback-arm64_v8a-5.8.8-abc1234.apk
+adb install -r tvbox-jmgo-leanback-arm64_v8a-5.8.9-abc1234.apk
 ```
 
 `-r` 表示替换已安装的应用但保留数据，**收藏、历史记录、播放进度不会丢**。看到 `Success` 即安装成功。
