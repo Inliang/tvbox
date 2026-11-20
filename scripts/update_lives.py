@@ -16,6 +16,10 @@
   python scripts/update_lives.py --refresh-scenery  重测风景慢直播线路并重建总表
   python scripts/update_lives.py --refresh-logo     重测台标并重建总表
 
+定时自动更新由 .github/workflows/live-upstream.yml 负责：每 6 小时依次跑
+「全量拉上游 -> probe_live_speed 测速 -> --with-speed 重建」，CI 通过
+LIVE_PROBE_WORKERS 降低可达性探测并发，避免被上游限流误杀。
+
 卡顿与「可达」是两件事：HTTP 200 只说明连得上，播放列表过期（分片 404）照样一直转圈。
 `scripts/probe_live_speed.py` 会实测 TTFB 与分片下载吞吐，结果缓存在
 `data/live_speed.json`（本机网络快照，不入库）。`--with-speed` 用它把快线路排到每个频道
@@ -25,6 +29,7 @@
 import collections
 import concurrent.futures as cf
 import json
+import os
 import re
 import shutil
 import sys
@@ -38,7 +43,8 @@ ROOT = Path(__file__).resolve().parent.parent
 LIB = ROOT / "lib"
 UA = "Mozilla/5.0 (Linux; Android 11) okHttp/Mod-1.5.0.0"
 TIMEOUT = 6
-WORKERS = 64
+# CI 定时全量重建时降低并发，避免上游把高频探测当成刷流而误杀（本地默认不变）。
+WORKERS = int(os.environ.get("LIVE_PROBE_WORKERS", "64"))
 ROUNDS = 2  # 公网探测有抖动，多轮取并集，避免误杀间歇可达的源
 # 这里只用于 m3u 头的 x-tvg-url，给支持 XMLTV 的播放器备用；
 # 配置里的 lives[].epg 走 DIYP 按名查询（见 zijian*.json），两者互不冲突。
@@ -68,6 +74,18 @@ SOURCES = [
         "label": "高清综合·vbskycn",
         "out": "live-vbskycn.m3u",
         "upstream": [f"{RAW}/vbskycn/iptv/master/tv/iptv4.m3u"],
+    },
+    {
+        # iptv-org/iptv 已改版：频道流在 streams/ 下按地区拆分。
+        # 只取中国内地与中国香港/中国澳门/中国台湾地区文件，避免整包国际源
+        # 把总表撑爆；这些文件与 vbskycn 等中文源互补，同台异线由 build_all 合并。
+        "label": "iptv-org·中国与港澳台",
+        "out": "live-iptvorg.m3u",
+        "upstream": [
+            f"{RAW}/iptv-org/iptv/master/streams/{name}.m3u"
+            for name in ("cn", "cn_112114", "cn_cctv", "cn_cgtn",
+                         "cn_yeslivetv", "hk", "mo", "tw")
+        ],
     },
     {
         "label": "央视卫视HD·bestfan",
@@ -415,6 +433,7 @@ ALL_INPUTS = [
     "iptv.m3u",
     "interface.txt",
     "live-vbskycn.m3u",
+    "live-iptvorg.m3u",
     "live-bestfan.m3u",
     "live-kaige.m3u",
     "live-4k.m3u",

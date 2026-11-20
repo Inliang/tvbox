@@ -6164,6 +6164,14 @@
       "logo": "https://epg.112114.xyz/logo/{name}.png"
     },
     {
+      "name": "iptv-org·中国/港澳台",
+      "type": 0,
+      "url": "./lib/live-iptvorg.m3u",
+      "playerType": 2,
+      "epg": "https://epg.112114.xyz/?ch={name}",
+      "logo": "https://epg.112114.xyz/logo/{name}.png"
+    },
+    {
       "name": "央视卫视HD·bestfan",
       "type": 0,
       "url": "./lib/live-bestfan.m3u",

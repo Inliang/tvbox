@@ -27,7 +27,9 @@ permissions:
 
 # 同一时间只允许一个刷新任务，避免两次运行互相覆盖对方的提交。
 concurrency:
-  group: refresh
+  # 与 live-upstream.yml 共用组：直播源全量重建可能跑很久，避免两个任务
+  # 同时 git push 造成互相覆盖或 push 冲突。
+  group: live-refresh
   cancel-in-progress: false
 
 jobs:

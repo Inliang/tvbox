@@ -1,0 +1,80 @@
+name: live-upstream
+
+# 每 6 小时自动同步直播上游：vbskycn/iptv 与 iptv-org/iptv（中国/港澳台文件）。
+#
+# 顺序不能换：
+#   1) update_lives.py 全量拉上游、剔除明确死链并写出各分组；
+#   2) probe_live_speed.py 对写出的线路实测 TTFB / 分片吞吐；
+#   3) update_lives.py --with-speed 用刚生成的测速结果重建总表 / 优选表 / 4K / 港台。
+# data/live_speed.json 被 .gitignore 排除，只在本次 job 内生成和使用，不会入库。
+#
+# 与 refresh.yml 共用 concurrency group，防止两个任务同时 push 互相覆盖。
+
+on:
+  schedule:
+    - cron: "10 */6 * * *"   # UTC 0/6/12/18:10 → 北京时间 8:10/14:10/20:10/2:10
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-refresh
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      # 可达性探测并发降低，避免上游把定时高频请求当成刷流而误杀
+      LIVE_PROBE_WORKERS: "24"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 拉取上游并剔除死链
+        run: python scripts/update_lives.py
+
+      - name: 实测线路流畅度
+        run: python scripts/probe_live_speed.py --workers 12
+
+      - name: 按测速重建总表与优选表
+        run: python scripts/update_lives.py --with-speed
+
+      - name: 校验两份订阅
+        run: python scripts/catvod_check.py zijian.json zijian-full.json
+
+      - name: 判断内容是否变化
+        id: diff
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          git status --short
+
+      - name: 提交并推送
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(lives): 自动同步上游直播源（$(date -u +%Y-%m-%dT%H:%M:%SZ)）"
+          git push
+
+      - name: 摘要
+        run: |
+          {
+            echo "## 直播上游自动同步"
+            echo ""
+            echo "- 内容变化：\`${{ steps.diff.outputs.changed }}\`"
+            echo "- 分组文件：$(ls lib/*.m3u lib/*.txt 2>/dev/null | wc -l) 个"
+            echo "- 总表线路：$(grep -c '^http' lib/live-all.m3u || true)"
+            echo "- 优选线路：$(grep -c '^http' lib/live-fast.m3u || true)"
+          } >> "$GITHUB_STEP_SUMMARY"
