@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-23T12:21:09+08:00",
-  "total": 582,
+  "generatedAt": "2026-11-20T15:34:24+08:00",
+  "total": 585,
   "mirrorHosts": [
     "gh-proxy.com",
     "gh-proxy.net",
@@ -10012,7 +10012,58 @@
       "tier": "Y",
       "segment": 4,
       "recommend": false
+    },
+    {
+      "id": "s_6532c1b83c",
+      "name": "🦚360┃采集",
+      "configId": "zoo-0821",
+      "type": 1,
+      "typeLabel": "type1 远程",
+      "api": "https://360zy.com/api.php/provide/vod?",
+      "searchable": 1,
+      "snippet": "{\"name\":\"🦚360┃采集\",\"api\":\"https://360zy.com/api.php/provide/vod?\",\"type\":1}",
+      "probe_url": null,
+      "probe_kind": "url",
+      "probe_status": "confirmed",
+      "included": false,
+      "tier": "A",
+      "segment": 1,
+      "recommend": false
+    },
+    {
+      "id": "s_5cd2758028",
+      "name": "🍀┃非凡┃资源",
+      "configId": "zoo-0211",
+      "type": 1,
+      "typeLabel": "type1 远程",
+      "api": "http://ffzy5.tv/api.php/provide/vod",
+      "searchable": 1,
+      "snippet": "{\"name\":\"🍀┃非凡┃资源\",\"api\":\"http://ffzy5.tv/api.php/provide/vod\",\"type\":1}",
+      "probe_url": null,
+      "probe_kind": "url",
+      "probe_status": "confirmed",
+      "included": false,
+      "tier": "A",
+      "segment": 1,
+      "recommend": false
+    },
+    {
+      "id": "s_8cff52ab0d",
+      "name": "🌪️暴风影音",
+      "configId": "liucn-m",
+      "type": 1,
+      "typeLabel": "type1 远程",
+      "api": "https://app.bfzyapi.com/api.php/provide/vod/",
+      "searchable": 1,
+      "snippet": "{\"name\":\"🌪️暴风影音\",\"api\":\"https://app.bfzyapi.com/api.php/provide/vod/\",\"type\":1}",
+      "probe_url": null,
+      "probe_kind": "url",
+      "probe_status": "confirmed",
+      "included": false,
+      "tier": "A",
+      "segment": 1,
+      "recommend": false
     }
   ],
-  "contentHash": "5c67e245b63db3f3"
+  "contentHash": "1c15232d60b0e164"
 }

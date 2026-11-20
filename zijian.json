@@ -1258,16 +1258,6 @@
       "group": "影视"
     },
     {
-      "key": "ffzy5",
-      "name": "🍀┃非凡┃资源",
-      "type": 1,
-      "api": "https://ffzy5.tv/api.php/provide/vod",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "group": "影视"
-    },
-    {
       "key": "请勿扒取",
       "name": "💝分享亢龙",
       "type": 1,
