@@ -118,8 +118,6 @@ http://l.cztvcloud.com/channels/lantian/SXjinyun1/720p.m3u8
 #EXTINF:-1 tvg-id="龙泉电视台" tvg-name="龙泉电视台" tvg-logo="" group-title="浙江地区",龙泉电视台
 http://l.cztvcloud.com/channels/lantian/SXlongquan1/720p.m3u8
 #EXTINF:-1 tvg-id="哈尔滨新闻综合" tvg-name="哈尔滨新闻综合" tvg-logo="" group-title="黑龙江地区",哈尔滨新闻综合
-https://stream.hrbtv.net/xwzh/sd/live.m3u8
-#EXTINF:-1 tvg-id="哈尔滨新闻综合" tvg-name="哈尔滨新闻综合" tvg-logo="" group-title="黑龙江地区",哈尔滨新闻综合
 http://stream.hrbtv.net/xwzh/sd/live.m3u8
 #EXTINF:-1 tvg-id="哈尔滨生活" tvg-name="哈尔滨生活" tvg-logo="" group-title="黑龙江地区",哈尔滨生活
 https://stream.hrbtv.net/shpd/sd/live.m3u8
@@ -133,10 +131,6 @@ http://stream.hrbtv.net/ylpd/sd/live.m3u8
 https://stream.hrbtv.net/yspd/sd/live.m3u8
 #EXTINF:-1 tvg-id="哈尔滨影视" tvg-name="哈尔滨影视" tvg-logo="" group-title="黑龙江地区",哈尔滨影视
 http://stream.hrbtv.net/yspd/sd/live.m3u8
-#EXTINF:-1 tvg-id="嘉峪关综合" tvg-name="嘉峪关综合" tvg-logo="" group-title="甘肃地区",嘉峪关综合
-https://play.kankanlive.com/live/1658978094528926.m3u8
-#EXTINF:-1 tvg-id="嘉峪关公共" tvg-name="嘉峪关公共" tvg-logo="" group-title="甘肃地区",嘉峪关公共
-https://play.kankanlive.com/live/1658978141553927.m3u8
 #EXTINF:-1 tvg-id="金昌综合" tvg-name="金昌综合" tvg-logo="" group-title="甘肃地区",金昌综合
 http://play.kankanlive.com/live/1660096574549900.m3u8
 #EXTINF:-1 tvg-id="张掖新闻" tvg-name="张掖新闻" tvg-logo="" group-title="甘肃地区",张掖新闻
@@ -147,26 +141,18 @@ https://play.kankanlive.com/live/1675303871634928.m3u8
 https://play.kankanlive.com/live/1656487214793905.m3u8
 #EXTINF:-1 tvg-id="泰安综合" tvg-name="泰安综合" tvg-logo="" group-title="甘肃地区",泰安综合
 http://play.kankanlive.com/live/1680577080200944.m3u8
-#EXTINF:-1 tvg-id="西和综合" tvg-name="西和综合" tvg-logo="" group-title="甘肃地区",西和综合
-https://play.kankanlive.com/live/1659926941626981.m3u8
 #EXTINF:-1 tvg-id="古浪综合" tvg-name="古浪综合" tvg-logo="" group-title="甘肃地区",古浪综合
 http://play.kankanlive.com/live/1647934328544907.m3u8
 #EXTINF:-1 tvg-id="永昌电视台" tvg-name="永昌电视台" tvg-logo="" group-title="甘肃地区",永昌电视台
 https://play.kankanlive.com/live/1652755738635915.m3u8
-#EXTINF:-1 tvg-id="陇西电视台" tvg-name="陇西电视台" tvg-logo="" group-title="甘肃地区",陇西电视台
-https://play.kankanlive.com/live/1669881644081970.m3u8
 #EXTINF:-1 tvg-id="平川电视台" tvg-name="平川电视台" tvg-logo="" group-title="甘肃地区",平川电视台
 http://play.kankanlive.com/live/1658907556249918.m3u8
 #EXTINF:-1 tvg-id="岷县电视台" tvg-name="岷县电视台" tvg-logo="" group-title="甘肃地区",岷县电视台
 http://play.kankanlive.com/live/1672715401874967.m3u8
-#EXTINF:-1 tvg-id="庄浪电视台" tvg-name="庄浪电视台" tvg-logo="" group-title="甘肃地区",庄浪电视台
-https://play.kankanlive.com/live/1655107221272926.m3u8
 #EXTINF:-1 tvg-id="金川电视台" tvg-name="金川电视台" tvg-logo="" group-title="甘肃地区",金川电视台
 http://play.kankanlive.com/live/1657360567739997.m3u8
 #EXTINF:-1 tvg-id="安定电视台" tvg-name="安定电视台" tvg-logo="" group-title="甘肃地区",安定电视台
 https://play.kankanlive.com/live/1672881652415978.m3u8
-#EXTINF:-1 tvg-id="靖远电视台" tvg-name="靖远电视台" tvg-logo="" group-title="甘肃地区",靖远电视台
-https://play.kankanlive.com/live/1658390970673988.m3u8
 #EXTINF:-1 tvg-id="天祝电视台" tvg-name="天祝电视台" tvg-logo="" group-title="甘肃地区",天祝电视台
 http://play.kankanlive.com/live/1656487214793905.m3u8
 #EXTINF:-1 tvg-id="天祝电视台" tvg-name="天祝电视台" tvg-logo="" group-title="甘肃地区",天祝电视台
