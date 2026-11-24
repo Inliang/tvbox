@@ -91,8 +91,6 @@ http://play1-qk.nmtv.cn/live/1735546697341033.m3u8
 https://fastlive.cctvplus.com/out/v1/ca6f9297b7314a63959435028af287fc/index.m3u8
 #EXTINF:-1 tvg-id="ChuxiongNewsChannel.cn@SD",Chuxiong News Channel [Not 24/7]
 http://hwapi.yntv.net/ew265l/848y54.m3u8
-#EXTINF:-1 tvg-id="CNDFilmMiddleSchoolChannel.cn@SD",CND Film Middle School Channel
-http://live-play.zxstv.com.cn/zhongxuesheng/zhongxuesheng.m3u8
 #EXTINF:-1 tvg-id="DiscoveringChina.cn@SD",Discovering China (1080p)
 https://fastlive.cctvplus.com/out/v1/8442c3bfd4c64a3984389328f6087879/index.m3u8
 #EXTINF:-1 tvg-id="DongguanComprehensiveNewsChannel.cn@SD",Dongguan Comprehensive News Channel
@@ -167,8 +165,10 @@ http://120.70.60.179:9901/tsfile/live/1002_1.m3u8?authid=0&key=txiptv&playlive=1
 https://pili-live-hls-zdzz-tv.zzxwcm.cn/zdzz-tv/nqzh.m3u8
 #EXTINF:-1 tvg-id="XizangTVTibetan.cn@SD",Xizang TV Tibetan
 https://live.vtibet.cn/live/ZYWS20261016.stream.m3u8
-#EXTINF:-1 tvg-id="XizangTVTibetan.cn@SD",Xizang TV Tibetan (720p) [Not 24/7]
-http://php.jdshipin.com:8880/xztv.php?id=zy
+#EXTINF:-1 tvg-id="YichangSanxiaGeneralChannel.cn@SD",Yichang Sanxia General Channel
+https://liveplay.ycrmt.cn/sxgd/zhpd.m3u8
+#EXTINF:-1 tvg-id="YichangSanxiaTravelLifeChannel.cn@SD",Yichang Sanxia Travel & Life Channel
+https://liveplay.ycrmt.cn/sxgd/lysh.m3u8
 #EXTINF:-1 tvg-id="ZhejiangChildrensChannel.cn@SD",Zhejiang Children's Channel
 rtmp://splay-qukan.cztv.com/live/1792055184232041?auth_key=1886663369-8067bfcb3c684fe98dc7e8ab4b018582-0-3adb461e15e39f56e7a75b9b7f80377d
 #EXTINF:-1 tvg-id="ZhejiangEconomicChannel.cn@SD",Zhejiang Economic Channel
