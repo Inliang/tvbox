@@ -165,10 +165,6 @@ https://pili-live-hls-zdzz-tv.zzxwcm.cn/zdzz-tv/nqzh.m3u8
 https://live.vtibet.cn/live/ZYWS20261016.stream.m3u8
 #EXTINF:-1 tvg-id="XizangTVTibetan.cn@SD",Xizang TV Tibetan (720p) [Not 24/7]
 http://php.jdshipin.com:8880/xztv.php?id=zy
-#EXTINF:-1 tvg-id="YichangSanxiaGeneralChannel.cn@SD",Yichang Sanxia General Channel
-https://liveplay.ycrmt.cn/sxgd/zhpd.m3u8
-#EXTINF:-1 tvg-id="YichangSanxiaTravelLifeChannel.cn@SD",Yichang Sanxia Travel & Life Channel
-https://liveplay.ycrmt.cn/sxgd/lysh.m3u8
 #EXTINF:-1 tvg-id="ZhejiangChildrensChannel.cn@SD",Zhejiang Children's Channel
 rtmp://splay-qukan.cztv.com/live/1792055184232041?auth_key=1886663369-8067bfcb3c684fe98dc7e8ab4b018582-0-3adb461e15e39f56e7a75b9b7f80377d
 #EXTINF:-1 tvg-id="ZhejiangEconomicChannel.cn@SD",Zhejiang Economic Channel
@@ -179,8 +175,12 @@ rtmp://splay-qukan.cztv.com/live/1792059848292249?auth_key=1886667907-3d9b01248b
 rtmp://splay-qukan.cztv.com/live/1792059771757250?auth_key=1886667772-951bbd2034684d73940470ed3eebc32a-0-adc4291abba5c186e3ead67a1683e790
 #EXTINF:-1 tvg-id="ZhejiangInternationalChannel.cn@SD",Zhejiang TV International
 https://ali-m-l.cztv.com/channels/lantian/channel10/1080p.m3u8
+#EXTINF:-1 tvg-id="",上虞1新闻综合 (720p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXshangyu1/720p.m3u8
 #EXTINF:-1 tvg-id="",上虞3新商都 (720p) [Not 24/7]
 https://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8
+#EXTINF:-1 tvg-id="",上虞經濟文化 (720p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8
 #EXTINF:-1 tvg-id="",之江纪录
 https://ali-m-l.cztv.com/channels/lantian/channel012/1080p.m3u8
 #EXTINF:-1 tvg-id="",余姚姚江文化 (576p)
@@ -205,6 +205,8 @@ https://stream2.jlntv.cn/jlyb/sd/live.m3u8
 https://l.cztvcloud.com/channels/lantian/SXxinchang2/720p.m3u8
 #EXTINF:-1 tvg-id="",松原新闻综合 [Geo-blocked]
 https://stream2.jlntv.cn/sytv/sd/live.m3u8
+#EXTINF:-1 tvg-id="",武进生活 (576p) [Not 24/7]
+https://live.wjyanghu.com/live/CH2.m3u8
 #EXTINF:-1 tvg-id="",江津新闻综合 (480p)
 http://222.179.155.21:1935/ch1.m3u8
 #EXTINF:-1 tvg-id="",江津经济生活 (480p)
@@ -247,6 +249,8 @@ https://stream2.jlntv.cn/jlcc/sd/live.m3u8
 https://stream2.jlntv.cn/ja/sd/live.m3u8
 #EXTINF:-1 tvg-id="",靖江新闻綜合 (480p) [Not 24/7]
 http://visit.jjbctv.com:1935/live/xwzhmb/playlist.m3u8
+#EXTINF:-1 tvg-id="",餘姚姚江文化 (576p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXyuyao2/720p.m3u8
 #EXTINF:-1 tvg-id="HebiNewsChannel.cn@SD",鹤壁新闻综合 (480p) [Not 24/7]
 http://pili-live-hls.hebitv.com/hebi/hebi.m3u8
 #EXTINF:-1 tvg-id="",douyu8
@@ -345,64 +349,6 @@ rtmp://59.124.75.138:1935/sat/tv111
 http://www.dalitv.com.tw:4568/live/dali/index.m3u8
 #EXTINF:-1 tvg-id="DiscoveryAsiaTaiwan.tw@SD",Discovery Asia Taiwan (1080p)
 http://125.227.210.55:1004/VideoInput/play.ts
-#EXTINF:-1 tvg-id="GoodTV.tw@SD",GOOD TV CH1 綜合台 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech1.m3u8
-#EXTINF:-1 tvg-id="Good2.tw@SD",GOOD TV CH2 真理台 (720p)
-https://live.streamingfast.net/osmflivech2.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH3 真情部落格 短版 (720p)
-https://live.streamingfast.net/osmflivech3.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH5 共享觀點 短版 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech5.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH6 親近神 詩歌音樂 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech6.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH7 禱告大軍 信息 (720p)
-https://live.streamingfast.net/osmflivech7.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH9 愛+好醫生 短版 (720p)
-https://live.streamingfast.net/osmflivech9.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH12 維他命施 (720p)
-https://live.streamingfast.net/osmflivech12.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH14 真情部落格 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech14.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH15 真情之夜 (720p)
-https://live.streamingfast.net/osmflivech15.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH16 葉光明 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech16.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH17 大衛鮑森 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech17.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH18 國際講員 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech18.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH20 恩典時分 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech20.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH21 華語講員 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech21.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH24 劉三講古 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech24.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH27 空中聖經學院 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech27.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH28 現代詩歌 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech28.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH29 經典音樂河 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech29.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH30 天堂敬拜 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech30.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH31 福音佈道音樂會 (720p)
-https://live.streamingfast.net/osmflivech31.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH32 特會系列：禱告與轉化 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech32.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH33 特會系列：研經培靈 (720p)
-https://live.streamingfast.net/osmflivech33.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH38 特會系列：青年特會 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech38.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH40 家庭8點檔轉轉發現愛 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech40.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH45 卡通 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech45.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH47 牧者頻道 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech47.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH49 禱告頻道 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech49.m3u8
-#EXTINF:-1 tvg-id="",GOOD TV CH50 國際講員 中文發音 (720p) [Not 24/7]
-https://live.streamingfast.net/osmflivech50.m3u8
 #EXTINF:-1 tvg-id="TaiwanIndigenousTV.tw@SD",Taiwan Indigenous TV (720p)
 https://streamipcfapp.akamaized.net/live/_definst_/live_720/key_b1500.m3u8
 #EXTINF:-1 tvg-id="TVBSAsia.tw@SD",TVBS Asia (1080p)
