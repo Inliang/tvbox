@@ -1,4 +1,4 @@
-#EXTM3U
+#EXTM3U x-tvg-url="https://epg.112114.xyz/pp.xml,https://epg.kanya.io/us/guide.xml.gz"
 #EXTINF:-1 tvg-id="AndoTV.cn@SD",Ando TV (1080p)
 http://play.kankanlive.com/live/1711956137852982.m3u8
 #EXTINF:-1 tvg-id="AnhuiTV.cn@SD",Anhui TV (1080p)
@@ -37,8 +37,6 @@ http://74.91.26.218:82/live/cctv7hd.m3u8
 http://74.91.26.218:82/live/cctv8hd.m3u8
 #EXTINF:-1 tvg-id="CCTV8K.cn@HD",CCTV-8K (1080p)
 http://192.151.150.154/live/cctv8k.m3u8
-#EXTINF:-1 tvg-id="CCTV8K.cn@HD",CCTV-8K (1080p)
-http://198.204.240.250:82/live/cctv8k.m3u8
 #EXTINF:-1 tvg-id="CCTV9.cn@SD",CCTV-9 (576i)
 https://xykt-fix.github.io/Y77.m3u8
 #EXTINF:-1 tvg-id="CCTV10.cn@SD",CCTV-10 (720p)
@@ -83,8 +81,6 @@ https://fastlive.cctvplus.com/out/v1/2b3d8a0c805d437f9dc85b764c2ac599/index.m3u8
 https://russian-liveali.cgtn.com/hls/LSvexABhNipibK5KRuUkvHZ7220802LSTeze9o8tdFXMHsb1VosgoT220802cd/playlist.m3u8
 #EXTINF:-1 tvg-id="CGTNSpanish.cn@SD",CGTN Spanish (1080p)
 https://espanol-liveali.cgtn.com/hls/LSveOGBaBw41Ea7ukkVAUdKQ220802LSTexu6xAuFH8VZNBLE1ZNEa220802cd/playlist.m3u8
-#EXTINF:-1 tvg-id="CGTNSpanish.cn@SD",CGTN Spanish (576p)
-http://45.186.106.147:8880/play/a06f/index.m3u8
 #EXTINF:-1 tvg-id="ChaozhouPublicChannel.cn@SD",Chaozhou Public Channel
 http://113.64.146.48:1688/hls/4/index.m3u8
 #EXTINF:-1 tvg-id="ChifengComprehensiveNewsChanel.cn@SD",Chifeng Comprehensive News Chanel
@@ -165,8 +161,6 @@ http://120.70.60.179:9901/tsfile/live/1002_1.m3u8?authid=0&key=txiptv&playlive=1
 https://pili-live-hls-zdzz-tv.zzxwcm.cn/zdzz-tv/nqzh.m3u8
 #EXTINF:-1 tvg-id="XizangTVTibetan.cn@SD",Xizang TV Tibetan
 https://live.vtibet.cn/live/ZYWS20261016.stream.m3u8
-#EXTINF:-1 tvg-id="XizangTVTibetan.cn@SD",Xizang TV Tibetan (720p) [Not 24/7]
-http://php.jdshipin.com:8880/xztv.php?id=zy
 #EXTINF:-1 tvg-id="YichangSanxiaGeneralChannel.cn@SD",Yichang Sanxia General Channel
 https://liveplay.ycrmt.cn/sxgd/zhpd.m3u8
 #EXTINF:-1 tvg-id="YichangSanxiaTravelLifeChannel.cn@SD",Yichang Sanxia Travel & Life Channel
@@ -181,10 +175,16 @@ rtmp://splay-qukan.cztv.com/live/1792059848292249?auth_key=1886667907-3d9b01248b
 rtmp://splay-qukan.cztv.com/live/1792059771757250?auth_key=1886667772-951bbd2034684d73940470ed3eebc32a-0-adc4291abba5c186e3ead67a1683e790
 #EXTINF:-1 tvg-id="ZhejiangInternationalChannel.cn@SD",Zhejiang TV International
 https://ali-m-l.cztv.com/channels/lantian/channel10/1080p.m3u8
+#EXTINF:-1 tvg-id="",上虞1新闻综合 (720p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXshangyu1/720p.m3u8
+#EXTINF:-1 tvg-id="",上虞3新商都 (720p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXshangyu3/720p.m3u8
 #EXTINF:-1 tvg-id="",上虞經濟文化 (720p) [Not 24/7]
 https://l.cztvcloud.com/channels/lantian/SXshangyu2/720p.m3u8
 #EXTINF:-1 tvg-id="",之江纪录
 https://ali-m-l.cztv.com/channels/lantian/channel012/1080p.m3u8
+#EXTINF:-1 tvg-id="",余姚姚江文化 (576p)
+https://l.cztvcloud.com/channels/lantian/SXyuyao3/720p.m3u8
 #EXTINF:-1 tvg-id="",余姚新闻综合 (576p)
 https://l.cztvcloud.com/channels/lantian/SXyuyao1/720p.m3u8
 #EXTINF:-1 tvg-id="",兴隆综合
@@ -197,10 +197,14 @@ https://stream2.jlntv.cn/qg/sd/live.m3u8
 https://stream2.jlntv.cn/jilin1/sd/live.m3u8
 #EXTINF:-1 tvg-id="",四平新闻综合 [Geo-blocked]
 https://stream2.jlntv.cn/sptv/sd/live.m3u8
+#EXTINF:-1 tvg-id="",嵊州综合 (720p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXshengzhou1/720p.m3u8
 #EXTINF:-1 tvg-id="",延边新闻综合 [Geo-blocked]
 https://stream2.jlntv.cn/jlyb/sd/live.m3u8
 #EXTINF:-1 tvg-id="",新昌休闲影视 (1080p) [Not 24/7]
 https://l.cztvcloud.com/channels/lantian/SXxinchang2/720p.m3u8
+#EXTINF:-1 tvg-id="",新昌新聞綜合 (1080p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXxinchang1/720p.m3u8
 #EXTINF:-1 tvg-id="",松原新闻综合 [Geo-blocked]
 https://stream2.jlntv.cn/sytv/sd/live.m3u8
 #EXTINF:-1 tvg-id="",武进新闻 (576p) [Not 24/7]
@@ -249,6 +253,8 @@ https://stream2.jlntv.cn/jlcc/sd/live.m3u8
 https://stream2.jlntv.cn/ja/sd/live.m3u8
 #EXTINF:-1 tvg-id="",靖江新闻綜合 (480p) [Not 24/7]
 http://visit.jjbctv.com:1935/live/xwzhmb/playlist.m3u8
+#EXTINF:-1 tvg-id="",餘姚姚江文化 (576p) [Not 24/7]
+https://l.cztvcloud.com/channels/lantian/SXyuyao2/720p.m3u8
 #EXTINF:-1 tvg-id="HebiNewsChannel.cn@SD",鹤壁新闻综合 (480p) [Not 24/7]
 http://pili-live-hls.hebitv.com/hebi/hebi.m3u8
 #EXTINF:-1 tvg-id="",douyu8
@@ -257,8 +263,6 @@ http://epg.112114.xyz/douyu/4332
 http://epg.112114.xyz/douyu/6140589
 #EXTINF:-1 tvg-id="",douyu15
 http://epg.112114.xyz/douyu/8770422
-#EXTINF:-1 tvg-id="",douyu19
-http://epg.112114.xyz/douyu/747764
 #EXTINF:-1 tvg-id="",douyu20
 http://epg.112114.xyz/douyu/52787
 #EXTINF:-1 tvg-id="",douyu24
